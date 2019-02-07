@@ -1,0 +1,462 @@
+.profile-page {
+  min-height: 100%;
+  height: 100%;
+}
+
+.infoCol {
+  margin-bottom: 50px
+}
+
+.profile {
+  min-height: 1100px;
+  background: #fff;
+  text-align: center;
+}
+
+.profileImage {
+  width: 100px;
+  height: 90px;
+  border-radius: 15px;
+  top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50%;
+  left: 0;
+  right: 0;
+  position: absolute;
+  border: solid 2px #fff;
+  object-fit: cover;
+}
+
+.profile-header:after {
+  top: 0;
+  font-size: 4em;
+  margin-left: 23%;
+  margin-right: auto;
+  margin-top: 58%;
+  left: 0;
+  right: 0;
+  position: absolute;
+  content: "•";
+  /* Insert content that looks like bullets */
+  color: #03CEA4;
+  z-index: 1;
+  /* Or a color you prefer */
+}
+
+.profileInfo {
+  margin-top: 50px;
+}
+
+.profileIntro {
+  margin-top: 10px;
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+  padding: 5px;
+}
+
+.profileAbout {
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 1em;
+  color:#adb1af
+}
+
+.profilePhotoHeader {
+  border-bottom: 1px solid #eee;
+  border-top: 0;
+  padding: 5px;
+}
+
+.profilePhotos {
+  border-bottom: 1px solid #eee;
+  border-top: 0;
+  padding: 15px;
+
+}
+
+.profilePhotos img {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.profile .ant-badge {
+  vertical-align: top;
+}
+
+.profile .head-example {
+  width: 60px;
+  height: 60px;
+  background: #adb1af;
+}
+
+.messenger {
+  width: 100%;
+  min-height: 850px;
+  padding-bottom: 190px;
+  background: #fff;
+}
+
+.userList {
+  padding: 10px;
+  margin: 0;
+}
+
+.userList li {
+  display: inline-block;
+  border-bottom: 1px solid #eee;
+  padding: 12px 0px;
+  width: 100%;
+}
+
+.userList li:hover {
+  background: #ddd;
+  cursor: pointer
+}
+.userList li img{
+  margin-left: 10px
+}
+
+.userList li span {
+  position: relative;
+  margin-left: 10px;
+  float: left;
+  font-size: 1.2em;
+  margin-top: 15px;
+  color: #adb1af
+}
+
+.userList li img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  float: left;
+}
+
+.newpost {
+  padding: 0!important;
+  border-radius: 10px!important;
+  box-shadow: none!important;
+}
+
+.newpost img {
+  width: 80px!important;
+  height: 80px!important;
+  object-fit: cover!important;
+  border-radius: 10px
+}
+.newPostIdea{
+  position: absolute;
+  right: 0;
+  top:0;
+  margin-top: 90px;
+  margin-right: 20px
+}
+.lastpost {
+  padding: 0!important;
+}
+
+.lastpostcontent .category {
+  font-size: 2em;
+}
+
+.lastpost img {
+  width: 100%!important;
+  height: 300px!important;
+  object-fit: cover!important;
+  border-radius: 10px;
+  margin-bottom: 25px
+}
+
+.postInput img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.postInput .ant-btn {
+  float: right;
+  margin-top: 20px;
+}
+
+.postInput b {
+  position: relative;
+  margin-left: 30px;
+  font-size: 1.2em;
+  top: 15px;
+  vertical-align: top;
+}
+
+.postContent {
+  width: 100%;
+  display: inline-block;
+}
+
+.contentImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  float: left;
+}
+
+.postContent p {
+  font-size: 1.4em;
+  color: #ddd2d2;
+  margin-left: 10px;
+  margin-top: 5px;
+  float: left;
+}
+
+.postImage {
+  width: 100%;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.smallText{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+@media only screen and (max-device-width: 480px) {
+  
+.profile {
+  height: 900px;
+}
+  .profilePhotos img {
+    margin-bottom:15px
+}
+
+}
+
+.ant-badge {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.ant-badge-count {
+  position: absolute;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: -10px;
+  height: 20px;
+  border-radius: 10px;
+  min-width: 20px;
+  background: #f04134;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  padding: 0 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  -webkit-transform-origin: -10% center;
+  -ms-transform-origin: -10% center;
+  transform-origin: -10% center;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;  
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.ant-badge-count a,
+.ant-badge-count a:hover {
+  color: #fff;
+}
+
+.ant-badge-dot {
+  position: absolute;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  -webkit-transform-origin: 0 center;
+  -ms-transform-origin: 0 center;
+  transform-origin: 0 center;
+  top: -4px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background: #f04134;
+  z-index: 10;
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.ant-badge-status {
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+.ant-badge-status-dot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.ant-badge-status-success {
+  background-color: #00a854;
+}
+
+.ant-badge-status-processing {
+  background-color: #108ee9;
+  position: relative;
+}
+
+.ant-badge-status-processing:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid #108ee9;
+  content: '';
+  -webkit-animation: antStatusProcessing 1.2s infinite ease-in-out;
+  animation: antStatusProcessing 1.2s infinite ease-in-out;
+}
+
+.ant-badge-status-default {
+  background-color: #d9d9d9;
+}
+
+.ant-badge-status-error {
+  background-color: #f04134;
+}
+
+.ant-badge-status-warning {
+  background-color: #ffbf00;
+}
+
+.ant-badge-status-text {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.ant-badge-zoom-appear,
+.ant-badge-zoom-enter {
+  -webkit-animation: antZoomBadgeIn 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  animation: antZoomBadgeIn 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.ant-badge-zoom-leave {
+  -webkit-animation: antZoomBadgeOut 0.3s cubic-bezier(0.71, -0.46, 0.88, 0.6);
+  animation: antZoomBadgeOut 0.3s cubic-bezier(0.71, -0.46, 0.88, 0.6);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.ant-badge-not-a-wrapper .ant-badge-count {
+  top: auto;
+  display: block;
+  position: relative;
+  -webkit-transform: none!important;
+  -ms-transform: none!important;
+  transform: none!important;
+}
+
+@-webkit-keyframes antStatusProcessing {
+  0% {
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    -webkit-transform: scale(2.4);
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes antStatusProcessing {
+  0% {
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    -webkit-transform: scale(2.4);
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.ant-scroll-number {
+  overflow: hidden;
+}
+
+.ant-scroll-number-only {
+  display: inline-block;
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: -webkit-transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), -webkit-transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  height: 20px;
+}
+
+.ant-scroll-number-only>p {
+  height: 20px;
+}
+
+.ant-scroll-number.not-support-css-animation .ant-scroll-number-only>p {
+  display: none;
+}
+
+.ant-scroll-number.not-support-css-animation .ant-scroll-number-only>p.current {
+  display: block;
+}
+
+@-webkit-keyframes antZoomBadgeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0) translateX(-50%);
+    transform: scale(0) translateX(-50%);
+  }
+  100% {
+    -webkit-transform: scale(1) translateX(-50%);
+    transform: scale(1) translateX(-50%);
+  }
+}
+
+@keyframes antZoomBadgeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0) translateX(-50%);
+    transform: scale(0) translateX(-50%);
+  }
+  100% {
+    -webkit-transform: scale(1) translateX(-50%);
+    transform: scale(1) translateX(-50%);
+  }
+}
+
+@-webkit-keyframes antZoomBadgeOut {
+  0% {
+    -webkit-transform: scale(1) translateX(-50%);
+    transform: scale(1) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0) translateX(-50%);
+    transform: scale(0) translateX(-50%);
+  }
+}
+
+@keyframes antZoomBadgeOut {
+  0% {
+    -webkit-transform: scale(1) translateX(-50%);
+    transform: scale(1) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0) translateX(-50%);
+    transform: scale(0) translateX(-50%);
+  }
+}

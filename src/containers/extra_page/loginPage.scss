@@ -1,0 +1,32 @@
+
+$mobile:"(min-width: 320px) and (max-width: 479px)";
+$tablet: "(min-width: 768px) and (max-width: 1023px)";
+$desktop: "(min-width: 1024px)";
+
+
+@media #{$mobile} {
+ 
+   .forMobileButton {
+   display: block!important;
+  }
+  .loginCard{
+    margin:-30px 0 0 0!important
+  }
+  .loginCard-header{
+    margin: 0!important;
+    border-radius: 0!important
+  }
+}
+
+@media #{$tablet} {
+  .forMobileButton {
+   display: none!important
+  }
+}
+@media #{$desktop} {
+ .forMobileButton {
+   display: none!important
+  }
+}
+
+
