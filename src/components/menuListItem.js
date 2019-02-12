@@ -97,7 +97,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1}  primaryText={strings.menu.manageuser} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageuser} containerElement={<Link to={'dashboard'} />} />,
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'dashboard'} />} />,
                 <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'dashboard'} />} />,
                 <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'dashboard'} />} />,
@@ -109,7 +109,7 @@ export class MenuList extends React.Component {
             <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> location_on </FontIcon>}
-              key={1}
+              key={2}
               primaryText={strings.menu.homespassed}
               containerElement={<Link to={'dashboard'} />}
             />
@@ -117,7 +117,7 @@ export class MenuList extends React.Component {
             <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> attach_money </FontIcon>}
-              key={1}
+              key={3}
               primaryText={strings.menu.taxmanagement}
               containerElement={<Link to={'dashboard'} />}
             />
@@ -152,7 +152,7 @@ export class MenuList extends React.Component {
             <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> person </FontIcon>}
-              key={1}
+              key={4}
               primaryText={strings.menu.salesuser}
               containerElement={<Link to={'dashboard'} />}
             />
@@ -174,7 +174,7 @@ export class MenuList extends React.Component {
             <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> directions_walk </FontIcon>}
-              key={1}
+              key={5}
               primaryText={strings.menu.msuser}
               containerElement={<Link to={'dashboard'} />}
             />
