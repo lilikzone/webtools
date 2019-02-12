@@ -23,6 +23,7 @@ const styles_right_icon = {
 
 const styles_left_icon = {
   fontSize: 20,
+  color: 'rgba(0, 0, 0, 0.87)',
 };
 
 const styles_list_item = {
@@ -63,12 +64,10 @@ export class MenuList extends React.Component {
   }
 
   select = (index) => {
-    if (index == 2) {
-      browserHistory.push('lock');
-    } else if (index == 1) {
+    if (index == 1) {
       browserHistory.push('login');
     } else if (index == 0) {
-      browserHistory.push('documents');
+      browserHistory.push('lock');
     }
 
     this.setState({selectedIndex: index});
@@ -84,184 +83,153 @@ export class MenuList extends React.Component {
 
             <ListItem
               innerDivStyle={styles_list}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> home </FontIcon>}
+              key={1}
               primaryText={strings.menu.dashboard}
-              leftIcon={<FontIcon  style={styles_left_icon}   color={this.props.muiTheme.appBar.color} className="material-icons"> dashboard </FontIcon>}
-              initiallyOpen={false}
-              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-              primaryTogglesNestedList={true}
-              nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.dashboard1} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.dashboard2} containerElement={<Link to={'dashboard_2'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.dashboard3} containerElement={<Link to={'dashboard_3'} />} />,
-              ]}
+              containerElement={<Link to={'dashboard'} />}
             />
-            <ListItem
-              innerDivStyle={styles_list}
-              primaryText={strings.menu.uikit}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> extension </FontIcon>}
-              initiallyOpen={false}
-              primaryTogglesNestedList={true}
-              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-              nestedItems={[
-                <ListItem style={styles_list_item} key={1}  primaryText={strings.menu.buttons} containerElement={<Link to={'button'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.icons} containerElement={<Link to={'icon'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.cards} containerElement={<Link to={'card'} />} />,
-                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.menus} containerElement={<Link to={'menus'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.lists} containerElement={<Link to={'list'} />} />,
-                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.boxes} containerElement={<Link to={'box'} />} />,
-                <ListItem style={styles_list_item} key={7} primaryText={strings.menu.grid} containerElement={<Link to={'grid'} />} />,
-                <ListItem style={styles_list_item} key={8} primaryText={strings.menu.colors} containerElement={<Link to={'color'} />} />,
-                <ListItem style={styles_list_item} key={9} primaryText={strings.menu.messages} containerElement={<Link to={'messages'} />} />,
-              ]}
-            />
-            <ListItem
-              innerDivStyle={styles_list}
-              primaryText={strings.menu.scripts}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> local_pizza</FontIcon>}
-              initiallyOpen={false}
-              primaryTogglesNestedList={true}
-              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-              nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.modal} containerElement={<Link to={'modal'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.alert} containerElement={<Link to={'alert'} />} />,
-                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.popover} containerElement={<Link to={'popover'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.badge} containerElement={<Link to={'badge'} />} />,
-                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.tabs} containerElement={<Link to={'tabs'} />} />,
-                <ListItem style={styles_list_item} key={7} primaryText={strings.menu.toolbar} containerElement={<Link to={'toolbar'} />} />,
-                <ListItem style={styles_list_item} key={8} primaryText={strings.menu.chip} containerElement={<Link to={'chip'} />} />,
-                <ListItem style={styles_list_item} key={9} primaryText={strings.menu.slider} containerElement={<Link to={'slider'} />} />,
-                <ListItem style={styles_list_item} key={10} primaryText={strings.menu.stepper} containerElement={<Link to={'stepper'} />} />,
-                <ListItem style={styles_list_item} key={11} primaryText={strings.menu.subheader} containerElement={<Link to={'subheader'} />} />,
-                <ListItem style={styles_list_item} key={12} primaryText={strings.menu.datepicker} containerElement={<Link to={'datePicker'} />} />,
-                <ListItem style={styles_list_item} key={13} primaryText={strings.menu.progressbar} containerElement={<Link to={'progressbar'} />} />,
-                <ListItem style={styles_list_item} key={14} primaryText={strings.menu.autocomplete} containerElement={<Link to={'autocomplete'} />} />,
 
-              ]}
-            />
             <ListItem
               innerDivStyle={styles_list}
-              primaryText={strings.menu.forms}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> rate_review </FontIcon>}
+              primaryText={strings.menu.system}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> build </FontIcon>}
               initiallyOpen={false}
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.basicForm} containerElement={<Link to={'form'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.formValidate} containerElement={<Link to={'formValidation'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.formElement} containerElement={<Link to={'formElements'} />} />,
+                <ListItem style={styles_list_item} key={1}  primaryText={strings.menu.manageuser} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.manageva} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.activityreport} containerElement={<Link to={'dashboard'} />} />,
               ]}
             />
 
             <ListItem
               innerDivStyle={styles_list}
-              primaryText={strings.menu.tables}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> pages </FontIcon>}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> location_on </FontIcon>}
+              key={1}
+              primaryText={strings.menu.homespassed}
+              containerElement={<Link to={'dashboard'} />}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> attach_money </FontIcon>}
+              key={1}
+              primaryText={strings.menu.taxmanagement}
+              containerElement={<Link to={'dashboard'} />}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              primaryText={strings.menu.productmanagement}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> collections </FontIcon>}
               initiallyOpen={false}
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.basicTable} containerElement={<Link to={'table'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.advancedTable} containerElement={<Link to={'advancedTable'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.dataTable} containerElement={<Link to={'dataTable'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'dashboard'} />} />,
+
               ]}
             />
 
             <ListItem
               innerDivStyle={styles_list}
-              primaryText={strings.menu.charts}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> donut_small </FontIcon>}
+              primaryText={strings.menu.transaction}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> show_chart </FontIcon>}
               initiallyOpen={false}
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.chart1} containerElement={<Link to={'chart1'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.chart2} containerElement={<Link to={'chart2'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.chart3} containerElement={<Link to={'chart3'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.customerdata} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.dailytrx} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.monthlytrx} containerElement={<Link to={'dashboard'} />} />,
               ]}
             />
 
             <ListItem
               innerDivStyle={styles_list}
-              primaryText={strings.menu.pages}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> view_carousel </FontIcon>}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> person </FontIcon>}
+              key={1}
+              primaryText={strings.menu.salesuser}
+              containerElement={<Link to={'dashboard'} />}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              primaryText={strings.menu.salesmanagement}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> next_week </FontIcon>}
+              initiallyOpen={false}
+              primaryTogglesNestedList={true}
+              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
+
+              nestedItems={[
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createsalesorder} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'dashboard'} />} />,
+              ]}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> directions_walk </FontIcon>}
+              key={1}
+              primaryText={strings.menu.msuser}
+              containerElement={<Link to={'dashboard'} />}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              primaryText={strings.menu.workorder}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> play_for_work </FontIcon>}
               initiallyOpen={false}
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.profile} containerElement={<Link to={'profile'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.price} containerElement={<Link to={'price'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.products} containerElement={<Link to={'products'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'dashboard'} />} />,
+              ]}
+            />
+
+            <ListItem
+              innerDivStyle={styles_list}
+              primaryText={strings.menu.ticket}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> report </FontIcon>}
+              initiallyOpen={false}
+              primaryTogglesNestedList={true}
+              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
+              nestedItems={[
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.ticket} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'dashboard'} />} />,
 
               ]}
             />
             <ListItem
               innerDivStyle={styles_list}
-              primaryText={strings.menu.extraPages}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> view_column </FontIcon>}
+              primaryText={strings.menu.cs}
+              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> local_phone </FontIcon>}
               initiallyOpen={false}
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.Login} containerElement={<Link to={'login'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.lockScreen} containerElement={<Link to={'lock'} />} />,
-                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.error} containerElement={<Link to={'404'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createticket} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageleads} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.spamreport} containerElement={<Link to={'dashboard'} />} />,
 
               ]}
             />
 
-
-            <ListItem
-              innerDivStyle={styles_list}
-              primaryText={strings.menu.menuLevel}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> gesture </FontIcon>}
-              initiallyOpen={false}
-              primaryTogglesNestedList={true}
-              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-              nestedItems={[<ListItem
-                innerDivStyle={styles_list}
-                key={1} leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> chevron_right </FontIcon>}
-                primaryText={strings.menu.level1}
-                            />, <ListItem
-                              innerDivStyle={styles_list}
-                              key={2}
-                              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> chevron_right </FontIcon>}
-                              primaryText={strings.menu.level1} disabled={true}
-                              rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
-                              nestedItems={[<ListItem
-                                innerDivStyle={styles_list}
-                                key={1}
-                                leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> chevron_right </FontIcon>}
-                                primaryText={strings.menu.level2}
-                                            />]}
-                                />,
-              ]}
-            />
-
-
-            <ListItem innerDivStyle={styles_list} leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> live_help </FontIcon>} key={1} primaryText={strings.menu.documents} containerElement={<Link to={'documents'} />} />
           </List>
 
-
-          <Divider inset={false} />
-          <ListItem style={styles_list_item} primaryText={<div>CPU<Progress percent={75} status="active"  /></div>} />
-          <Divider inset={false} />
-          <ListItem style={styles_list_item} primaryText={<div>RAM<Progress percent={45} status="exception" showInfo={true} /></div>} />
-          <Divider inset={false} />
-
-
           <BottomNavigation  className="bottomNavigation">
-            <BottomNavigationItem
-              label="Help"
-              icon={<FontIcon color={this.props.muiTheme.appBar.color} className="material-icons"> code </FontIcon>}
-              onTouchTap={() => this.select(0)}
-            />
 
             <BottomNavigationItem
               label="Lock"
               icon={<FontIcon color={this.props.muiTheme.appBar.color} className="material-icons"> https </FontIcon>}
-              onTouchTap={() => this.select(2)}
+              onTouchTap={() => this.select(0)}
             />
+
             <BottomNavigationItem
               label="Logout"
               icon={<FontIcon color={this.props.muiTheme.appBar.color} className="material-icons"> exit_to_app </FontIcon>}

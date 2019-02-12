@@ -4,8 +4,6 @@ import App from './containers/App';
 
 // Dashboard Pages Routes
 import DashboardPage from './containers/dashboard/DashboardPage';
-import DashboardPage_2 from './containers/dashboard/DashboardPage_2';
-import DashboardPage_3 from './containers/dashboard/DashboardPage_3';
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
@@ -65,8 +63,6 @@ export default (
       <IndexRoute component={DashboardPage} />
 
       <Route path="dashboard" component={DashboardPage} />
-      <Route path="dashboard_2" component={DashboardPage_2} />
-      <Route path="dashboard_3" component={DashboardPage_3} />
 
       <Route path="button" component={Button} />
       <Route path="icon" component={Icon} />

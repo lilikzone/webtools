@@ -100,7 +100,7 @@ class Header extends React.Component {
 
   render() {
     const {styles, handleChangeRequestNavDrawer, setLanguages, setMuiTheme, setOptions} = this.props;
-
+    const userName = 'ADL Admin';
     const style = {
       appBar: {
         top: 0,
@@ -130,6 +130,13 @@ class Header extends React.Component {
         paddingLeft: 10,
         paddingRight: 10,
 
+      },
+      labelstyle: {
+        verticalAlign: 'super',
+      },
+      customAvatar: {
+        height: 30,
+        width: 30,
       },
     };
 
@@ -188,12 +195,21 @@ class Header extends React.Component {
 
 
           iconElementRight={<CustomDiv style={style.iconsRightContainer}>
+            <FlatButton>
+              <img style={style.customAvatar} src="./assets/images/avatar.png" />
+            </FlatButton>
+            <FlatButton
+              className="header-username"
+              label={userName}
+              labelStyle={style.labelstyle}
+            />
             <IconMenu
               style={style.icons}
               color={'#707780'}
-              iconButtonElement={<IconButton><FontIcon color="#707780" className="material-icons">
-                face
-        </FontIcon></IconButton>}
+              iconButtonElement={<IconButton onTouchTap={this.handleToggle} > <FontIcon color={'#707780'} className="material-icons">
+              settings
+        </FontIcon> </IconButton>
+                }
               targetOrigin={{
                 horizontal: 'left',
                 vertical: 'top',
@@ -207,11 +223,10 @@ class Header extends React.Component {
               <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} />
               {/* <MenuItem key={3} primaryText="Price List" /> */}
             </IconMenu>
-
-            <IconButton onTouchTap={this.handleToggle} > <FontIcon color={'#707780'} className="material-icons">
+            {/* <IconButton onTouchTap={this.handleToggle} > <FontIcon color={'#707780'} className="material-icons">
               settings
-        </FontIcon> </IconButton>
-            <Drawer className="rightDocker" docked={false} onRequestChange={(open) => this.setState({open})} width={200} openSecondary={true} open={this.state.open} > <AppBar title={strings.options.headerText} />
+        </FontIcon> </IconButton> */}
+            {/* <Drawer className="rightDocker" docked={false} onRequestChange={(open) => this.setState({open})} width={200} openSecondary={true} open={this.state.open} > <AppBar title={strings.options.headerText} />
               <div style={style.main}>
                 <br />
                 {strings.options.themes}
@@ -275,7 +290,7 @@ class Header extends React.Component {
                 </IconButton>
 
               </div>
-            </Drawer>
+            </Drawer> */}
 
           </CustomDiv>}
         />

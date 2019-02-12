@@ -13,7 +13,7 @@ const Footer = (props) => {
 
       <Row center="xs">
         <Col xs={true}>
-          <span style={styles.span}>© 2017 Mare Admin All Right Reserved. Created by Yellow Red Team</span>
+          <span style={styles.span}>© 2019 iBase XL-Home All Right Reserved. Created by Axiata Digital labs</span>
         </Col>
 
       </Row>
