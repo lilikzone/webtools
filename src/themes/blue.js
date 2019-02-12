@@ -12,7 +12,7 @@ const ThemeDark = getMuiTheme({
   spacing: spacing,
   // fontFamily: 'Roboto, sans-serif',
   palette: {
-    primary1Color: '#fff',
+    primary1Color: blue600,
     primary2Color: blue600,
     primary3Color: blue600,
     accent1Color: '#009688',
