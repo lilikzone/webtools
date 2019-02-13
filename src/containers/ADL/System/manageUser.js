@@ -146,7 +146,7 @@ export default class ManageUser extends React.Component {
       },
       dataTable: this.data,
     };
-  };
+  }
 
   _handleTouchTap() {
     this.data.push({
@@ -164,19 +164,19 @@ export default class ManageUser extends React.Component {
       isRegistered: true,
       textField: {},
     });
-  };
+  }
 
   _handleValidationName(input, data) {
     this.setState({
       textField: {...this.state.textField, name: data},
     });
-  };
+  }
 
   _handleValidationUserName(input, data) {
     this.setState({
       textField: {...this.state.textField, username: data},
     });
-  };
+  }
 
   _handleValidationRole(input, data) {
     let dataInput = input.toLowerCase();
@@ -189,7 +189,7 @@ export default class ManageUser extends React.Component {
         textField: {...this.state.textField, role: dataInput},
       });
     }
-  };
+  }
 
   _handleValidationAgency(input, data) {
     let dataInput = input.toLowerCase();
@@ -202,7 +202,7 @@ export default class ManageUser extends React.Component {
         textField: {...this.state.textField, agency: dataInput},
       });
     }
-  };
+  }
 
   _handleValidationVendor(input, data) {
     let dataInput = input.toLowerCase();
@@ -215,7 +215,7 @@ export default class ManageUser extends React.Component {
         textField: {...this.state.textField, vendor: dataInput},
       });
     }
-  };
+  }
   _handleValidationGender(input, data) {
     let dataInput = input.toLowerCase();
     let dataGender = data.map((val) => val.toLowerCase());
@@ -227,14 +227,13 @@ export default class ManageUser extends React.Component {
         textField: {...this.state.textField, gender: dataInput},
       });
     }
-    }
-  };
+  }
   _handleValidationNumber(e, input) {
     this.setState({
       isPhoneValid: !isNaN(input),
       textField: {...this.state.textField, phoneNumber: input},
     });
-  };
+  }
 
   _handleValidationEmail(e, input) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -243,7 +242,7 @@ export default class ManageUser extends React.Component {
       textField: {...this.state.textField, email: input},
     });
     // this.data.push({'email': this.state.textField.email});
-  };
+  }
   render() {
     let _renderCreateUser = () => {
       return (
@@ -397,8 +396,8 @@ export default class ManageUser extends React.Component {
                     keys="name"
                     className="mdl-data-table"
                     columns={columns}
-                    //onDragColumn={(columns) => console.log(columns)}
-                    //onChangeColumnsVisibility={(columns) => console.log(columns)}
+                    // onDragColumn={(columns) => console.log(columns)}
+                    // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}
                     draggable={false}
                     sortable={false}
@@ -418,7 +417,7 @@ export default class ManageUser extends React.Component {
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
             <Tabs initialSelectedIndex={0}>
-              <Tab key = {1}label="Create User">
+              <Tab key={1}label="Create User">
                 {_renderCreateUser()}
               </Tab>
               <Tab key={2}label="Manage User">
