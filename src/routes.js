@@ -3,7 +3,9 @@ import {Route, IndexRoute, hashHistory} from 'react-router';
 import App from './containers/App';
 
 // Dashboard Pages Routes
-import DashboardPage from './containers/dashboard/DashboardPage';
+import DashboardPage from './containers/ADL/Dashboard/DashboardPage';
+// System Pages Routes
+import ManageUser from './containers/ADL/System/manageUser';
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
@@ -61,8 +63,9 @@ export default (
     <Route path="404" component={NotFoundPage404} />
     <Route path="/" component={App}>
       <IndexRoute component={DashboardPage} />
-
+      {/* custom group */}
       <Route path="dashboard" component={DashboardPage} />
+      <Route path="manageUser" component={ManageUser} />
 
       <Route path="button" component={Button} />
       <Route path="icon" component={Icon} />
