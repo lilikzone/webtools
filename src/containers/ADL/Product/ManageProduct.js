@@ -12,6 +12,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import {MaterialContainer} from 'react-table-components';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
+import DatePicker from 'material-ui/DatePicker';
 import '../../table/datatable.scss';
 
 
@@ -78,6 +79,8 @@ export default class ManageProduct extends React.Component {
         soc_label: false,
         soc_id: false,
         description: false,
+        promo_end: false,
+        promo_start: false,
       },
       TextField: {
         code: '',
@@ -91,7 +94,8 @@ export default class ManageProduct extends React.Component {
         soc_label: '',
         soc_id: '',
         description: '',
-
+        promo_end: '',
+        promo_start: '',
       },
     };
   }
@@ -199,6 +203,22 @@ export default class ManageProduct extends React.Component {
                   />
                   <Toggle name="promo" label="Promo" style={styles.toggle} onToggle={this.promoToggle} toggled={promo_activation} />
                   {promo_activation ? <div>
+                    <DatePicker
+                      hintText="Promo Start"
+                      floatingLabelText="Promo Start"
+                      name="promo_start"
+                      fullWidth={true}
+                      onChange={this.handleChangeText}
+                      errorText={validation.promo_start}
+                    />
+                    <DatePicker
+                      hintText="Promo End"
+                      floatingLabelText="Promo End"
+                      name="promo_end"
+                      fullWidth={true}
+                      onChange={this.handleChangeText}
+                      errorText={validation.promo_end}
+                    />
                     <SelectField
                       fullWidth={true}
                       floatingLabelText="Promo Type"
