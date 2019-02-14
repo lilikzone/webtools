@@ -154,7 +154,7 @@ const AutoCompleteExampleFilters = () => (
     <AutoComplete
       fullWidth={true}
       floatingLabelText="Type 'r', case insensitive"
-      filter={AutoComplete.caseInsensitiveFilter}
+      filter={AutoComplete.defaultFilter}
       dataSource={colors}
     />
     <br />
