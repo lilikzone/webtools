@@ -3,6 +3,7 @@ import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import {Card} from 'material-ui/Card';
 import 'react-table-components/styles/styles.css';
+import '../../table/datatable.scss';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
 import {Grid, Row, Col} from 'react-flexbox-grid';
@@ -66,77 +67,144 @@ const columns = [
   // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   {
     id: 1,
-    title: 'Username',
-    prop: 'username',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'Role',
-    prop: 'role',
-    width: '10%',
+    title: 'id',
+    prop: 'id',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 2,
-    title: 'Name',
-    prop: 'name',
-    width: '10%',
+    title: 'Subscriber ID',
+    prop: 'subscriberId',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 0,
-    title: 'Gender',
-    prop: 'gender',
-    width: '10%',
+    id: 2,
+    title: 'Customer Name',
+    prop: 'customerName',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 3,
-    title: 'Email',
-    prop: 'email',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'Vendor',
-    prop: 'vendor',
-    width: '10%',
+    title: 'DOB',
+    prop: 'dob',
+    width: '5.5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 4,
-    title: 'Agency',
-    prop: 'agency',
-    width: '10%',
+    title: 'DOB Place',
+    prop: 'dobPlace',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
-  // {id: 5, title: 'Created at', prop: 'created_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Updated at', prop: 'updated_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Ip address', prop: 'ip_address', width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 7, title: 'Country', prop: 'country.name', visible: false, width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 8, title: 'Code', prop: 'country.code', width: '80px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {
+    id: 5,
+    title: 'Type ID',
+    prop: 'typeId',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 6,
+    title: 'ID Number',
+    prop: 'idNumber',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 7,
+    title: 'ID Address',
+    prop: 'idAddress',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 8,
+    title: 'Primary Phone',
+    prop: 'primaryPhone',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
   {
     id: 9,
-    title: 'Action',
-    render: EditBtn,
-    width: '10%',
+    title: 'Alternative Phone 1',
+    prop: 'alternativePhone1',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 10,
+    title: 'Alternative Phone 2',
+    prop: 'alternativePhone2',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 11,
+    title: 'Email',
+    prop: 'email',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 12,
+    title: 'Alternative Email',
+    prop: 'alternativeEmail',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 13,
+    title: 'Created At',
+    prop: 'createdAt',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 14,
+    title: 'Balance',
+    prop: 'balance',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 15,
+    title: 'Due Date',
+    prop: 'dueDate',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 16,
+    title: 'Action',
+    render: EditBtn,
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 17,
     title: 'Action',
     render: DeleteBtn,
-    width: '10%',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
   },
 ];
@@ -152,7 +220,7 @@ const generateRowProps = (row) => {
   return options;
 };
 
-export default class ManageUser extends React.Component {
+export default class ManageCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.data = [
@@ -624,7 +692,8 @@ export default class ManageUser extends React.Component {
     ];
     this.state = {
       isGenderValid: true,
-      isEmailValid: true,
+      isEmailValid1: true,
+      isEmailValid2: true,
       isPhoneValid: true,
       isRoleValid: true,
       isVendorValid: true,
@@ -632,29 +701,36 @@ export default class ManageUser extends React.Component {
       isRegistered: false,
       currentTab: 0,
       textField: {
-        name: '',
+        customerName: '',
+        subscriberId: '',
+        dobPlace: '',
+        dob: '',
+        typeId: '',
+        idNumber: '',
+        idAddress: '',
+        primaryPhone: '',
+        alternativePhone1: '',
+        alternativePhone2: '',
         email: '',
-        username: '',
-        password: '',
-        gender: '',
-        phoneNumber: '',
-        role: '',
-        vendor: '',
-        agency: '',
+        alternativeEmail: '',
       },
     };
   }
 
   _handleTouchTap() {
     this.data.push({
+      customerName: this.state.textField.customerName,
+      subscriberId: this.state.textField.subscriberId,
+      dob: this.state.textField.dob,
+      dobPlace: this.state.textField.dobPlace,
+      typeId: this.state.textField.typeId,
+      idNumber: this.state.textField.idNumber,
+      idAddress: this.state.textField.idAddress,
+      primaryPhone: this.state.textField.primaryPhone,
+      alternativePhone1: this.state.textField.alternativePhone1,
+      alternativePhone2: this.state.textField.alternativePhone2,
       email: this.state.textField.email,
-      name: this.state.textField.name,
-      username: this.state.textField.username,
-      gender: this.state.textField.gender,
-      phone: this.state.textField.phoneNumber,
-      role: this.state.textField.role,
-      vendor: this.state.textField.vendor,
-      agency: this.state.textField.agency,
+      alternativeEmail: this.state.textField.alternativeEmail,
     });
     this.setState({
       currentTab: 1,
@@ -669,9 +745,9 @@ export default class ManageUser extends React.Component {
     });
   }
 
-  _handleValidationUserName(input, data) {
+  _handleValidationCustomerName(input, data) {
     this.setState({
-      textField: {...this.state.textField, username: data},
+      textField: {...this.state.textField, customerName: data},
     });
   }
 
@@ -732,11 +808,11 @@ export default class ManageUser extends React.Component {
     });
   }
 
-  _handleValidationEmail(e, input) {
+  _handleValidationEmail(e, input, state, email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.setState({
-      isEmailValid: re.test(String(input).toLowerCase()),
-      textField: {...this.state.textField, email: input},
+      [state]: re.test(String(input).toLowerCase()),
+      textField: {...this.state.textField, [email]: input},
     });
     // this.data.push({'email': this.state.textField.email});
   }
@@ -751,52 +827,158 @@ export default class ManageUser extends React.Component {
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="Username"
-                    value={this.state.textField.username}
-                    floatingLabelText="Username"
+                    hintText="Customer Name"
+                    value={this.state.textField.customerName}
+                    floatingLabelText="Customer Name"
                     fullWidth={true}
                     onChange={(e, input) => {
-                      this._handleValidationUserName(e, input);
+                      this._handleValidationCustomerName(e, input);
                     }}
                   />
 
                   <TextField
                     required={true}
-                    hintText="Password Field"
-                    floatingLabelText="Password"
-                    type="password"
+                    type={'number'}
+                    hintText="Subscriber ID"
+                    value={this.state.textField.subscriberId}
+                    floatingLabelText="Subscriber ID"
                     fullWidth={true}
-                    value={this.state.textField.password}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {...this.state.textField, password: input},
+                        textField: {
+                          ...this.state.textField,
+                          subscriberId: input,
+                        },
                       });
                     }}
                   />
 
                   <TextField
                     required={true}
-                    value={this.state.textField.name}
-                    hintText="Name User"
-                    floatingLabelText="Name"
+                    type={'date'}
+                    value={this.state.textField.dob}
+                    floatingLabelFixed={true}
+                    floatingLabelText="DOB"
                     fullWidth={true}
                     onChange={(e, input) => {
-                      this._handleValidationName(e, input);
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          dob: input,
+                        },
+                      });
                     }}
                   />
 
-                  <AutoComplete
-                    fullWidth={true}
+                  <TextField
                     required={true}
-                    floatingLabelText="Gender"
-                    searchText={this.state.textField.gender}
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataGender}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationGender(input, dataSource);
+                    value={this.state.textField.dobPlace}
+                    floatingLabelText="DOB Place"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          dobPlace: input,
+                        },
+                      });
                     }}
-                    errorText={!this.state.isGenderValid}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.typeId}
+                    hintText={'Type ID'}
+                    floatingLabelText="Type ID"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          typeId: input,
+                        },
+                      });
+                    }}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.idNumber}
+                    hintText={'ID Number'}
+                    floatingLabelText="ID Number"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          idNumber: input,
+                        },
+                      });
+                    }}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.idAddress}
+                    hintText={'ID Address'}
+                    floatingLabelText="ID Address"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          idAddress: input,
+                        },
+                      });
+                    }}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.primaryPhone}
+                    hintText={'Primary Phone'}
+                    floatingLabelText="Primary Phone"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          primaryPhone: input,
+                        },
+                      });
+                    }}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.alternativePhone1}
+                    hintText={'Alternative Phone 1'}
+                    floatingLabelText="Alternative Phone 1"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          alternativePhone1: input,
+                        },
+                      });
+                    }}
+                  />
+
+                  <TextField
+                    required={true}
+                    value={this.state.textField.alternativePhone2}
+                    hintText={'Alternative Phone 2'}
+                    floatingLabelText="Alternative Phone 2"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          alternativePhone2: input,
+                        },
+                      });
+                    }}
                   />
 
                   <TextField
@@ -805,60 +987,32 @@ export default class ManageUser extends React.Component {
                     value={this.state.textField.email}
                     hintText="Email"
                     floatingLabelText="Email"
-                    errorText={!this.state.isEmailValid}
+                    errorText={!this.state.isEmailValid1}
                     onChange={(e, input) => {
-                      this._handleValidationEmail(e, input);
+                      this._handleValidationEmail(
+                        e,
+                        input,
+                        'isEmailValid1',
+                        'email'
+                      );
                     }}
                   />
+
                   <TextField
                     fullWidth={true}
                     required={true}
-                    hintText="Phone Number"
-                    floatingLabelText="Phone Number"
-                    value={this.state.textField.phoneNumber}
-                    errorText={!this.state.isPhoneValid}
+                    value={this.state.textField.alternativeEmail}
+                    hintText="Alternative Email"
+                    floatingLabelText="Alternative Email"
+                    errorText={!this.state.isEmailValid2}
                     onChange={(e, input) => {
-                      this._handleValidationNumber(e, input);
+                      this._handleValidationEmail(
+                        e,
+                        input,
+                        'isEmailValid2',
+                        'alternativeEmail'
+                      );
                     }}
-                  />
-                  <AutoComplete
-                    required={true}
-                    fullWidth={true}
-                    floatingLabelText="Role"
-                    searchText={this.state.textField.role}
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataRole}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationRole(input, dataSource);
-                    }}
-                    errorText={!this.state.isRoleValid}
-                  />
-                  <AutoComplete
-                    required={true}
-                    fullWidth={true}
-                    floatingLabelText="Vendor"
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataVendor}
-                    searchText={this.state.textField.vendor}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationVendor(input, dataSource);
-                    }}
-                    errorText={!this.state.isVendorValid}
-                  />
-                  <AutoComplete
-                    required={true}
-                    fullWidth={true}
-                    floatingLabelText="Agency"
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataAgency}
-                    searchText={this.state.textField.agency}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationAgency(input, dataSource);
-                    }}
-                    errorText={!this.state.isAgencyValid}
                   />
                   <RaisedButton
                     label="Register"
@@ -911,7 +1065,7 @@ export default class ManageUser extends React.Component {
             <Tabs value={this.state.currentTab}>
               <Tab
                 value={0}
-                label="Create User"
+                label="Create Customer"
                 onActive={(val) => {
                   this.setState({
                     currentTab: val.props.index,
@@ -923,7 +1077,7 @@ export default class ManageUser extends React.Component {
               </Tab>
               <Tab
                 value={1}
-                label="Manage User"
+                label="Manage Customer"
                 onActive={(val) => {
                   this.setState({
                     currentTab: val.props.index,
@@ -935,7 +1089,7 @@ export default class ManageUser extends React.Component {
             </Tabs>
             <Snackbar
               open={this.state.isRegistered}
-              message="User Added"
+              message="Customer Added"
               autoHideDuration={4000}
               bodyStyle={{backgroundColor: 'teal'}}
             />
