@@ -97,12 +97,11 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageuser} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.manageva} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.activityreport} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageuser} containerElement={<Link to={'manageUser'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'manageVendor'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'manageAgency'} />} />,
+                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'manageCustomer'} />} />,
+                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.activityreport} containerElement={<Link to={'manageActivity'} />} />,
               ]}
             />
 
@@ -130,7 +129,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'manageProduct'} />} />,
 
               ]}
             />
@@ -222,7 +221,7 @@ export class MenuList extends React.Component {
 
           </List>
 
-          <BottomNavigation  className="bottomNavigation">
+          {/* <BottomNavigation  className="bottomNavigation">
 
             <BottomNavigationItem
               label="Lock"
@@ -236,7 +235,7 @@ export class MenuList extends React.Component {
               onTouchTap={() => this.select(1)}
             />
 
-          </BottomNavigation>
+          </BottomNavigation> */}
           {this.props.isAuthenticated && <div className={classnames('app-content', {expanded: this.state.open})}>
             {this.props.children}
           </div>}

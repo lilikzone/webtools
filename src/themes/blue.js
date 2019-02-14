@@ -29,6 +29,7 @@ const ThemeDark = getMuiTheme({
   },
   raisedButton: {
     fontSize: 12,
+    backgroundColor: '#5cb85c',
   },
   appBar: {
     height: 54,

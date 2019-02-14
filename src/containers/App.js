@@ -155,6 +155,7 @@ class App extends React.Component {
     const styles = {
       header: {
         paddingLeft: navDrawerOpen ? 236 : 0,
+        backgroundColor: '#fff',
       },
       container: {
         margin: '80px 20px 20px 15px',

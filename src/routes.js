@@ -3,7 +3,13 @@ import {Route, IndexRoute, hashHistory} from 'react-router';
 import App from './containers/App';
 
 // Dashboard Pages Routes
-import DashboardPage from './containers/dashboard/DashboardPage';
+import DashboardPage from './containers/ADL/Dashboard/DashboardPage';
+// System Pages Routes
+import ManageUser from './containers/ADL/System/manageUser';
+import ManageVendor from './containers/ADL/System/manageVendor';
+import ManageAgency from './containers/ADL/System/manageAgency';
+import ManageCustomer from './containers/ADL/System/manageCustomer';
+import ManageActivity from './containers/ADL/System/manageActivity';
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
@@ -52,6 +58,7 @@ import LoginPage from './containers/extra_page/LoginPage';
 import lockPage from './containers/extra_page/lock';
 
 import Documents from './containers/doc/documents';
+import ManageProduct from './containers/ADL/Product/ManageProduct';
 
 
 export default (
@@ -61,8 +68,15 @@ export default (
     <Route path="404" component={NotFoundPage404} />
     <Route path="/" component={App}>
       <IndexRoute component={DashboardPage} />
-
+      {/* custom page start here */}
       <Route path="dashboard" component={DashboardPage} />
+      <Route path="manageUser" component={ManageUser} />
+      <Route path="manageVendor" component={ManageVendor} />
+      <Route path="manageAgency" component={ManageAgency} />
+      <Route path="manageCustomer" component={ManageCustomer} />
+      <Route path="manageActivity" component={ManageActivity} />
+      <Route path="manageProduct" component={ManageProduct} />
+      {/* custom page end here */}
 
       <Route path="button" component={Button} />
       <Route path="icon" component={Icon} />
