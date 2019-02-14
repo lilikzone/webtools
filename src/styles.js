@@ -29,7 +29,7 @@ const styles = {
   raisedButton: {
     marginRight: 10,
     marginBottom: 10,
-
+    marginTop: 25,
   },
   uploadButton: {
     verticalAlign: 'middle',
@@ -78,6 +78,9 @@ const styles = {
     marginBottom: 10,
     opacity: 0.7,
 
+  },
+  saveButton: {
+    backgroundColor: '#5cb85c !important',
   },
 };
 

@@ -52,6 +52,7 @@ import LoginPage from './containers/extra_page/LoginPage';
 import lockPage from './containers/extra_page/lock';
 
 import Documents from './containers/doc/documents';
+import ManageProduct from './containers/ADL/Product/ManageProduct';
 
 
 export default (
@@ -63,6 +64,10 @@ export default (
       <IndexRoute component={DashboardPage} />
 
       <Route path="dashboard" component={DashboardPage} />
+
+      {/* custom page start here */}
+      <Route path="manageProduct" component={ManageProduct} />
+      {/* custom page end here */}
 
       <Route path="button" component={Button} />
       <Route path="icon" component={Icon} />

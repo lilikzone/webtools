@@ -42,7 +42,6 @@ export default class FormPage extends React.Component {
         <h3 style={styles.navigation}>Form Page / Basic
         </h3>
         <div className="row">
-
           <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-5 ">
             <Paper style={styles.paper}>
               <Subheader>Form</Subheader>

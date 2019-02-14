@@ -130,7 +130,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'manageProduct'} />} />,
 
               ]}
             />
@@ -222,7 +222,7 @@ export class MenuList extends React.Component {
 
           </List>
 
-          <BottomNavigation  className="bottomNavigation">
+          {/* <BottomNavigation  className="bottomNavigation">
 
             <BottomNavigationItem
               label="Lock"
@@ -236,7 +236,7 @@ export class MenuList extends React.Component {
               onTouchTap={() => this.select(1)}
             />
 
-          </BottomNavigation>
+          </BottomNavigation> */}
           {this.props.isAuthenticated && <div className={classnames('app-content', {expanded: this.state.open})}>
             {this.props.children}
           </div>}
