@@ -68,15 +68,13 @@ export default (
     <Route path="404" component={NotFoundPage404} />
     <Route path="/" component={App}>
       <IndexRoute component={DashboardPage} />
-      {/* custom group */}
+      {/* custom page start here */}
       <Route path="dashboard" component={DashboardPage} />
       <Route path="manageUser" component={ManageUser} />
       <Route path="manageVendor" component={ManageVendor} />
       <Route path="manageAgency" component={ManageAgency} />
       <Route path="manageCustomer" component={ManageCustomer} />
       <Route path="manageActivity" component={ManageActivity} />
-
-      {/* custom page start here */}
       <Route path="manageProduct" component={ManageProduct} />
       {/* custom page end here */}
 

@@ -290,7 +290,7 @@ export default class ManageProduct extends React.Component {
                   dataArray={dataDummy}
                   draggable={true}
                   sortable={true}
-                  sortBy={{prop: 'country.name', order: 'asc'}} generateRowProps={generateRowProps}
+                  sortBy={{prop: 'id', order: 'desc'}} generateRowProps={generateRowProps}
                   pageSizeOptions={[5]}
                 />
               </div>
