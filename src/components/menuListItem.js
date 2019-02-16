@@ -110,7 +110,7 @@ export class MenuList extends React.Component {
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> location_on </FontIcon>}
               key={2}
               primaryText={strings.menu.homespassed}
-              containerElement={<Link to={'dashboard'} />}
+              containerElement={<Link to={'homesPassed'} />}
             />
 
             <ListItem
