@@ -82,6 +82,10 @@ const styles = {
   saveButton: {
     backgroundColor: '#5cb85c !important',
   },
+  map: {
+    width: '100%',
+    height: '500px',
+  },
 };
 
 export default styles;
