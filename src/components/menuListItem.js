@@ -97,11 +97,11 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageuser} containerElement={<Link to={'manageUser'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'manageVendor'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'manageAgency'} />} />,
-                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'manageCustomer'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.activityreport} containerElement={<Link to={'manageActivity'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageuser} containerElement={<Link to={'/admin/manageUser'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'/admin/manageVendor'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'/admin/manageAgency'} />} />,
+                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'/admin/manageCustomer'} />} />,
+                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.activityreport} containerElement={<Link to={'/admin/manageActivity'} />} />,
               ]}
             />
 
@@ -110,7 +110,7 @@ export class MenuList extends React.Component {
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> location_on </FontIcon>}
               key={2}
               primaryText={strings.menu.homespassed}
-              containerElement={<Link to={'homesPassed'} />}
+              containerElement={<Link to={'/admin/homesPassed'} />}
             />
 
             <ListItem
@@ -118,7 +118,7 @@ export class MenuList extends React.Component {
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> attach_money </FontIcon>}
               key={3}
               primaryText={strings.menu.taxmanagement}
-              containerElement={<Link to={'dashboard'} />}
+              containerElement={<Link to={'/admin/dashboard'} />}
             />
 
             <ListItem
@@ -129,7 +129,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'manageProduct'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'/admin/manageProduct'} />} />,
 
               ]}
             />
@@ -142,9 +142,9 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.customerdata} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.dailytrx} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.monthlytrx} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.customerdata} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.dailytrx} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.monthlytrx} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
             />
 
@@ -153,7 +153,7 @@ export class MenuList extends React.Component {
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> person </FontIcon>}
               key={4}
               primaryText={strings.menu.salesuser}
-              containerElement={<Link to={'dashboard'} />}
+              containerElement={<Link to={'/admin/dashboard'} />}
             />
 
             <ListItem
@@ -165,8 +165,8 @@ export class MenuList extends React.Component {
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
 
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createsalesorder} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createsalesorder} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
             />
 
@@ -175,7 +175,7 @@ export class MenuList extends React.Component {
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> directions_walk </FontIcon>}
               key={5}
               primaryText={strings.menu.msuser}
-              containerElement={<Link to={'dashboard'} />}
+              containerElement={<Link to={'/admin/dashboard'} />}
             />
 
             <ListItem
@@ -186,7 +186,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
             />
 
@@ -198,8 +198,8 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.ticket} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.ticket} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'/admin/dashboard'} />} />,
 
               ]}
             />

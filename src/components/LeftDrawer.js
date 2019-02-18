@@ -70,7 +70,7 @@ const LeftDrawer = (props) => {
   return (
     <Drawer docked={true} containerClassName="sideBar"  containerStyle={style_} open={navDrawerOpen}>
       <div style={styles.logoWrap}>
-        <img style={styles.logo} src="./assets/images/xl-logo.png" />
+        <img style={styles.logo} src="/assets/images/xl-logo.png" />
         {/* <span style={styles.mareText} className="mareText">MARE ADMIN</span> */}
       </div>
       {/* <Paper style={styles.avatar.div} >

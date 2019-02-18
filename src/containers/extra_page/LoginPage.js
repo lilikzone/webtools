@@ -13,19 +13,19 @@ import FontIcon from 'material-ui/FontIcon';
 import IconTextField from '../../components/iconedtextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Avatar from 'material-ui/Avatar';
+import {Row} from 'react-flexbox-grid';
+import Subheader from 'material-ui/Subheader';
 import './loginPage.scss';
 const LoginPage = () => {
   const styles = {
     loginContainer: {
-      minWidth: 320,
-      maxWidth: 400,
-      height: 'auto',
+      minHeight: 700,
       position: 'absolute',
-      top: '5%',
-      left: 0,
+      top: 0,
       right: 0,
       margin: 'auto',
-
+      backgroundColor: 'rgba(0, 9, 22, 0.8)',
+      color: '#fff',
     },
 
     footer: {
@@ -84,102 +84,45 @@ const LoginPage = () => {
       marginLeft: 10,
     },
     title: {
-      fontSize: '3em',
+      fontSize: '2em',
       textAlign: 'center',
       marginBottom: 10,
       marginTop: 10,
     },
     avatar: {
-
       marginLeft: '33%',
     },
   };
 
   return (
     <MuiThemeProvider muiTheme={ThemeDefault}>
-      <div>
+      <div className="login-background">
+        <Row>
+          <div className="card-content" style={styles.loginContainer}>
+            <h3 style={styles.title}>SIGN IN</h3>
+            <form>
+              <IconTextField hint="Username" label="Username" name="username" icon="perm_identity" floatingLabelStyle={{color: 'white'}} style={{color: 'white'}} type="text" />
+              <IconTextField hint="Password" label="Password" name="password" icon="https" floatingLabelStyle={{color: 'white'}} style={{color: 'white'}} type="password" />
+              <Link to="./" className="forMobileButton">
+                <RaisedButton
+                  fullWidth={true}
+                  label="Login"
+                  primary={true}
+                  style={styles.loginBtn}
+                />
+                <br />
+                <br />
+              </Link>
 
-        <div style={styles.loginContainer}>
-          <Paper className="card loginCard" zDepth={4}>
-            <div className="card-header loginCard-header" data-background-color="red">
-              <Avatar
-                style={styles.avatar}
-                src="./assets/images/avatar/3.jpg"
-                size={100}
-              />
-              <h4 style={styles.title} className="title">Mare Admin</h4>
+              <div style={styles.controls} className="displayNone">
 
-              <div style={styles.buttonsDiv}>
-
-                <FloatingActionButton mini={true} style={styles.floatbutton}>
-                  <FontIcon className="material-icons">
-                    mic
-                  </FontIcon>
-                </FloatingActionButton>
-                <FloatingActionButton mini={true} style={styles.floatbutton}>
-                  <FontIcon className="material-icons">
-                    vpn_key
-                  </FontIcon>
-                </FloatingActionButton>
-                <FloatingActionButton mini={true} style={styles.floatbutton}>
-                  <FontIcon className="material-icons">
-                    security
-                  </FontIcon>
-                </FloatingActionButton>
-
-              </div>
-            </div>
-            <div className="card-content">
-              <form>
-                <IconTextField hint="Name" label="Enter Your Name" icon="perm_identity" />
-                <IconTextField hint="E-Mail" label="Enter Your Email" icon="email" />
-                <IconTextField hint="Password" label="Enter Your Password" icon="https" />
-                <Link to="./" className="forMobileButton">
-                  <RaisedButton
-                    fullWidth={true}
-                    label="Login"
-                    primary={true}
-                    style={styles.loginBtn}
-                  />
-                  <br />
-                  <br />
+                <Link to="/admin">
+                  <RaisedButton label="Login" primary={true} style={styles.loginBtn} />
                 </Link>
-
-                <div style={styles.controls} className="displayNone">
-                  <Checkbox
-                    label="Remember me"
-                    style={styles.checkRemember.style}
-                    labelStyle={styles.checkRemember.labelStyle}
-                    iconStyle={styles.checkRemember.iconStyle}
-                  />
-
-                  <Link to="./">
-                    <RaisedButton label="Login" primary={true} style={styles.loginBtn} />
-                  </Link>
-                </div>
-              </form>
-            </div>
-            <div className="card-footer displayNone" style={styles.footer}>
-              <div style={styles.buttonsDiv}>
-                <FlatButton
-                  label="Register"
-                  href="./"
-                  style={styles.flatButton}
-                  icon={<PersonAdd />}
-                />
-
-                <FlatButton
-                  label="Forgot Password?"
-                  href="./"
-                  style={styles.flatButton}
-                  icon={<Help />}
-                />
               </div>
-
-            </div>
-          </Paper>
-
-        </div>
+            </form>
+          </div>
+        </Row>
       </div>
     </MuiThemeProvider>
   );

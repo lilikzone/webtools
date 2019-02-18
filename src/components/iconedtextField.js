@@ -12,6 +12,10 @@ const IconTextField = function statelessFunctionComponentClass(props) {
           hintText={`${props.hint}`}
           floatingLabelText={`${props.label}`}
           className="form-control" fullWidth={true}
+          name={`${props.name}`}
+          floatingLabelStyle={props.floatingLabelStyle}
+          style={props.style}
+          type={`${props.type}`}
         />
 
       </div>

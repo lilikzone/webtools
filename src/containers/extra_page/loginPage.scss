@@ -4,18 +4,57 @@ $tablet: "(min-width: 768px) and (max-width: 1023px)";
 $desktop: "(min-width: 1024px)";
 
 
+.card .loginCard{
+  border:none;
+}
+.login-background{
+  background: url(../../assets/images/login-background.jpg);
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.card-content{
+  padding-right:20px;
+  padding-left:20px;
+  padding-top: 12%;
+  min-width: 350px;
+}
+
+input[type=text],input[type=password]{
+  color:white !important;
+}
+
 @media #{$mobile} {
- 
+
    .forMobileButton {
    display: block!important;
   }
-  .loginCard{
-    margin:-30px 0 0 0!important
+  .card-content {
+    min-width: 100% ;
   }
-  .loginCard-header{
-    margin: 0!important;
-    border-radius: 0!important
+
+  form{
+    padding: 0 20px;
   }
+
+  .card-content{
+    padding-right: 0;
+    padding-left: 0;
+  }
+  // .loginCard{
+  //   margin:-30px 0 0 0!important
+  // }
+  // .loginCard-header{
+  //   margin: 0!important;
+  //   border-radius: 0!important
+  // }
 }
 
 @media #{$tablet} {
@@ -27,6 +66,8 @@ $desktop: "(min-width: 1024px)";
  .forMobileButton {
    display: none!important
   }
+
+
 }
 
 

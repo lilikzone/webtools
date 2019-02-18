@@ -68,7 +68,7 @@ export default (
     <Route path="login" component={LoginPage} />
     <Route path="lock" component={lockPage} />
     <Route path="404" component={NotFoundPage404} />
-    <Route path="/" component={App}>
+    <Route path="/admin" component={App}>
       <IndexRoute component={DashboardPage} />
       {/* custom page start here */}
       <Route path="dashboard" component={DashboardPage} />
