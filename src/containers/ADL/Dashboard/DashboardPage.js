@@ -5,7 +5,6 @@ import Face from 'material-ui/svg-icons/action/face';
 import ThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import InfoBox from '../../../components/dashboard/InfoBox';
-import InfoBoxes from '../../../components/dashboard/InfoBoxes';
 import {Row, Col} from 'react-flexbox-grid';
 import WebsiteViews from '../../../components/dashboard/WebsiteViews';
 import CompletedTasks from '../../../components/dashboard/CompletedTasks';

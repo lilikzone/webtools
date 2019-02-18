@@ -11,7 +11,7 @@ import ManageAgency from './containers/ADL/System/manageAgency';
 import ManageCustomer from './containers/ADL/System/manageCustomer';
 import ManageActivity from './containers/ADL/System/manageActivity';
 // Homespassed
-import HomesPassed from './containers/ADL/HomesPassed/HomesPassed';
+import HomesPassed from './containers/ADL/Homespassed/Homespassed';
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
