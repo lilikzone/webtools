@@ -116,7 +116,7 @@ const LoginPage = () => {
 
               <div style={styles.controls} className="displayNone">
 
-                <Link to="./">
+                <Link to="/admin/1231231231231231">
                   <RaisedButton label="Login" primary={true} style={styles.loginBtn} />
                 </Link>
               </div>

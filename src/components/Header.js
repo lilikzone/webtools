@@ -196,7 +196,7 @@ class Header extends React.Component {
 
           iconElementRight={<CustomDiv style={style.iconsRightContainer}>
             <FlatButton>
-              <img style={style.customAvatar} src="./assets/images/avatar.png" />
+              <img style={style.customAvatar} src="/assets/images/avatar.png" />
             </FlatButton>
             <FlatButton
               className="header-username"

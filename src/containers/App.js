@@ -131,6 +131,7 @@ class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({defaultLoading: false});
+      console.log(this.props.params);
     }, 300);
 
     if (window.innerWidth < 800) {
