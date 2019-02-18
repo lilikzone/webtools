@@ -72,7 +72,7 @@ export default (
       <IndexRoute component={DashboardPage} />
       {/* custom page start here */}
       <Route path="dashboard" component={DashboardPage} />
-      <Route path="manageUser" component={ManageUser} />
+      <Route path="manageUser/:role" component={ManageUser} />
       <Route path="manageVendor" component={ManageVendor} />
       <Route path="manageAgency" component={ManageAgency} />
       <Route path="manageCustomer" component={ManageCustomer} />

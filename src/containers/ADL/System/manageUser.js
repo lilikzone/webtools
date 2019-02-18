@@ -152,7 +152,7 @@ const generateRowProps = (row) => {
   return options;
 };
 
-export default class ManageUser extends React.Component {
+export default class ManageUser extends React.PureComponent {
   constructor(props) {
     super(props);
     this.data = [
@@ -740,8 +740,11 @@ export default class ManageUser extends React.Component {
     });
     // this.data.push({'email': this.state.textField.email});
   }
+
   render() {
-    let _renderCreateUser = () => {
+    const params = this.props.params;
+    let _renderCreateUser = (props) => {
+      console.log(props);
       return (
         <div>
           <h3 style={styles.navigation}>Create User</h3>
@@ -904,6 +907,7 @@ export default class ManageUser extends React.Component {
         </div>
       );
     };
+
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
@@ -919,7 +923,7 @@ export default class ManageUser extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 0 && _renderCreateUser()}
+                {this.state.currentTab == 0 && _renderCreateUser(params)}
               </Tab>
               <Tab
                 value={1}
