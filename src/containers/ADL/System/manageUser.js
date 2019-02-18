@@ -28,6 +28,7 @@ const dataRole = [
   'CS',
   'CS External',
 ];
+const vendorShowRole = ['manageservice', 'dispatcher', 'installer', 'admin'];
 const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -642,6 +643,9 @@ export default class ManageUser extends React.PureComponent {
         vendor: '',
         agency: '',
       },
+      user: {
+        role: 'test',
+      },
     };
   }
 
@@ -745,6 +749,7 @@ export default class ManageUser extends React.PureComponent {
     const params = this.props.params;
     let _renderCreateUser = (props) => {
       console.log(props);
+      const user_data = this.state.user;
       return (
         <div>
           <h3 style={styles.navigation}>Create User</h3>
@@ -837,7 +842,7 @@ export default class ManageUser extends React.PureComponent {
                     }}
                     errorText={!this.state.isRoleValid}
                   />
-                  <AutoComplete
+                  {vendorShowRole.includes(user_data.role) ? <AutoComplete
                     required={true}
                     fullWidth={true}
                     floatingLabelText="Vendor"
@@ -849,7 +854,8 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationVendor(input, dataSource);
                     }}
                     errorText={!this.state.isVendorValid}
-                  />
+                                                             /> : ''}
+
                   <AutoComplete
                     required={true}
                     fullWidth={true}
