@@ -12,23 +12,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Subheader} from 'material-ui';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+
 const dataGender = ['Male', 'Female'];
-const dataRole = [
-  'Admin',
-  'Homepassed',
-  'Operation',
-  'Product',
-  'Finance',
-  'Internal Sales',
-  'Sales Admin',
-  'Sales',
-  'Manage Service',
-  'Dispacher',
-  'Installer',
-  'CS',
-  'CS External',
-];
+
 const vendorShowRole = ['manageservice', 'dispatcher', 'installer', 'admin'];
+const agencyShowRole = ['internalsales', 'salesadmin', 'sales', 'admin'];
 const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -644,9 +634,57 @@ export default class ManageUser extends React.PureComponent {
         agency: '',
       },
       user: {
-        role: 'test',
+        role: 'manageservice',
       },
+      dataRole: '',
     };
+  }
+
+  _dataRole(role) {
+    if (role === 'manageservice') {
+      return [{
+        'value': 'dispatcher',
+        'name': 'Dispatcher',
+      }, {
+        'value': 'installer',
+        'name': 'Installer',
+      }];
+    }
+
+    if (role === 'dispatcher') {
+      return [{'value': 'installer',
+        'name': 'installer'}];
+    }
+
+    if (role === 'admin') {
+      return [
+        {'name': 'Admin', 'value': 'admin'},
+        {'name': 'Homepassed', 'value': 'homepassed'},
+        {'name': 'Operation', 'value': 'operation'},
+        {'name': 'Product', 'value': 'product'},
+        {'name': 'Finance', 'value': 'finance'},
+        {'name': 'Internal Sales', 'value': 'internalsales'},
+        {'name': 'Sales Admin', 'value': 'salesadmin'},
+        {'name': 'Sales', 'value': 'sales'},
+        {'name': 'Manage Service', 'value': 'manageservice'},
+        {'name': 'Dispacher', 'value': 'dispacher'},
+        {'name': 'Installer', 'value': 'installer'},
+        {'name': 'CS', 'value': 'cs'},
+        {'name': 'CS External', 'value': 'csexternal'},
+      ];
+    }
+
+    if (role === 'internalsales') {
+      return [{'name': 'Sales Admin', 'value': 'salesadmin'},
+      {'name': 'Sales', 'value': 'sales'}];
+    }
+  }
+
+  componentWillMount() {
+    const role = this.state.user.role;
+    console.log(role);
+    const dataRole = this._dataRole(role);
+    this.setState({dataRole: dataRole});
   }
 
   _handleTouchTap() {
@@ -747,8 +785,10 @@ export default class ManageUser extends React.PureComponent {
 
   render() {
     const params = this.props.params;
+    // console.log(this.state.dataRole);
     let _renderCreateUser = (props) => {
-      console.log(props);
+      // console.log(props);
+      const dataRole = this.state.dataRole;
       const user_data = this.state.user;
       return (
         <div>
@@ -829,7 +869,7 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationNumber(e, input);
                     }}
                   />
-                  <AutoComplete
+                  {/* <AutoComplete
                     required={true}
                     fullWidth={true}
                     floatingLabelText="Role"
@@ -841,7 +881,20 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationRole(input, dataSource);
                     }}
                     errorText={!this.state.isRoleValid}
-                  />
+                  /> */}
+
+                  <SelectField
+                    fullWidth={true}
+                    floatingLabelText="Role"
+                    name="role"
+                  >
+                    {dataRole.map((data, j) => {
+                      return (<MenuItem key={j} value={data.value} primaryText={data.name} />);
+                    })}
+
+                  </SelectField>
+
+
                   {vendorShowRole.includes(user_data.role) ? <AutoComplete
                     required={true}
                     fullWidth={true}
@@ -855,8 +908,7 @@ export default class ManageUser extends React.PureComponent {
                     }}
                     errorText={!this.state.isVendorValid}
                                                              /> : ''}
-
-                  <AutoComplete
+                  {agencyShowRole.includes(user_data.role) ? <AutoComplete
                     required={true}
                     fullWidth={true}
                     floatingLabelText="Agency"
@@ -868,7 +920,8 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationAgency(input, dataSource);
                     }}
                     errorText={!this.state.isAgencyValid}
-                  />
+                                                             /> : ''}
+
                   <RaisedButton
                     label="Register"
                     secondary={true}
