@@ -12,6 +12,8 @@ import ManageCustomer from './containers/ADL/System/manageCustomer';
 import ManageActivity from './containers/ADL/System/manageActivity';
 // Homespassed
 import HomesPassed from './containers/ADL/Homespassed/Homespassed';
+// Sales Management
+import SalesOrder from './containers/ADL/SalesOrder/SalesOrder';
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
@@ -79,6 +81,7 @@ export default (
       <Route path="manageActivity" component={ManageActivity} />
       <Route path="manageProduct" component={ManageProduct} />
       <Route path="homesPassed" component={HomesPassed} />
+      <Route path="salesOrder" component={SalesOrder} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />

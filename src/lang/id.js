@@ -20,6 +20,7 @@ const id = {
     salesmanagement: 'Pengaturan sales',
     createsalesorder: 'Membuat sales order',
     trackorder: 'Lacak order',
+    salesinvoice: 'Tagihan sales',
     msuser: 'Pengaturan user MS',
     workorder: 'Work order',
     reportorder: 'Laporan work order',

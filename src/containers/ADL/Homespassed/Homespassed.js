@@ -8,11 +8,12 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import {MaterialContainer} from 'react-table-components';
 import {blue400, teal300, red400} from 'material-ui/styles/colors';
+import {CSVLink, CSVDownload} from 'react-csv';
 import 'react-leaflet-markercluster/dist/styles.min.css';
 import 'leaflet/dist/leaflet.css';
 import {RaisedButton} from 'material-ui';
 const style = {
-  uploadInput: {
+  tableButton: {
     cursor: 'pointer',
     position: 'absolute',
     top: 0,
@@ -23,6 +24,15 @@ const style = {
     opacity: 0,
   },
 };
+// generate Marker
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
 export default class HomePassed extends React.Component {
   constructor(props) {
     super(props);
@@ -73,6 +83,19 @@ export default class HomePassed extends React.Component {
         },
       ],
     };
+    this.dataImport = [
+      {
+        id: '6584278700',
+        file: (
+          <a download="file.csv" href="/images/myw3schoolsimage.jpg">
+            file.csv
+          </a>
+        ),
+        size: '100 kB',
+        status: 'Success',
+        date: '18 February 2019',
+      },
+    ];
   }
   _mapEvent(event) {
     const {lat, lng} = event.target.getCenter();
@@ -119,8 +142,8 @@ export default class HomePassed extends React.Component {
           title: 'ID',
           prop: 'id',
           width: '4%',
-          headerClass: 'mdl-data-table__cell--numeric',
-          cellClass: 'mdl-data-table__cell--numeric',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
         },
         {
           id: 2,
@@ -151,8 +174,8 @@ export default class HomePassed extends React.Component {
           title: 'Residence',
           prop: 'residence',
           width: '4%',
-          headerClass: 'mdl-data-table__cell--numeric',
-          cellClass: 'mdl-data-table__cell--numeric',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
         },
         {
           id: 6,
@@ -198,7 +221,7 @@ export default class HomePassed extends React.Component {
           id: 11,
           title: 'RT',
           prop: 'RT',
-          width: '4%',
+          width: '2%',
           headerClass: 'mdl-data-table__cell--non-numeric',
           cellClass: 'mdl-data-table__cell--non-numeric',
         },
@@ -206,7 +229,7 @@ export default class HomePassed extends React.Component {
           id: 12,
           title: 'RW',
           prop: 'RW',
-          width: '4%',
+          width: '2%',
           headerClass: 'mdl-data-table__cell--non-numeric',
           cellClass: 'mdl-data-table__cell--non-numeric',
         },
@@ -220,6 +243,12 @@ export default class HomePassed extends React.Component {
         },
         // {id: 10, title: 'Action', render: DeleteBtn, width: '10%', headerClass: 'mdl-data-table__cell--non-numeric'},
       ];
+      const csvData = [
+        ['firstname', 'lastname', 'email'],
+        ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
+        ['Raed', 'Labes', 'rl@smthing.co.com'],
+        ['Yezzi', 'Min l3b', 'ymin@cocococo.com'],
+      ];
       return (
         <div>
           <Row>
@@ -227,21 +256,17 @@ export default class HomePassed extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <RaisedButton
-                    label={'IMPORT'}
-                    backgroundColor={teal300}
-                    labelColor={'white'}
-                    style={{marginRight: 10, marginTop: 10}}
-                  >
-                    <input type="file" style={style.uploadInput} />
-                  </RaisedButton>
-
-                  <RaisedButton
-                    label={'EXPORT'}
-                    labelColor={'white'}
                     backgroundColor={red400}
                     style={{marginTop: 10}}
                   >
-                    <input type="submit" style={style.uploadInput} />
+                    <CSVLink
+                      data={csvData}
+                      filename={'my-file.csv'}
+                      style={{color: 'white'}}
+                      target="_blank"
+                    >
+                      EXPORT
+                    </CSVLink>
                   </RaisedButton>
 
                   <MaterialContainer
@@ -251,7 +276,7 @@ export default class HomePassed extends React.Component {
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}
-                    draggable={false}
+                    draggable={true}
                     sortable={false}
                     sortBy={{prop: 'id', order: 'asc'}}
                     pageSizeOptions={[5]}
@@ -263,34 +288,123 @@ export default class HomePassed extends React.Component {
         </div>
       );
     };
+    let _renderImport = () => {
+      const columns = [
+        {
+          id: 1,
+          title: 'ID',
+          prop: 'id',
+          width: '20%',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
+        },
+        {
+          id: 2,
+          title: 'File',
+          prop: 'file',
+          width: '20%',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
+        },
+        {
+          id: 3,
+          title: 'Size',
+          prop: 'size',
+          width: '20%',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
+        },
+        {
+          id: 4,
+          title: 'Status',
+          prop: 'status',
+          width: '20%',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
+        },
+        {
+          id: 5,
+          title: 'Date',
+          prop: 'date',
+          width: '20%',
+          headerClass: 'mdl-data-table__cell--non-numeric',
+          cellClass: 'mdl-data-table__cell--non-numeric',
+        },
+      ];
+      return (
+        <Row>
+          <Col xs={12} md={12} lg={12}>
+            <div className="mdl-layout mdl-layout--no-drawer-button container">
+              <div className="mdl-layout--fixed-drawer" id="asa">
+                <RaisedButton
+                  label="IMPORT"
+                  labelPosition="before"
+                  labelColor={'white'}
+                  backgroundColor={teal300}
+                  style={{marginTop: 10}}
+                  containerElement="label"
+                >
+                  <input type="file" style={style.tableButton} />
+                </RaisedButton>
+                <MaterialContainer
+                  keys="id"
+                  className="mdl-data-table"
+                  columns={columns}
+                  // onDragColumn={(columns) => console.log(columns)}
+                  // onChangeColumnsVisibility={(columns) => console.log(columns)}
+                  dataArray={this.dataImport}
+                  draggable={false}
+                  sortable={false}
+                  sortBy={{prop: 'id', order: 'asc'}}
+                  pageSizeOptions={[5]}
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+      );
+    };
     return (
       <Paper style={styles.paper}>
-        <Col xs={12} md={12} lg={12}>
-          <Tabs value={this.state.currentTab}>
-            <Tab
-              value={0}
-              label="Homespassed Map"
-              onActive={(val) => {
-                this.setState({
-                  currentTab: val.props.index,
-                });
-              }}
-            >
-              {this.state.currentTab == 0 && _renderMap()}
-            </Tab>
-            <Tab
-              value={1}
-              label="Homespassed List"
-              onActive={(val) => {
-                this.setState({
-                  currentTab: val.props.index,
-                });
-              }}
-            >
-              {_renderTable()}
-            </Tab>
-          </Tabs>
-        </Col>
+        <Row className="m-b-15">
+          <Col xs={12} md={12} lg={12}>
+            <Tabs value={this.state.currentTab}>
+              <Tab
+                value={0}
+                label="Homespassed Map"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab == 0 && _renderMap()}
+              </Tab>
+              <Tab
+                value={1}
+                label="Homespassed List"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {_renderTable()}
+              </Tab>
+              <Tab
+                value={2}
+                label="Import Files"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {_renderImport()}
+              </Tab>
+            </Tabs>
+          </Col>
+        </Row>
       </Paper>
     );
   }
