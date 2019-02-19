@@ -10,6 +10,7 @@ import ManageVendor from './containers/ADL/System/manageVendor';
 import ManageAgency from './containers/ADL/System/manageAgency';
 import ManageCustomer from './containers/ADL/System/manageCustomer';
 import ManageActivity from './containers/ADL/System/manageActivity';
+import ManageVA from './containers/ADL/System/manageVA';
 // Homespassed
 import HomesPassed from './containers/ADL/Homespassed/Homespassed';
 // Sales Management
@@ -81,6 +82,7 @@ export default (
       <Route path="manageAgency" component={ManageAgency} />
       <Route path="manageCustomer" component={ManageCustomer} />
       <Route path="manageActivity" component={ManageActivity} />
+      <Route path="manageVA" component={ManageVA} />
       <Route path="manageProduct" component={ManageProduct} />
       <Route path="homesPassed" component={HomesPassed} />
       <Route path="salesOrder" component={SalesOrder} />

@@ -4,21 +4,29 @@ import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
 
+const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
   </div>
 );
 
+const EditBtn = () => (
+  <div className="text-center">
+    <button className="mdl-button mdl-button--raised">Edit</button>
+  </div>
+);
 
 const DeleteBtn = () => (
   <div className="text-center">
@@ -34,8 +42,7 @@ const CheckBtn = () => (
   </div>
 );
 
-
-export default class ManageAgency extends React.Component {
+export default class ManageVA extends React.Component {
   constructor(props) {
     super(props);
     this.data = [
@@ -506,16 +513,25 @@ export default class ManageAgency extends React.Component {
       },
     ];
     this.state = {
+      isGenderValid: true,
+      isEmailValid: true,
+      isPhoneValid: true,
+      isRoleValid: true,
+      isVendorValid: true,
       isAgencyValid: true,
       isRegistered: false,
-      currentTab: 0,
       onEdit: false,
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
       textField: {
-        code: '',
-        agency: '',
+        va: '',
+        issuer: '',
+        partner: '',
+        paymentType: '',
+        cred1: '',
+        cred2: '',
+        cred3: '',
       },
       dataTable: this.data,
     };
@@ -524,20 +540,21 @@ export default class ManageAgency extends React.Component {
         <button
           className="mdl-button mdl-button--raised"
           onClick={() =>
-           this.setState({
-             onEdit: true,
-             idTemp: data.id,
-             codeTemp: data.code,
-             nameTemp: data.name,
-           })
-         }
+            this.setState({
+              onEdit: true,
+              idTemp: data.id,
+              codeTemp: data.code,
+              nameTemp: data.name,
+            })
+          }
         >
-        Edit</button>
+          Edit
+        </button>
       </div>
     );
     this.columns = [
       {
-        id: 1,
+        id: 0,
         title: 'Id',
         prop: 'id',
         width: '20%',
@@ -545,30 +562,70 @@ export default class ManageAgency extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 1,
+        title: 'VA',
+        prop: 'va',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 2,
-        title: 'Code',
-        prop: 'code',
+        title: 'Issuer',
+        prop: 'issuer',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 3,
-        title: 'Agency Name',
-        prop: 'agency',
+        title: 'Partner',
+        prop: 'partner',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 4,
+        title: 'Partner Type',
+        prop: 'partnerType',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'Cred 1',
+        prop: 'cred1',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'Cred 2',
+        prop: 'cred2',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Cred 3',
+        prop: 'cred3',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
         title: '',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 5,
+        id: 9,
         title: '',
         render: DeleteBtn,
         width: '2%',
@@ -580,19 +637,12 @@ export default class ManageAgency extends React.Component {
   _handleTouchTap() {
     this.data.push({
       code: this.state.textField.code,
-      agency: this.state.textField.agency,
+      vendor: this.state.textField.vendor,
     });
     this.setState({
       dataTable: this.data,
-      currentTab: 1,
       isRegistered: true,
       textField: {},
-    });
-  }
-
-  _handleClose() {
-    this.setState({
-      onEdit: false,
     });
   }
 
@@ -607,18 +657,145 @@ export default class ManageAgency extends React.Component {
       textField: {...this.state.textField, code: data},
     });
   }
+  _handleClose() {
+    this.setState({
+      onEdit: false,
+    });
+  }
 
   render() {
     let actions = [
       <FlatButton
-        label="Cancel" primary={true}
+        label="Cancel"
+        primary={true}
         onTouchTap={() => this._handleClose()}
-      />, <FlatButton
-        label="Submit" primary={true}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleClose()}
-          />,
+      />,
     ];
+    let _renderSelection = (data) => {
+      return data.map((val, index) => {
+        return <MenuItem key={index} value={val} primaryText={val} />;
+      });
+    };
+    let _renderCreateVA = () => {
+      return (
+        <div>
+          <h3 style={styles.navigation}>Create VA</h3>
+          <Row>
+            <Col xs={12} md={12} lg={12}>
+              <form>
+                <Col xs={12} md={6} lg={6}>
+                  <TextField
+                    required={true}
+                    hintText="VA"
+                    value={this.state.textField.va}
+                    floatingLabelText="VA"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, va: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    hintText="Issuer"
+                    value={this.state.textField.issuer}
+                    floatingLabelText="Issuer"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, issuer: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    hintText="Partner"
+                    value={this.state.textField.partner}
+                    floatingLabelText="Partner"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, partner: input},
+                      });
+                    }}
+                  />
+                  <SelectField
+                    floatingLabelText="Payment Type"
+                    value={this.state.textField.paymentType}
+                    fullWidth={true}
+                    onChange={(e, index, value) => {
+                      this.setState({
+                        textField: {
+                          ...this.state.textField,
+                          paymentType: value,
+                        },
+                      });
+                    }}
+                  >
+                    {_renderSelection(paymentType)}
+                  </SelectField>
+                  <TextField
+                    required={true}
+                    hintText="Cred 1"
+                    value={this.state.textField.cred1}
+                    floatingLabelText="Cred 1"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, cred1: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    hintText="Cred 2"
+                    value={this.state.textField.cred2}
+                    floatingLabelText="Cred 2"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, cred2: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    hintText="Cred 3"
+                    value={this.state.textField.cred1}
+                    floatingLabelText="Cred 3"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, cred3: input},
+                      });
+                    }}
+                  />
+                  <RaisedButton
+                    label="Create"
+                    secondary={true}
+                    style={styles.raisedButton}
+                    onTouchTap={() => this._handleTouchTap()}
+                  />
+                  <Snackbar
+                    open={this.state.isRegistered}
+                    message="VA Added"
+                    autoHideDuration={4000}
+                    bodyStyle={{backgroundColor: 'teal'}}
+                  />
+                </Col>
+              </form>
+            </Col>
+          </Row>
+        </div>
+      );
+    };
     let _renderModalComponent = () => {
       return (
         <div>
@@ -649,8 +826,8 @@ export default class ManageAgency extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
-            hintText="Agency Name"
-            floatingLabelText="Agency Name"
+            hintText="Name"
+            floatingLabelText="Name"
             value={this.state.nameTemp}
             onChange={(e, input) => {
               this.setState({
@@ -661,60 +838,10 @@ export default class ManageAgency extends React.Component {
         </div>
       );
     };
-    let _renderCreateAgency = () => {
+    let _renderManageVA = () => {
       return (
         <div>
-          <h3 style={styles.navigation}>Create Agency</h3>
-          <Row>
-            <Col xs={12} md={12} lg={12}>
-              <form>
-                <Col xs={12} md={6} lg={6}>
-                  <TextField
-                    required={true}
-                    hintText="Code"
-                    value={this.state.textField.code}
-                    floatingLabelText="Code"
-                    fullWidth={true}
-                    onChange={(e, input) => {
-                      this._handleValidationCode(e, input);
-                    }}
-                  />
-
-                  <TextField
-                    required={true}
-                    hintText="Agency Name"
-                    floatingLabelText="Agency Name"
-                    fullWidth={true}
-                    value={this.state.textField.agency}
-                    onChange={(e, input) => {
-                      this.setState({
-                        textField: {...this.state.textField, agency: input},
-                      });
-                    }}
-                  />
-                  <RaisedButton
-                    label="Create"
-                    secondary={true}
-                    style={styles.raisedButton}
-                    onTouchTap={() => this._handleTouchTap()}
-                  />
-                  <Snackbar
-                    open={this.state.isRegistered}
-                    message="Agency Added"
-                    autoHideDuration={4000}
-                    bodyStyle={{backgroundColor: 'teal'}}
-                  />
-                </Col>
-              </form>
-            </Col>
-          </Row>
-        </div>
-      );
-    };
-    let _renderManageUser = () => {
-      return (
-        <div>
-          <h3 style={styles.navigation}>Manage Agency</h3>
+          <h3 style={styles.navigation}>Manage VA</h3>
           <Row>
             <Col xs={12} md={12} lg={12}>
               <div className="mdl-layout mdl-layout--no-drawer-button container">
@@ -753,38 +880,15 @@ export default class ManageAgency extends React.Component {
         <Grid item={true} xs={10} md={12} lg={12}>
           <Paper style={styles.paper}>
             <Col xs={12} md={12} lg={12}>
-              <Tabs value={this.state.currentTab}>
-                <Tab
-                  value={0}
-                  label="Create Agency"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                      isRegistered: false,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 0 && _renderCreateAgency()}
+              <Tabs initialSelectedIndex={0}>
+                <Tab key={1} label="Create VA">
+                  {_renderCreateVA()}
                 </Tab>
-                <Tab
-                  value={1}
-                  label="Manage Agency"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 1 && _renderManageUser()}
+                <Tab key={2} label="Manage VA">
+                  {_renderManageVA()}
                 </Tab>
               </Tabs>
             </Col>
-            <Snackbar
-              open={this.state.isRegistered}
-              message="Agency Added"
-              autoHideDuration={4000}
-              bodyStyle={{backgroundColor: 'teal'}}
-            />
           </Paper>
         </Grid>
       </Row>

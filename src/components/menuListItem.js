@@ -101,7 +101,8 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.managevendor} containerElement={<Link to={'/admin/manageVendor'} />} />,
                 <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageagency} containerElement={<Link to={'/admin/manageAgency'} />} />,
                 <ListItem style={styles_list_item} key={4} primaryText={strings.menu.managecustomer} containerElement={<Link to={'/admin/manageCustomer'} />} />,
-                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.activityreport} containerElement={<Link to={'/admin/manageActivity'} />} />,
+                <ListItem style={styles_list_item} key={5} primaryText={strings.menu.manageva} containerElement={<Link to={'/admin/manageVA'} />} />,
+                <ListItem style={styles_list_item} key={6} primaryText={strings.menu.activityreport} containerElement={<Link to={'/admin/manageActivity'} />} />,
               ]}
             />
 
