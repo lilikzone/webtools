@@ -13,6 +13,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Subheader} from 'material-ui';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 const dataGender = ['Male', 'Female'];
 const dataRole = [
   'Admin',
@@ -42,11 +44,6 @@ const UserPic = (row) => (
   </div>
 );
 
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
 
 const DeleteBtn = () => (
   <div className="text-center">
@@ -61,153 +58,6 @@ const CheckBtn = () => (
     <Checkbox iconStyle={styles.checkbox} />
   </div>
 );
-const columns = [
-  // id','name','email','role','is_admin','created_at','updated_at
-  // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {
-    id: 1,
-    title: 'id',
-    prop: 'id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Subscriber ID',
-    prop: 'subscriberId',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Customer Name',
-    prop: 'customerName',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 3,
-    title: 'DOB',
-    prop: 'dob',
-    width: '5.5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'DOB Place',
-    prop: 'dobPlace',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 5,
-    title: 'Type ID',
-    prop: 'typeId',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 6,
-    title: 'ID Number',
-    prop: 'idNumber',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'ID Address',
-    prop: 'idAddress',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 8,
-    title: 'Primary Phone',
-    prop: 'primaryPhone',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 9,
-    title: 'Alternative Phone 1',
-    prop: 'alternativePhone1',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 10,
-    title: 'Alternative Phone 2',
-    prop: 'alternativePhone2',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 11,
-    title: 'Email',
-    prop: 'email',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 12,
-    title: 'Alternative Email',
-    prop: 'alternativeEmail',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 13,
-    title: 'Created At',
-    prop: 'createdAt',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 14,
-    title: 'Balance',
-    prop: 'balance',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 15,
-    title: 'Due Date',
-    prop: 'dueDate',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 16,
-    title: 'Action',
-    render: EditBtn,
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 17,
-    title: 'Action',
-    render: DeleteBtn,
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-];
 
 const generateRowProps = (row) => {
   const options = {};
@@ -691,6 +541,10 @@ export default class ManageCustomer extends React.Component {
       },
     ];
     this.state = {
+      onEdit: false,
+      nameTemp: '',
+      emailTemp: '',
+      phoneNumberTemp: '',
       isGenderValid: true,
       isEmailValid1: true,
       isEmailValid2: true,
@@ -715,6 +569,175 @@ export default class ManageCustomer extends React.Component {
         alternativeEmail: '',
       },
     };
+    const EditBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() =>
+           this.setState({
+             onEdit: true,
+             nameTemp: data.name,
+             emailTemp: data.email,
+             phoneNumberTemp: data.phoneNumber,
+           })
+         }
+        >
+        Edit</button>
+      </div>
+    );
+    this.columns = [
+      // id','name','email','role','is_admin','created_at','updated_at
+      // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {
+        id: 1,
+        title: 'id',
+        prop: 'id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Subscriber ID',
+        prop: 'subscriberId',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Customer Name',
+        prop: 'customerName',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'DOB',
+        prop: 'dob',
+        width: '5.5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'DOB Place',
+        prop: 'dobPlace',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'Type ID',
+        prop: 'typeId',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'ID Number',
+        prop: 'idNumber',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'ID Address',
+        prop: 'idAddress',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'Primary Phone',
+        prop: 'primaryPhone',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
+        title: 'Alternative Phone 1',
+        prop: 'alternativePhone1',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Alternative Phone 2',
+        prop: 'alternativePhone2',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 11,
+        title: 'Email',
+        prop: 'email',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 12,
+        title: 'Alternative Email',
+        prop: 'alternativeEmail',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 13,
+        title: 'Created At',
+        prop: 'createdAt',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 14,
+        title: 'Balance',
+        prop: 'balance',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 15,
+        title: 'Due Date',
+        prop: 'dueDate',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 16,
+        title: 'Action',
+        render: EditBtn,
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 17,
+        title: 'Action',
+        render: DeleteBtn,
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
+  }
+
+  _handleClose() {
+    this.setState({
+      onEdit: false,
+    });
   }
 
   _handleTouchTap() {
@@ -817,6 +840,59 @@ export default class ManageCustomer extends React.Component {
     // this.data.push({'email': this.state.textField.email});
   }
   render() {
+    let actions = [
+      <FlatButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose()}
+      />, <FlatButton
+        label="Submit" primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._handleClose()}
+          />,
+    ];
+    let _renderModalComponent = () => {
+      return (
+        <div>
+          <TextField
+            required={true}
+            value={this.state.nameTemp}
+            hintText="Name User"
+            floatingLabelText="Name"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                nameTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.emailTemp}
+            hintText="Email"
+            floatingLabelText="Email"
+            onChange={(e, input) => {
+              this.setState({
+                emailTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            hintText="Phone Number"
+            floatingLabelText="Phone Number"
+            value={this.state.phoneNumberTemp}
+            errorText={!this.state.isPhoneValid}
+            onChange={(e, input) => {
+              this.setState({
+                isPhoneValid: input,
+              });
+            }}
+          />
+        </div>
+      );
+    };
     let _renderCreateUser = () => {
       return (
         <div>
@@ -1038,10 +1114,19 @@ export default class ManageCustomer extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Edit User"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.onEdit}
+                    onRequestClose={() => this._handleClose()}
+                  >
+                    {_renderModalComponent()}
+                  </Dialog>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
-                    columns={columns}
+                    columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}

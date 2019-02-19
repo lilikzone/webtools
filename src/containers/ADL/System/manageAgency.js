@@ -9,6 +9,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import Card from 'material-ui/Card';
 
 const UserPic = (row) => (
@@ -17,11 +19,6 @@ const UserPic = (row) => (
   </div>
 );
 
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
 
 const DeleteBtn = () => (
   <div className="text-center">
@@ -36,46 +33,7 @@ const CheckBtn = () => (
     <Checkbox iconStyle={styles.checkbox} />
   </div>
 );
-const columns = [
-  {
-    id: 1,
-    title: 'Id',
-    prop: 'id',
-    width: '20%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Code',
-    prop: 'code',
-    width: '20%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 3,
-    title: 'Agency Name',
-    prop: 'agency',
-    width: '20%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: '',
-    render: EditBtn,
-    width: '2%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 5,
-    title: '',
-    render: DeleteBtn,
-    width: '2%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-];
+
 
 export default class ManageAgency extends React.Component {
   constructor(props) {
@@ -551,12 +509,72 @@ export default class ManageAgency extends React.Component {
       isAgencyValid: true,
       isRegistered: false,
       currentTab: 0,
+      onEdit: false,
+      idTemp: '',
+      codeTemp: '',
+      nameTemp: '',
       textField: {
         code: '',
         agency: '',
       },
       dataTable: this.data,
     };
+    const EditBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() =>
+           this.setState({
+             onEdit: true,
+             idTemp: data.id,
+             codeTemp: data.code,
+             nameTemp: data.name,
+           })
+         }
+        >
+        Edit</button>
+      </div>
+    );
+    this.columns = [
+      {
+        id: 1,
+        title: 'Id',
+        prop: 'id',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Code',
+        prop: 'code',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Agency Name',
+        prop: 'agency',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: '',
+        render: EditBtn,
+        width: '2%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: '',
+        render: DeleteBtn,
+        width: '2%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
   }
 
   _handleTouchTap() {
@@ -569,6 +587,12 @@ export default class ManageAgency extends React.Component {
       currentTab: 1,
       isRegistered: true,
       textField: {},
+    });
+  }
+
+  _handleClose() {
+    this.setState({
+      onEdit: false,
     });
   }
 
@@ -585,6 +609,58 @@ export default class ManageAgency extends React.Component {
   }
 
   render() {
+    let actions = [
+      <FlatButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose()}
+      />, <FlatButton
+        label="Submit" primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._handleClose()}
+          />,
+    ];
+    let _renderModalComponent = () => {
+      return (
+        <div>
+          <TextField
+            required={true}
+            value={this.state.idTemp}
+            hintText="ID"
+            floatingLabelText="ID"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                idTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.codeTemp}
+            hintText="Code"
+            floatingLabelText="Code"
+            onChange={(e, input) => {
+              this.setState({
+                codeTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            hintText="Agency Name"
+            floatingLabelText="Agency Name"
+            value={this.state.nameTemp}
+            onChange={(e, input) => {
+              this.setState({
+                nameTemp: input,
+              });
+            }}
+          />
+        </div>
+      );
+    };
     let _renderCreateAgency = () => {
       return (
         <div>
@@ -644,10 +720,19 @@ export default class ManageAgency extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Edit User"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.onEdit}
+                    onRequestClose={() => this._handleClose()}
+                  >
+                    {_renderModalComponent()}
+                  </Dialog>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
-                    columns={columns}
+                    columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}
