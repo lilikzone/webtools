@@ -20,6 +20,7 @@ const eng_lang = {
     salesmanagement: 'Sales management',
     createsalesorder: 'Create sales order',
     trackorder: 'Track order',
+    salesinvoice: 'Sales invoice',
     msuser: 'Manage MS user',
     workorder: 'Work order',
     reportorder: 'Report order',

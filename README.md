@@ -18,4 +18,5 @@ IBASE Frontend with REACT
   $ node -v
   $ npm -v
   
- 
+ #troubleshoot
+ if you have issue with `node-sass` when run `npm install`. Run `npm install --unsafe-perm node-sass`.
