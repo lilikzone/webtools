@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import {Card} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
@@ -14,6 +15,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
 
 const dataGender = ['Male', 'Female'];
 
@@ -32,12 +34,6 @@ const UserPic = (row) => (
   </div>
 );
 
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
-
 const DeleteBtn = () => (
   <div className="text-center">
     <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
@@ -51,86 +47,6 @@ const CheckBtn = () => (
     <Checkbox iconStyle={styles.checkbox} />
   </div>
 );
-const columns = [
-  // id','name','email','role','is_admin','created_at','updated_at
-  // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {
-    id: 1,
-    title: 'Username',
-    prop: 'username',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'Role',
-    prop: 'role',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Name',
-    prop: 'name',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 0,
-    title: 'Gender',
-    prop: 'gender',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 3,
-    title: 'Email',
-    prop: 'email',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'Vendor',
-    prop: 'vendor',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'Agency',
-    prop: 'agency',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  // {id: 5, title: 'Created at', prop: 'created_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Updated at', prop: 'updated_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Ip address', prop: 'ip_address', width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 7, title: 'Country', prop: 'country.name', visible: false, width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 8, title: 'Code', prop: 'country.code', width: '80px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {
-    id: 9,
-    title: 'Action',
-    render: EditBtn,
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 10,
-    title: 'Action',
-    render: DeleteBtn,
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-];
 
 const generateRowProps = (row) => {
   const options = {};
@@ -616,12 +532,18 @@ export default class ManageUser extends React.PureComponent {
     this.state = {
       isGenderValid: true,
       isEmailValid: true,
+      isEmailValidTemp: true,
       isPhoneValid: true,
+      isPhoneValidTemp: true,
       isRoleValid: true,
       isVendorValid: true,
       isAgencyValid: true,
       isRegistered: false,
+      onEdit: false,
       currentTab: 0,
+      nameTemp: '',
+      emailTemp: '',
+      phoneNumberTemp: '',
       textField: {
         name: '',
         email: '',
@@ -638,6 +560,102 @@ export default class ManageUser extends React.PureComponent {
       },
       dataRole: '',
     };
+    const EditBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() =>
+           this.setState({
+             onEdit: true,
+             nameTemp: data.name,
+             emailTemp: data.email,
+             phoneNumberTemp: data.phoneNumber,
+           })
+         }
+        >
+        Edit</button>
+      </div>
+    );
+    this.columns = [
+      // id','name','email','role','is_admin','created_at','updated_at
+      // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {
+        id: 1,
+        title: 'Username',
+        prop: 'username',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Role',
+        prop: 'role',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Name',
+        prop: 'name',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 0,
+        title: 'Gender',
+        prop: 'gender',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Email',
+        prop: 'email',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Vendor',
+        prop: 'vendor',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Agency',
+        prop: 'agency',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      // {id: 5, title: 'Created at', prop: 'created_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 6, title: 'Updated at', prop: 'updated_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 6, title: 'Ip address', prop: 'ip_address', width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 7, title: 'Country', prop: 'country.name', visible: false, width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      // {id: 8, title: 'Code', prop: 'country.code', width: '80px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {
+        id: 9,
+        title: 'Action',
+        render: EditBtn,
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Action',
+        render: DeleteBtn,
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
   }
 
   _dataRole(role) {
@@ -702,6 +720,12 @@ export default class ManageUser extends React.PureComponent {
       currentTab: 1,
       isRegistered: true,
       textField: {},
+    });
+  }
+
+  _handleClose() {
+    this.setState({
+      onEdit: false,
     });
   }
 
@@ -774,6 +798,13 @@ export default class ManageUser extends React.PureComponent {
     });
   }
 
+  _handleValidationNumberTemp(e, input) {
+    this.setState({
+      isPhoneValidTemp: !isNaN(input),
+      phoneNumberTemp: input,
+    });
+  }
+
   _handleValidationEmail(e, input) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.setState({
@@ -783,8 +814,27 @@ export default class ManageUser extends React.PureComponent {
     // this.data.push({'email': this.state.textField.email});
   }
 
+  _handleValidationEmailTemp(e, input) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    this.setState({
+      isEmailValidTemp: re.test(String(input).toLowerCase()),
+      emailTemp: input,
+    });
+    // this.data.push({'email': this.state.textField.email});
+  }
+
   render() {
     const params = this.props.params;
+    let actions = [
+      <FlatButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose()}
+      />, <FlatButton
+        label="Submit" primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._handleClose()}
+          />,
+    ];
     // console.log(this.state.dataRole);
     let _renderCreateUser = (props) => {
       // console.log(props);
@@ -935,6 +985,46 @@ export default class ManageUser extends React.PureComponent {
         </div>
       );
     };
+    let _renderModalComponent = () => {
+      return (
+        <div>
+          <TextField
+            required={true}
+            value={this.state.nameTemp}
+            hintText="Name User"
+            floatingLabelText="Name"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                nameTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.emailTemp}
+            hintText="Email"
+            floatingLabelText="Email"
+            errorText={!this.state.isEmailValidTemp}
+            onChange={(e, input) => {
+              this._handleValidationEmailTemp(e, input);
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            hintText="Phone Number"
+            floatingLabelText="Phone Number"
+            value={this.state.phoneNumberTemp}
+            errorText={!this.state.isPhoneValid}
+            onChange={(e, input) => {
+              this._handleValidationNumberTemp(e, input);
+            }}
+          />
+        </div>
+      );
+    };
     let _renderManageUser = () => {
       return (
         <div>
@@ -946,14 +1036,22 @@ export default class ManageUser extends React.PureComponent {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Edit User"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.onEdit}
+                    onRequestClose={() => this._handleClose()}
+                  >
+                    {_renderModalComponent()}
+                  </Dialog>
                   <MaterialContainer
-                    keys="name"
+                    keys="id"
                     className="mdl-data-table"
-                    columns={columns}
-                    // onDragColumn={(columns) => console.log(columns)}
+                    columns={this.columns}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}
-                    draggable={false}
+                    draggable={true}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
                     pageSizeOptions={[5]}

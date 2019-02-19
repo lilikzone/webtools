@@ -4,6 +4,8 @@ import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -35,14 +37,6 @@ const CheckBtn = () => (
     <Checkbox iconStyle={styles.checkbox} />
   </div>
 );
-const columns = [
-  {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 2, title: 'Code', prop: 'code', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 3, title: 'Name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 4, title: '', render: EditBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 5, title: '', render: DeleteBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
-];
-
 
 export default class ManageVendor extends React.Component {
   constructor(props) {
@@ -96,12 +90,39 @@ export default class ManageVendor extends React.Component {
       isVendorValid: true,
       isAgencyValid: true,
       isRegistered: false,
+      onEdit: false,
+      idTemp: '',
+      codeTemp: '',
+      nameTemp: '',
       textField: {
         code: '',
         vendor: '',
       },
       dataTable: this.data,
     };
+    const EditBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() =>
+           this.setState({
+             onEdit: true,
+             idTemp: data.id,
+             codeTemp: data.code,
+             nameTemp: data.name,
+           })
+         }
+        >
+        Edit</button>
+      </div>
+    );
+    this.columns = [
+      {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 2, title: 'Code', prop: 'code', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 3, title: 'Name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: '', render: EditBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 5, title: '', render: DeleteBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+    ];
   }
 
   _handleTouchTap() {
@@ -127,8 +148,23 @@ export default class ManageVendor extends React.Component {
       textField: {...this.state.textField, code: data},
     });
   }
+  _handleClose() {
+    this.setState({
+      onEdit: false,
+    });
+  }
 
   render() {
+    let actions = [
+      <FlatButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose()}
+      />, <FlatButton
+        label="Submit" primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._handleClose()}
+          />,
+    ];
     let _renderCreateVendor = () => {
       return (
         <div>
@@ -179,6 +215,48 @@ export default class ManageVendor extends React.Component {
         </div>
       );
     };
+    let _renderModalComponent = () => {
+      return (
+        <div>
+          <TextField
+            required={true}
+            value={this.state.idTemp}
+            hintText="ID"
+            floatingLabelText="ID"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                idTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.codeTemp}
+            hintText="Code"
+            floatingLabelText="Code"
+            onChange={(e, input) => {
+              this.setState({
+                codeTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            hintText="Name"
+            floatingLabelText="Name"
+            value={this.state.nameTemp}
+            onChange={(e, input) => {
+              this.setState({
+                nameTemp: input,
+              });
+            }}
+          />
+        </div>
+      );
+    };
     let _renderManageUser = () => {
       return (
         <div>
@@ -188,10 +266,19 @@ export default class ManageVendor extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Edit User"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.onEdit}
+                    onRequestClose={() => this._handleClose()}
+                  >
+                    {_renderModalComponent()}
+                  </Dialog>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
-                    columns={columns}
+                    columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.data}

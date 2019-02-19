@@ -1,49 +1,32 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
-import {Card} from 'material-ui/Card';
 import 'react-table-components/styles/styles.css';
-import '../../table/datatable.scss';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import TextField from 'material-ui/TextField';
-import AutoComplete from 'material-ui/AutoComplete';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Subheader} from 'material-ui';
-import Checkbox from 'material-ui/Checkbox';
-import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-const dataGender = ['Male', 'Female'];
-const dataRole = [
-  'Admin',
-  'Homepassed',
-  'Operation',
-  'Product',
-  'Finance',
-  'Internal Sales',
-  'Sales Admin',
-  'Sales',
-  'Manage Service',
-  'Dispacher',
-  'Installer',
-  'CS',
-  'CS External',
-];
-const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
-const dataAgency = ['Agency1', 'Agency2'];
-const style = {
-  card: {
-    padding: 20,
-  },
-};
+import {Grid, Row, Col} from 'react-flexbox-grid';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+import Snackbar from 'material-ui/Snackbar';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import Card from 'material-ui/Card';
+
+const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
   </div>
 );
 
+const EditBtn = () => (
+  <div className="text-center">
+    <button className="mdl-button mdl-button--raised">Edit</button>
+  </div>
+);
 
 const DeleteBtn = () => (
   <div className="text-center">
@@ -59,18 +42,7 @@ const CheckBtn = () => (
   </div>
 );
 
-const generateRowProps = (row) => {
-  const options = {};
-  if (row.gender === 'Male') {
-    options.className = 'info';
-  }
-  if (row.gender === 'Female') {
-    options.className = 'warning';
-  }
-  return options;
-};
-
-export default class ManageCustomer extends React.Component {
+export default class ManageVA extends React.Component {
   constructor(props) {
     super(props);
     this.data = [
@@ -541,222 +513,134 @@ export default class ManageCustomer extends React.Component {
       },
     ];
     this.state = {
-      onEdit: false,
-      nameTemp: '',
-      emailTemp: '',
-      phoneNumberTemp: '',
       isGenderValid: true,
-      isEmailValid1: true,
-      isEmailValid2: true,
+      isEmailValid: true,
       isPhoneValid: true,
       isRoleValid: true,
       isVendorValid: true,
       isAgencyValid: true,
       isRegistered: false,
-      currentTab: 0,
+      onEdit: false,
+      idTemp: '',
+      codeTemp: '',
+      nameTemp: '',
       textField: {
-        customerName: '',
-        subscriberId: '',
-        dobPlace: '',
-        dob: '',
-        typeId: '',
-        idNumber: '',
-        idAddress: '',
-        primaryPhone: '',
-        alternativePhone1: '',
-        alternativePhone2: '',
-        email: '',
-        alternativeEmail: '',
+        va: '',
+        issuer: '',
+        partner: '',
+        paymentType: '',
+        cred1: '',
+        cred2: '',
+        cred3: '',
       },
+      dataTable: this.data,
     };
     const EditBtn = (data) => (
       <div className="text-center">
         <button
           className="mdl-button mdl-button--raised"
           onClick={() =>
-           this.setState({
-             onEdit: true,
-             nameTemp: data.name,
-             emailTemp: data.email,
-             phoneNumberTemp: data.phoneNumber,
-           })
-         }
+            this.setState({
+              onEdit: true,
+              idTemp: data.id,
+              codeTemp: data.code,
+              nameTemp: data.name,
+            })
+          }
         >
-        Edit</button>
+          Edit
+        </button>
       </div>
     );
     this.columns = [
-      // id','name','email','role','is_admin','created_at','updated_at
-      // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
-      // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {
+        id: 0,
+        title: 'Id',
+        prop: 'id',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
       {
         id: 1,
-        title: 'id',
-        prop: 'id',
-        width: '5%',
+        title: 'VA',
+        prop: 'va',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 2,
-        title: 'Subscriber ID',
-        prop: 'subscriberId',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 2,
-        title: 'Customer Name',
-        prop: 'customerName',
-        width: '5%',
+        title: 'Issuer',
+        prop: 'issuer',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 3,
-        title: 'DOB',
-        prop: 'dob',
-        width: '5.5%',
+        title: 'Partner',
+        prop: 'partner',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 4,
-        title: 'DOB Place',
-        prop: 'dobPlace',
-        width: '5%',
+        title: 'Partner Type',
+        prop: 'partnerType',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 5,
-        title: 'Type ID',
-        prop: 'typeId',
-        width: '5%',
+        title: 'Cred 1',
+        prop: 'cred1',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 6,
-        title: 'ID Number',
-        prop: 'idNumber',
-        width: '5%',
+        title: 'Cred 2',
+        prop: 'cred2',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 7,
-        title: 'ID Address',
-        prop: 'idAddress',
-        width: '5%',
+        title: 'Cred 3',
+        prop: 'cred3',
+        width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 8,
-        title: 'Primary Phone',
-        prop: 'primaryPhone',
-        width: '5%',
+        title: '',
+        render: EditBtn,
+        width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 9,
-        title: 'Alternative Phone 1',
-        prop: 'alternativePhone1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 10,
-        title: 'Alternative Phone 2',
-        prop: 'alternativePhone2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: 'Email',
-        prop: 'email',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Alternative Email',
-        prop: 'alternativeEmail',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 13,
-        title: 'Created At',
-        prop: 'createdAt',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 14,
-        title: 'Balance',
-        prop: 'balance',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 15,
-        title: 'Due Date',
-        prop: 'dueDate',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 16,
-        title: 'Action',
-        render: EditBtn,
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 17,
-        title: 'Action',
+        title: '',
         render: DeleteBtn,
-        width: '5%',
+        width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
   }
 
-  _handleClose() {
-    this.setState({
-      onEdit: false,
-    });
-  }
-
   _handleTouchTap() {
     this.data.push({
-      customerName: this.state.textField.customerName,
-      subscriberId: this.state.textField.subscriberId,
-      dob: this.state.textField.dob,
-      dobPlace: this.state.textField.dobPlace,
-      typeId: this.state.textField.typeId,
-      idNumber: this.state.textField.idNumber,
-      idAddress: this.state.textField.idAddress,
-      primaryPhone: this.state.textField.primaryPhone,
-      alternativePhone1: this.state.textField.alternativePhone1,
-      alternativePhone2: this.state.textField.alternativePhone2,
-      email: this.state.textField.email,
-      alternativeEmail: this.state.textField.alternativeEmail,
+      code: this.state.textField.code,
+      vendor: this.state.textField.vendor,
     });
     this.setState({
-      currentTab: 1,
+      dataTable: this.data,
       isRegistered: true,
       textField: {},
     });
@@ -768,333 +652,142 @@ export default class ManageCustomer extends React.Component {
     });
   }
 
-  _handleValidationCustomerName(input, data) {
+  _handleValidationCode(input, data) {
     this.setState({
-      textField: {...this.state.textField, customerName: data},
+      textField: {...this.state.textField, code: data},
+    });
+  }
+  _handleClose() {
+    this.setState({
+      onEdit: false,
     });
   }
 
-  _handleValidationRole(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataRole = data.map((val) => val.toLowerCase());
-    this.setState({
-      isRoleValid: dataRole.includes(dataInput),
-    });
-    if (dataRole.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, role: dataInput},
-      });
-    }
-  }
-
-  _handleValidationAgency(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataAgency = data.map((val) => val.toLowerCase());
-    this.setState({
-      isAgencyValid: dataAgency.includes(dataInput),
-    });
-    if (dataAgency.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, agency: dataInput},
-      });
-    }
-  }
-
-  _handleValidationVendor(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataVendor = data.map((val) => val.toLowerCase());
-    this.setState({
-      isVendorValid: dataVendor.includes(dataInput),
-    });
-    if (dataVendor.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, vendor: dataInput},
-      });
-    }
-  }
-  _handleValidationGender(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataGender = data.map((val) => val.toLowerCase());
-    this.setState({
-      isGenderValid: dataGender.includes(dataInput),
-    });
-    if (dataGender.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, gender: dataInput},
-      });
-    }
-  }
-  _handleValidationNumber(e, input) {
-    this.setState({
-      isPhoneValid: !isNaN(input),
-      textField: {...this.state.textField, phoneNumber: input},
-    });
-  }
-
-  _handleValidationEmail(e, input, state, email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    this.setState({
-      [state]: re.test(String(input).toLowerCase()),
-      textField: {...this.state.textField, [email]: input},
-    });
-    // this.data.push({'email': this.state.textField.email});
-  }
   render() {
     let actions = [
       <FlatButton
-        label="Cancel" primary={true}
+        label="Cancel"
+        primary={true}
         onTouchTap={() => this._handleClose()}
-      />, <FlatButton
-        label="Submit" primary={true}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleClose()}
-          />,
+      />,
     ];
-    let _renderModalComponent = () => {
-      return (
-        <div>
-          <TextField
-            required={true}
-            value={this.state.nameTemp}
-            hintText="Name User"
-            floatingLabelText="Name"
-            fullWidth={true}
-            onChange={(e, input) => {
-              this.setState({
-                nameTemp: input,
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            value={this.state.emailTemp}
-            hintText="Email"
-            floatingLabelText="Email"
-            onChange={(e, input) => {
-              this.setState({
-                emailTemp: input,
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="Phone Number"
-            floatingLabelText="Phone Number"
-            value={this.state.phoneNumberTemp}
-            errorText={!this.state.isPhoneValid}
-            onChange={(e, input) => {
-              this.setState({
-                isPhoneValid: input,
-              });
-            }}
-          />
-        </div>
-      );
+    let _renderSelection = (data) => {
+      return data.map((val, index) => {
+        return <MenuItem key={index} value={val} primaryText={val} />;
+      });
     };
-    let _renderCreateUser = () => {
+    let _renderCreateVA = () => {
       return (
         <div>
-          <h3 style={styles.navigation}>Create User</h3>
+          <h3 style={styles.navigation}>Create VA</h3>
           <Row>
             <Col xs={12} md={12} lg={12}>
               <form>
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="Customer Name"
-                    value={this.state.textField.customerName}
-                    floatingLabelText="Customer Name"
-                    fullWidth={true}
-                    onChange={(e, input) => {
-                      this._handleValidationCustomerName(e, input);
-                    }}
-                  />
-
-                  <TextField
-                    required={true}
-                    type={'number'}
-                    hintText="Subscriber ID"
-                    value={this.state.textField.subscriberId}
-                    floatingLabelText="Subscriber ID"
+                    hintText="VA"
+                    value={this.state.textField.va}
+                    floatingLabelText="VA"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          subscriberId: input,
-                        },
+                        textField: {...this.state.textField, va: input},
                       });
                     }}
                   />
-
                   <TextField
                     required={true}
-                    type={'date'}
-                    value={this.state.textField.dob}
-                    floatingLabelFixed={true}
-                    floatingLabelText="DOB"
+                    hintText="Issuer"
+                    value={this.state.textField.issuer}
+                    floatingLabelText="Issuer"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          dob: input,
-                        },
+                        textField: {...this.state.textField, issuer: input},
                       });
                     }}
                   />
-
                   <TextField
                     required={true}
-                    value={this.state.textField.dobPlace}
-                    floatingLabelText="DOB Place"
+                    hintText="Partner"
+                    value={this.state.textField.partner}
+                    floatingLabelText="Partner"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          dobPlace: input,
-                        },
+                        textField: {...this.state.textField, partner: input},
                       });
                     }}
                   />
-
-                  <TextField
-                    required={true}
-                    value={this.state.textField.typeId}
-                    hintText={'Type ID'}
-                    floatingLabelText="Type ID"
+                  <SelectField
+                    floatingLabelText="Payment Type"
+                    value={this.state.textField.paymentType}
                     fullWidth={true}
-                    onChange={(e, input) => {
+                    onChange={(e, index, value) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          typeId: input,
+                          paymentType: value,
                         },
                       });
                     }}
-                  />
-
+                  >
+                    {_renderSelection(paymentType)}
+                  </SelectField>
                   <TextField
                     required={true}
-                    value={this.state.textField.idNumber}
-                    hintText={'ID Number'}
-                    floatingLabelText="ID Number"
+                    hintText="Cred 1"
+                    value={this.state.textField.cred1}
+                    floatingLabelText="Cred 1"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          idNumber: input,
-                        },
+                        textField: {...this.state.textField, cred1: input},
                       });
                     }}
                   />
-
                   <TextField
                     required={true}
-                    value={this.state.textField.idAddress}
-                    hintText={'ID Address'}
-                    floatingLabelText="ID Address"
+                    hintText="Cred 2"
+                    value={this.state.textField.cred2}
+                    floatingLabelText="Cred 2"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          idAddress: input,
-                        },
+                        textField: {...this.state.textField, cred2: input},
                       });
                     }}
                   />
-
                   <TextField
                     required={true}
-                    value={this.state.textField.primaryPhone}
-                    hintText={'Primary Phone'}
-                    floatingLabelText="Primary Phone"
+                    hintText="Cred 3"
+                    value={this.state.textField.cred1}
+                    floatingLabelText="Cred 3"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          primaryPhone: input,
-                        },
+                        textField: {...this.state.textField, cred3: input},
                       });
-                    }}
-                  />
-
-                  <TextField
-                    required={true}
-                    value={this.state.textField.alternativePhone1}
-                    hintText={'Alternative Phone 1'}
-                    floatingLabelText="Alternative Phone 1"
-                    fullWidth={true}
-                    onChange={(e, input) => {
-                      this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          alternativePhone1: input,
-                        },
-                      });
-                    }}
-                  />
-
-                  <TextField
-                    required={true}
-                    value={this.state.textField.alternativePhone2}
-                    hintText={'Alternative Phone 2'}
-                    floatingLabelText="Alternative Phone 2"
-                    fullWidth={true}
-                    onChange={(e, input) => {
-                      this.setState({
-                        textField: {
-                          ...this.state.textField,
-                          alternativePhone2: input,
-                        },
-                      });
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth={true}
-                    required={true}
-                    value={this.state.textField.email}
-                    hintText="Email"
-                    floatingLabelText="Email"
-                    errorText={!this.state.isEmailValid1}
-                    onChange={(e, input) => {
-                      this._handleValidationEmail(
-                        e,
-                        input,
-                        'isEmailValid1',
-                        'email'
-                      );
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth={true}
-                    required={true}
-                    value={this.state.textField.alternativeEmail}
-                    hintText="Alternative Email"
-                    floatingLabelText="Alternative Email"
-                    errorText={!this.state.isEmailValid2}
-                    onChange={(e, input) => {
-                      this._handleValidationEmail(
-                        e,
-                        input,
-                        'isEmailValid2',
-                        'alternativeEmail'
-                      );
                     }}
                   />
                   <RaisedButton
-                    label="Register"
+                    label="Create"
                     secondary={true}
                     style={styles.raisedButton}
                     onTouchTap={() => this._handleTouchTap()}
+                  />
+                  <Snackbar
+                    open={this.state.isRegistered}
+                    message="VA Added"
+                    autoHideDuration={4000}
+                    bodyStyle={{backgroundColor: 'teal'}}
                   />
                 </Col>
               </form>
@@ -1103,14 +796,54 @@ export default class ManageCustomer extends React.Component {
         </div>
       );
     };
-    let _renderManageUser = () => {
+    let _renderModalComponent = () => {
       return (
         <div>
-          <h3 style={styles.navigation}>Manage User</h3>
+          <TextField
+            required={true}
+            value={this.state.idTemp}
+            hintText="ID"
+            floatingLabelText="ID"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                idTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.codeTemp}
+            hintText="Code"
+            floatingLabelText="Code"
+            onChange={(e, input) => {
+              this.setState({
+                codeTemp: input,
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            hintText="Name"
+            floatingLabelText="Name"
+            value={this.state.nameTemp}
+            onChange={(e, input) => {
+              this.setState({
+                nameTemp: input,
+              });
+            }}
+          />
+        </div>
+      );
+    };
+    let _renderManageVA = () => {
+      return (
+        <div>
+          <h3 style={styles.navigation}>Manage VA</h3>
           <Row>
             <Col xs={12} md={12} lg={12}>
-              {/* <Card style={style.card}> */}
-
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
@@ -1137,7 +870,6 @@ export default class ManageCustomer extends React.Component {
                   />
                 </div>
               </div>
-              {/* </Card> */}
             </Col>
           </Row>
         </div>
@@ -1145,41 +877,20 @@ export default class ManageCustomer extends React.Component {
     };
     return (
       <Row className="m-b-15">
-        <Paper style={styles.paper}>
-          <Col xs={12} md={12} lg={12}>
-            <Tabs value={this.state.currentTab}>
-              <Tab
-                value={0}
-                label="Create Customer"
-                onActive={(val) => {
-                  this.setState({
-                    currentTab: val.props.index,
-                    isRegistered: false,
-                  });
-                }}
-              >
-                {this.state.currentTab == 0 && _renderCreateUser()}
-              </Tab>
-              <Tab
-                value={1}
-                label="Manage Customer"
-                onActive={(val) => {
-                  this.setState({
-                    currentTab: val.props.index,
-                  });
-                }}
-              >
-                {this.state.currentTab == 1 && _renderManageUser()}
-              </Tab>
-            </Tabs>
-            <Snackbar
-              open={this.state.isRegistered}
-              message="Customer Added"
-              autoHideDuration={4000}
-              bodyStyle={{backgroundColor: 'teal'}}
-            />
-          </Col>
-        </Paper>
+        <Grid item={true} xs={10} md={12} lg={12}>
+          <Paper style={styles.paper}>
+            <Col xs={12} md={12} lg={12}>
+              <Tabs initialSelectedIndex={0}>
+                <Tab key={1} label="Create VA">
+                  {_renderCreateVA()}
+                </Tab>
+                <Tab key={2} label="Manage VA">
+                  {_renderManageVA()}
+                </Tab>
+              </Tabs>
+            </Col>
+          </Paper>
+        </Grid>
       </Row>
     );
   }
