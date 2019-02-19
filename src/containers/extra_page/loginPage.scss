@@ -27,7 +27,7 @@ $desktop: "(min-width: 1024px)";
   min-width: 350px;
 }
 
-input[type=text],input[type=password]{
+.login-background > input[type=text],.login-background > input[type=password]{
   color:white !important;
 }
 
