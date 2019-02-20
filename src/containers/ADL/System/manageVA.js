@@ -14,7 +14,7 @@ import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
-
+const HOSTNAME = 'http://13.229.149.228:8081/api/va/';
 const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
@@ -25,14 +25,6 @@ const UserPic = (row) => (
 const EditBtn = () => (
   <div className="text-center">
     <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
-
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-      Delete
-    </button>
   </div>
 );
 
@@ -513,6 +505,8 @@ export default class ManageVA extends React.Component {
       },
     ];
     this.state = {
+      loaded: false,
+      currentTab: 0,
       isGenderValid: true,
       isEmailValid: true,
       isPhoneValid: true,
@@ -524,15 +518,7 @@ export default class ManageVA extends React.Component {
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: {
-        va: '',
-        issuer: '',
-        partner: '',
-        paymentType: '',
-        cred1: '',
-        cred2: '',
-        cred3: '',
-      },
+      textField: [],
       dataTable: this.data,
     };
     const EditBtn = (data) => (
@@ -552,6 +538,16 @@ export default class ManageVA extends React.Component {
         </button>
       </div>
     );
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+        >
+          Delete
+        </button>
+      </div>
+    );
     this.columns = [
       {
         id: 0,
@@ -564,7 +560,7 @@ export default class ManageVA extends React.Component {
       {
         id: 1,
         title: 'VA',
-        prop: 'va',
+        prop: 'va_number',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -579,6 +575,22 @@ export default class ManageVA extends React.Component {
       },
       {
         id: 3,
+        title: 'IP',
+        prop: 'ip',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Subnet',
+        prop: 'subnet',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
         title: 'Partner',
         prop: 'partner',
         width: '20%',
@@ -586,7 +598,7 @@ export default class ManageVA extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 6,
         title: 'Partner Type',
         prop: 'partnerType',
         width: '20%',
@@ -594,7 +606,7 @@ export default class ManageVA extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 5,
+        id: 7,
         title: 'Cred 1',
         prop: 'cred1',
         width: '20%',
@@ -602,7 +614,7 @@ export default class ManageVA extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 6,
+        id: 8,
         title: 'Cred 2',
         prop: 'cred2',
         width: '20%',
@@ -610,7 +622,7 @@ export default class ManageVA extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 9,
         title: 'Cred 3',
         prop: 'cred3',
         width: '20%',
@@ -618,14 +630,14 @@ export default class ManageVA extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
+        id: 10,
         title: '',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 11,
         title: '',
         render: DeleteBtn,
         width: '2%',
@@ -634,11 +646,87 @@ export default class ManageVA extends React.Component {
     ];
   }
 
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          this.setState({
+            [stateName]: responseJson,
+            loaded: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _postAPI(apiUrl, stateName, va_number, issuer, ip, subnet) {
+    fetch(`${apiUrl}va_number=${va_number}&issuer=${issuer}&ip=${ip}&subnet=${subnet}`, {
+      method: 'POST',
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('res', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _deleteAPI(apiUrl, ids) {
+    fetch(`${apiUrl}ids=${ids}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({
+          currentTab: 0,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   _handleTouchTap() {
     this.data.push({
       code: this.state.textField.code,
       vendor: this.state.textField.vendor,
     });
+    this._postAPI(
+      `${HOSTNAME}register?`,
+      'test',
+      this.state.textField.va_number,
+      this.state.textField.issuer,
+      this.state.textField.ip,
+      this.state.textField.subnet
+    );
+    this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
       dataTable: this.data,
       isRegistered: true,
@@ -692,20 +780,22 @@ export default class ManageVA extends React.Component {
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="VA"
-                    value={this.state.textField.va}
+                    // hintText="VA"
+                    value={this.state.textField.va_number}
+                    floatingLabelFixed={true}
                     floatingLabelText="VA"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {...this.state.textField, va: input},
+                        textField: {...this.state.textField, va_number: input},
                       });
                     }}
                   />
                   <TextField
                     required={true}
-                    hintText="Issuer"
+                    // hintText="Issuer"
                     value={this.state.textField.issuer}
+                    floatingLabelFixed={true}
                     floatingLabelText="Issuer"
                     fullWidth={true}
                     onChange={(e, input) => {
@@ -716,8 +806,9 @@ export default class ManageVA extends React.Component {
                   />
                   <TextField
                     required={true}
-                    hintText="Partner"
+                    // hintText="Partner"
                     value={this.state.textField.partner}
+                    floatingLabelFixed={true}
                     floatingLabelText="Partner"
                     fullWidth={true}
                     onChange={(e, input) => {
@@ -728,6 +819,7 @@ export default class ManageVA extends React.Component {
                   />
                   <SelectField
                     floatingLabelText="Payment Type"
+                    floatingLabelFixed={true}
                     value={this.state.textField.paymentType}
                     fullWidth={true}
                     onChange={(e, index, value) => {
@@ -746,6 +838,7 @@ export default class ManageVA extends React.Component {
                     hintText="Cred 1"
                     value={this.state.textField.cred1}
                     floatingLabelText="Cred 1"
+                    floatingLabelFixed={true}
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
@@ -757,6 +850,7 @@ export default class ManageVA extends React.Component {
                     required={true}
                     hintText="Cred 2"
                     value={this.state.textField.cred2}
+                    floatingLabelFixed={true}
                     floatingLabelText="Cred 2"
                     fullWidth={true}
                     onChange={(e, input) => {
@@ -768,7 +862,8 @@ export default class ManageVA extends React.Component {
                   <TextField
                     required={true}
                     hintText="Cred 3"
-                    value={this.state.textField.cred1}
+                    value={this.state.textField.cred3}
+                    floatingLabelFixed={true}
                     floatingLabelText="Cred 3"
                     fullWidth={true}
                     onChange={(e, input) => {
@@ -862,7 +957,7 @@ export default class ManageVA extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    dataArray={this.state.textField}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
@@ -880,12 +975,29 @@ export default class ManageVA extends React.Component {
         <Grid item={true} xs={10} md={12} lg={12}>
           <Paper style={styles.paper}>
             <Col xs={12} md={12} lg={12}>
-              <Tabs initialSelectedIndex={0}>
-                <Tab key={1} label="Create VA">
-                  {_renderCreateVA()}
+              <Tabs value={this.state.currentTab}>
+                <Tab
+                  value={0}
+                  label="Create VA"
+                  onActive={(val) => {
+                    this.setState({
+                      currentTab: val.props.index,
+                      isRegistered: false,
+                    });
+                  }}
+                >
+                  {this.state.currentTab == 0 && _renderCreateVA()}
                 </Tab>
-                <Tab key={2} label="Manage VA">
-                  {_renderManageVA()}
+                <Tab
+                  value={1}
+                  label="Manage VA"
+                  onActive={(val) => {
+                    this.setState({
+                      currentTab: val.props.index,
+                    });
+                  }}
+                >
+                  {this.state.loaded && this.state.currentTab == 1 && _renderManageVA()}
                 </Tab>
               </Tabs>
             </Col>
