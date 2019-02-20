@@ -23,7 +23,8 @@ const cookies = new Cookies();
 const dataGender = ['Male', 'Female'];
 
 const vendorShowRole = ['manageservice', 'operation', 'admin'];
-const agencyShowRole = ['internalsales', 'operation', 'admin'];
+const agentShowRole = ['internalsales', 'operation', 'admin'];
+
 const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -698,8 +699,6 @@ export default class ManageUser extends React.PureComponent {
   }
 
   componentWillMount() {
-    // console.log(role);
-
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       this.setState({token: cookieData});
@@ -711,7 +710,6 @@ export default class ManageUser extends React.PureComponent {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        // this.setState({token: respons.token});
         const role = respons.user.role;
         const dataRole = this._dataRole(role);
         console.log('datarole', dataRole);
@@ -724,10 +722,11 @@ export default class ManageUser extends React.PureComponent {
 
   _handleTouchTap() {
     this.data.push({
-      email: this.state.textField.email,
-      name: this.state.textField.name,
       username: this.state.textField.username,
+      password: this.state.textField.password,
+      name: this.state.textField.name,
       gender: this.state.textField.gender,
+      email: this.state.textField.email,
       phone: this.state.textField.phoneNumber,
       role: this.state.textField.role,
       vendor: this.state.textField.vendor,
@@ -828,7 +827,6 @@ export default class ManageUser extends React.PureComponent {
       isEmailValid: re.test(String(input).toLowerCase()),
       textField: {...this.state.textField, email: input},
     });
-    // this.data.push({'email': this.state.textField.email});
   }
 
   _handleValidationEmailTemp(e, input) {
@@ -837,7 +835,6 @@ export default class ManageUser extends React.PureComponent {
       isEmailValidTemp: re.test(String(input).toLowerCase()),
       emailTemp: input,
     });
-    // this.data.push({'email': this.state.textField.email});
   }
 
 
@@ -968,6 +965,7 @@ export default class ManageUser extends React.PureComponent {
                     fullWidth={true}
                     floatingLabelText="Vendor"
                     filter={AutoComplete.caseInsensitiveFilter}
+
                     openOnFocus={true}
                     dataSource={dataVendor}
                     searchText={this.state.textField.vendor}
@@ -976,7 +974,7 @@ export default class ManageUser extends React.PureComponent {
                     }}
                     errorText={!this.state.isVendorValid}
                                                              /> : ''}
-                  {agencyShowRole.includes(user_data.role) ? <AutoComplete
+                  {agentShowRole.includes(user_data.role) ? <AutoComplete
                     required={true}
                     fullWidth={true}
                     floatingLabelText="Agency"
@@ -988,7 +986,8 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationAgency(input, dataSource);
                     }}
                     errorText={!this.state.isAgencyValid}
-                                                             /> : ''}
+                                                            /> : ''}
+
 
                   <RaisedButton
                     label="Register"
