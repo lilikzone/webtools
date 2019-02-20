@@ -16,6 +16,10 @@ import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/customer/';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+// const HOSTNAME = 'http://13.229.149.228:8081/api/customer/';
 const dataGender = ['Male', 'Female'];
 const dataRole = [
   'Admin',
@@ -534,6 +538,7 @@ export default class ManageCustomer extends React.Component {
     ];
     this.state = {
       loaded: false,
+      cookies: '',
       onEdit: false,
       nameTemp: '',
       emailTemp: '',
@@ -569,9 +574,20 @@ export default class ManageCustomer extends React.Component {
           onClick={() =>
             this.setState({
               onEdit: true,
-              nameTemp: data.name,
-              emailTemp: data.email,
-              phoneNumberTemp: data.phoneNumber,
+              //
+              dob: data.dob,
+              birth_place: data.birth_place,
+              gender: data.gender,
+              identification_type: data.identification_type,
+              identification_number: data.identification_number,
+              identification_address: data.identification_address,
+              phone1: data.phone1,
+              phone2: data.phone2,
+              phone3: data.phone3,
+              email1: data.email1,
+              email2: data.email2,
+              group: data.group,
+              name: data.name,
             })
           }
         >
@@ -746,16 +762,57 @@ export default class ManageCustomer extends React.Component {
     ];
   }
 
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+
+
   componentDidMount() {
     this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _putAPI(
+    apiUrl,
+    dob,
+    birth_place,
+    gender,
+    identification_type,
+    identification_number,
+    identification_address,
+    phone1,
+    phone2,
+    phone3,
+    email1,
+    email2,
+    group,
+    name) {
+    fetch( `${apiUrl}dob=${dob}&birth_place=${birth_place}&gender=${gender}&identification_type=${identification_type}&identification_number=${identification_number}&identification_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&group=${group}&name=${name}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          this._getAPI(`${HOSTNAME}all`, 'textField');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   _getAPI(apiUrl, stateName) {
     fetch(apiUrl, {
       method: 'GET',
       headers: {
-        Authorization:
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+        'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
@@ -795,8 +852,7 @@ export default class ManageCustomer extends React.Component {
       {
         method: 'POST',
         headers: {
-          Authorization:
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+          'Authorization': `Bearer ${this.state.cookies}`,
           'Content-Type': 'application/json',
         },
       }
@@ -814,8 +870,7 @@ export default class ManageCustomer extends React.Component {
     fetch(`${apiUrl}ids=${ids}`, {
       method: 'DELETE',
       headers: {
-        Authorization:
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+        'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
@@ -873,7 +928,7 @@ export default class ManageCustomer extends React.Component {
     );
     this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
-      currentTab: 1,
+      // currentTab: 1,
       isRegistered: true,
       textField: {},
     });
@@ -956,6 +1011,22 @@ export default class ManageCustomer extends React.Component {
     });
     // this.data.push({'email': this.state.textField.email});
   }
+  _handleSubmit() {
+    this._putAPI(apiUrl,
+    this.state.dobTemp,
+    this.state.birth_placeTemp,
+    this.state.genderTemp,
+    this.state.identification_typeTemp,
+    this.state.identification_numberTemp,
+    this.state.identification_addressTemp,
+    this.state.phone1Temp,
+    this.state.phone2Temp,
+    this.state.phone3Temp,
+    this.state.email1Temp,
+    this.state.email2Temp,
+    this.state.groupTemp,
+    this.state.nameTemp);
+  }
   render() {
     let actions = [
       <FlatButton
@@ -967,7 +1038,7 @@ export default class ManageCustomer extends React.Component {
         label="Submit"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
+        onTouchTap={() => this._handleSubmit()}
       />,
     ];
     let _renderModalComponent = () => {
@@ -975,9 +1046,9 @@ export default class ManageCustomer extends React.Component {
         <div>
           <TextField
             required={true}
+            floatingLabelFixed={true}
             value={this.state.nameTemp}
-            hintText="Name User"
-            floatingLabelText="Name"
+            floatingLabelText="Customer Name"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
@@ -985,32 +1056,157 @@ export default class ManageCustomer extends React.Component {
               });
             }}
           />
+          {/* no param to post for subscriberId */}
+          <TextField
+            required={true}
+            type={'number'}
+                    // hintText="Subscriber ID"
+            floatingLabelFixed={true}
+            value={this.state.subscriberIdTemp}
+            floatingLabelText="Subscriber ID"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                subscriberIdTemp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            type={'date'}
+            value={this.state.dobTemp}
+            floatingLabelFixed={true}
+            floatingLabelText="DOB"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                dobTemp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.birth_placeTemp}
+            floatingLabelText="DOB Place"
+            floatingLabelFixed={true}
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                birth_placeTemp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.identification_typeTemp}
+            floatingLabelFixed={true}
+            floatingLabelText="Type ID"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {
+                  ...this.state.textField,
+                  identification_type: input,
+                },
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.identification_numberTemp}
+            floatingLabelFixed={true}
+            floatingLabelText="ID Number"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                identification_numberTemp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.identification_addressTemp}
+            floatingLabelFixed={true}
+            floatingLabelText="ID Address"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                identification_addressTemp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.phone1Temp}
+            floatingLabelFixed={true}
+            floatingLabelText="Primary Phone"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                phone1Temp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.textField.phone2Temp}
+            floatingLabelFixed={true}
+            floatingLabelText="Alternative Phone 1"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                phone2Temp: input,
+              });
+            }}
+          />
+
+          <TextField
+            required={true}
+            value={this.state.phone3Temp}
+            floatingLabelFixed={true}
+            floatingLabelText="Alternative Phone 2"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                phone3Temp: input,
+              });
+            }}
+          />
+
           <TextField
             fullWidth={true}
             required={true}
-            value={this.state.emailTemp}
-            hintText="Email"
+            value={this.state.email1Temp}
+            floatingLabelFixed={true}
             floatingLabelText="Email"
+            // errorText={!this.state.isEmailValid1}
             onChange={(e, input) => {
               this.setState({
-                emailTemp: input,
+                email1Temp: input,
               });
             }}
           />
+
           <TextField
             fullWidth={true}
             required={true}
-            hintText="Phone Number"
-            floatingLabelText="Phone Number"
-            value={this.state.phoneNumberTemp}
-            errorText={!this.state.isPhoneValid}
+            value={this.state.email2Temp}
+            floatingLabelFixed={true}
+            floatingLabelText="Alternative Email"
+            // errorText={!this.state.isEmailValid2}
             onChange={(e, input) => {
               this.setState({
-                isPhoneValid: input,
+                email2Temp: input,
               });
             }}
-          />
-        </div>
+          />        </div>
       );
     };
     let _renderCreateUser = () => {
