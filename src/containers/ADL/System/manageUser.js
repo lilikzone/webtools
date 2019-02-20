@@ -267,6 +267,7 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+
       fetch('https://ibase.adlsandbox.com:8081/api/agency/all', {
         method: 'GET',
         type: 'cors',
