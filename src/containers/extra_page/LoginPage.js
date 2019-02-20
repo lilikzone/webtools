@@ -200,17 +200,17 @@ class LoginPage extends Component {
 
                   </div>
                 </div>
-                {/* <Link to="./" className="forMobileButton"> */}
-                <RaisedButton
-                  fullWidth={true}
-                  label="Login"
-                  primary={true}
-                  style={styles.loginBtn}
-                  onTouchTap={this._handleClick}
-                />
-                <br />
-                <br />
-                {/* </Link> */}
+                <div className="forMobileButton">
+                  <RaisedButton
+                    fullWidth={true}
+                    label="Login"
+                    primary={true}
+                    style={styles.loginBtn}
+                    onTouchTap={this._handleClick}
+                  />
+                  <br />
+                  <br />
+                </div>
 
                 <div style={styles.controls} className="displayNone">
 
