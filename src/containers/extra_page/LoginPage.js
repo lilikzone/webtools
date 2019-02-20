@@ -137,7 +137,7 @@ class LoginPage extends Component {
       const username = this.state.username;
       const password = this.state.password;
       const json = (response) => response.json();
-      fetch(`http://13.229.149.228:8081/api/admin/login?username=${username}&password=${password}`, {
+      fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${username}&password=${password}`, {
         method: 'post',
         type: 'cors',
       })

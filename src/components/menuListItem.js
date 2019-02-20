@@ -17,9 +17,9 @@ const systemShowRule = ['admin'];
 const homepassedShowRule = ['admin', 'homepassed'];
 const taxmanagementShowRule = ['admin', 'operation'];
 const productmanagementShowRule = ['admin', 'operation', 'product'];
-const transactionShowRule = ['admin', 'operation', 'product', 'finance', 'internasales', 'salesadmin', 'sales'];
-const managesalesuserShowRule = ['admin', 'operation', 'internasales'];
-const salesmanagementShowRule = ['admin', 'operation', 'internasales', 'salesadmin', 'sales'];
+const transactionShowRule = ['admin', 'operation', 'product', 'finance', 'internalsales', 'salesadmin', 'sales'];
+const managesalesuserShowRule = ['admin', 'operation', 'internalsales'];
+const salesmanagementShowRule = ['admin', 'operation', 'internalsales', 'salesadmin', 'sales'];
 const manageMSuserShowRule = ['admin', 'operation', 'manageservice'];
 const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
 const ticketShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
@@ -73,16 +73,13 @@ export class MenuList extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       this.setState({token: cookieData});
       const json = (response) => response.json();
-      fetch(`http://13.229.149.228:8081/api/admin/check?token=${cookieData}`, {
+      fetch(`https://ibase.adlsandbox.com:8081/api/admin/check?token=${cookieData}`, {
         method: 'get',
         type: 'cors',
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
-        // this.setState({token: respons.token});
         this.setState({roleUser: respons.user.role});
-        // const role = respons.user.role;
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
