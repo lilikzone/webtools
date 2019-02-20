@@ -16,10 +16,7 @@ const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/vendor/';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-// const HOSTNAME = 'http://13.229.149.228:8081/api/vendor/';
 
-const cookies = new Cookies();
-const HOSTNAME = 'http://13.229.149.228:8081/api/vendor/';
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
@@ -115,7 +112,7 @@ export default class ManageVendor extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.Id)}
         >
         Delete
         </button>

@@ -19,9 +19,6 @@ const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/va/';
 const cookies = new Cookies();
 // const HOSTNAME = 'http://13.229.149.228:8081/api/va/';
 import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
-const HOSTNAME = 'http://13.229.149.228:8081/api/va/';
 const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
