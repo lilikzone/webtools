@@ -18,6 +18,7 @@ import Footer from '../components/footer';
 
 import './ui/spin.scss';
 
+
 class App extends React.Component {
 
   constructor(props) {
@@ -44,7 +45,7 @@ class App extends React.Component {
       } else if (nextProps.width === LARGE) {
         try {
           var styles_b = this.state.pageOptions;
-          styles_b.header = {paddingLeft: '236px'};
+          styles_b.header = {paddingLeft: 236};
           this.setState({pageOptions: styles_b});
         } catch (err) {
           console.log('error');
@@ -60,7 +61,7 @@ class App extends React.Component {
     if (!this.state.navDrawerOpen) {
       if (this.state.pageOptions != undefined) {
         var styles_b = this.state.pageOptions;
-        styles_b.header = {paddingLeft: '236px'};
+        styles_b.header = {paddingLeft: 236};
         this.setState({pageOptions: styles_b});
       }
     } else {
@@ -131,7 +132,6 @@ class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({defaultLoading: false});
-      console.log(this.props.params);
     }, 300);
 
     if (window.innerWidth < 800) {

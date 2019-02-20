@@ -16,11 +16,14 @@ import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 const dataGender = ['Male', 'Female'];
 
-const vendorShowRole = ['manageservice', 'dispatcher', 'installer', 'admin'];
-const agencyShowRole = ['internalsales', 'salesadmin', 'sales', 'admin'];
+const vendorShowRole = ['manageservice', 'operation', 'admin'];
+const agencyShowRole = ['internalsales', 'operation', 'admin'];
 const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -559,6 +562,7 @@ export default class ManageUser extends React.PureComponent {
         role: 'manageservice',
       },
       dataRole: '',
+      token: '',
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -669,11 +673,6 @@ export default class ManageUser extends React.PureComponent {
       }];
     }
 
-    if (role === 'dispatcher') {
-      return [{'value': 'installer',
-        'name': 'installer'}];
-    }
-
     if (role === 'admin') {
       return [
         {'name': 'Admin', 'value': 'admin'},
@@ -699,10 +698,28 @@ export default class ManageUser extends React.PureComponent {
   }
 
   componentWillMount() {
-    const role = this.state.user.role;
-    console.log(role);
-    const dataRole = this._dataRole(role);
-    this.setState({dataRole: dataRole});
+    // console.log(role);
+
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({token: cookieData});
+      const json = (response) => response.json();
+      fetch(`http://13.229.149.228:8081/api/admin/check?token=${cookieData}`, {
+        method: 'get',
+        type: 'cors',
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        // this.setState({token: respons.token});
+        const role = respons.user.role;
+        const dataRole = this._dataRole(role);
+        console.log('datarole', dataRole);
+        this.setState({dataRole: dataRole});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
   }
 
   _handleTouchTap() {
@@ -823,6 +840,7 @@ export default class ManageUser extends React.PureComponent {
     // this.data.push({'email': this.state.textField.email});
   }
 
+
   render() {
     const params = this.props.params;
     let actions = [
@@ -938,9 +956,9 @@ export default class ManageUser extends React.PureComponent {
                     floatingLabelText="Role"
                     name="role"
                   >
-                    {dataRole.map((data, j) => {
+                    {dataRole !== '' ? dataRole.map((data, j) => {
                       return (<MenuItem key={j} value={data.value} primaryText={data.name} />);
-                    })}
+                    }) : ''}
 
                   </SelectField>
 

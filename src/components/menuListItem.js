@@ -8,6 +8,22 @@ import Progress from 'antd/lib/progress';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import {browserHistory} from 'react-router';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
+const dashboardShowRule = ['admin', 'homepassed', 'operation', 'product'];
+const systemShowRule = ['admin'];
+const homepassedShowRule = ['admin', 'homepassed'];
+const taxmanagementShowRule = ['admin', 'operation'];
+const productmanagementShowRule = ['admin', 'operation', 'product'];
+const transactionShowRule = ['admin', 'operation', 'product', 'finance', 'internasales', 'salesadmin', 'sales'];
+const managesalesuserShowRule = ['admin', 'operation', 'internasales'];
+const salesmanagementShowRule = ['admin', 'operation', 'internasales', 'salesadmin', 'sales'];
+const manageMSuserShowRule = ['admin', 'operation', 'manageservice'];
+const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
+const ticketShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
+const customerserviceShowRule = ['admin', 'operation', 'cs', 'csext'];
 
 const styles_list = {
 
@@ -41,6 +57,7 @@ export class MenuList extends React.Component {
     this.state = {
       open: true,
       selectedIndex: 0,
+      roleUser: '',
     };
     this.handleToggle = this
       .handleToggle
@@ -51,7 +68,26 @@ export class MenuList extends React.Component {
   }
 
 
-  componentWillMount() { }
+  componentWillMount() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({token: cookieData});
+      const json = (response) => response.json();
+      fetch(`http://13.229.149.228:8081/api/admin/check?token=${cookieData}`, {
+        method: 'get',
+        type: 'cors',
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        // this.setState({token: respons.token});
+        this.setState({roleUser: respons.user.role});
+        // const role = respons.user.role;
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
 
   handleToggle() {
     this.setState({
@@ -75,21 +111,23 @@ export class MenuList extends React.Component {
 
 
   render() {
+    const userRole = this.state.roleUser;
+
     return (
       <div>
         <div className="sideBar">
 
           <List>
+            {dashboardShowRule.includes(userRole) ?
+              <ListItem
+                innerDivStyle={styles_list}
+                leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> home </FontIcon>}
+                key={1}
+                primaryText={strings.menu.dashboard}
+                containerElement={<Link to={'dashboard'} />}
+              /> : ''}
 
-            <ListItem
-              innerDivStyle={styles_list}
-              leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> home </FontIcon>}
-              key={1}
-              primaryText={strings.menu.dashboard}
-              containerElement={<Link to={'dashboard'} />}
-            />
-
-            <ListItem
+            {systemShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.system}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> build </FontIcon>}
@@ -104,25 +142,25 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={5} primaryText={strings.menu.manageva} containerElement={<Link to={'/admin/manageVA'} />} />,
                 <ListItem style={styles_list_item} key={6} primaryText={strings.menu.activityreport} containerElement={<Link to={'/admin/manageActivity'} />} />,
               ]}
-            />
+                                                 /> : ''}
 
-            <ListItem
+            {homepassedShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> location_on </FontIcon>}
               key={2}
               primaryText={strings.menu.homespassed}
               containerElement={<Link to={'/admin/homesPassed'} />}
-            />
+                                                     /> : ''}
 
-            <ListItem
+            {taxmanagementShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> attach_money </FontIcon>}
               key={3}
               primaryText={strings.menu.taxmanagement}
               containerElement={<Link to={'/admin/dashboard'} />}
-            />
+                                                        /> : ''}
 
-            <ListItem
+            {productmanagementShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.productmanagement}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> collections </FontIcon>}
@@ -133,9 +171,9 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={1} primaryText={strings.menu.manageproduct} containerElement={<Link to={'/admin/manageProduct'} />} />,
 
               ]}
-            />
+                                                            /> : ''}
 
-            <ListItem
+            {transactionShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.transaction}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> show_chart </FontIcon>}
@@ -147,17 +185,17 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.dailytrx} containerElement={<Link to={'/admin/dashboard'} />} />,
                 <ListItem style={styles_list_item} key={3} primaryText={strings.menu.monthlytrx} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
-            />
+                                                      /> : ''}
 
-            <ListItem
+            {managesalesuserShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> person </FontIcon>}
               key={4}
               primaryText={strings.menu.salesuser}
-              containerElement={<Link to={'/admin/dashboard'} />}
-            />
+              containerElement={<Link to={'/admin/manageUser'} />}
+                                                          /> : ''}
 
-            <ListItem
+            {salesmanagementShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.salesmanagement}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> next_week </FontIcon>}
@@ -170,17 +208,17 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'/admin/dashboard'} />} />,
                 <ListItem style={styles_list_item} key={3} primaryText={strings.menu.salesinvoice} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
-            />
+                                                          /> : ''}
 
-            <ListItem
+            {manageMSuserShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> directions_walk </FontIcon>}
               key={5}
               primaryText={strings.menu.msuser}
-              containerElement={<Link to={'/admin/dashboard'} />}
-            />
+              containerElement={<Link to={'/admin/manageUser'} />}
+                                                       /> : ''}
 
-            <ListItem
+            {workOrderShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.workorder}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> play_for_work </FontIcon>}
@@ -190,9 +228,9 @@ export class MenuList extends React.Component {
               nestedItems={[
                 <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
-            />
+                                                    /> : ''}
 
-            <ListItem
+            {ticketShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.ticket}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> report </FontIcon>}
@@ -204,8 +242,8 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'/admin/dashboard'} />} />,
 
               ]}
-            />
-            <ListItem
+                                                 /> : ''}
+            {customerserviceShowRule.includes(userRole) ? <ListItem
               innerDivStyle={styles_list}
               primaryText={strings.menu.cs}
               leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> local_phone </FontIcon>}
@@ -219,7 +257,8 @@ export class MenuList extends React.Component {
                 <ListItem style={styles_list_item} key={4} primaryText={strings.menu.spamreport} containerElement={<Link to={'dashboard'} />} />,
 
               ]}
-            />
+                                                          /> : ''}
+
 
           </List>
 

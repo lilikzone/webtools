@@ -16,6 +16,7 @@ const IconTextField = function statelessFunctionComponentClass(props) {
           floatingLabelStyle={props.floatingLabelStyle}
           style={props.style}
           type={`${props.type}`}
+          value={props.value}
         />
 
       </div>
