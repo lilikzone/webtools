@@ -97,6 +97,7 @@ export default class ManageUser extends React.PureComponent {
       token: '',
       dataVendor: [],
       dataAgency: [],
+      allData: [],
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -289,26 +290,78 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+
+      fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+          .then(json)
+          .then((respons) => {
+            console.log(respons);
+            this.setState({allData: respons});
+          }).catch((error) => {
+            console.log(error);
+          });
     }
   }
 
   _handleTouchTap() {
-    this.data.push({
-      username: this.state.textField.username,
-      password: this.state.textField.password,
-      name: this.state.textField.name,
-      gender: this.state.textField.gender,
-      email: this.state.textField.email,
-      phone: this.state.textField.phoneNumber,
-      role: this.state.textField.role,
-      vendor: this.state.textField.vendor,
-      agency: this.state.textField.agency,
-    });
-    this.setState({
-      currentTab: 1,
-      isRegistered: true,
-      textField: {},
-    });
+    // this.data.push({
+    const username = this.state.textField.username;
+    const password = this.state.textField.password;
+    const name = this.state.textField.name;
+    // const gender = this.state.textField.gender;
+    const email = this.state.textField.email;
+    const phone = this.state.textField.phoneNumber;
+    const role = this.state.textField.role;
+    const vendor = this.state.textField.vendor;
+    const agency = this.state.textField.agency;
+
+    const json = (response) => response.json();
+    // });
+    console.log(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}`);
+
+    fetch(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}`, {
+      method: 'POST',
+      type: 'cors',
+    })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        if (respons.token !== '') {
+          this.setState({
+            currentTab: 1,
+            isRegistered: true,
+            textField: {},
+          });
+
+          const cookieData = cookies.get('ssid');
+
+          if (cookieData !== undefined && cookieData !== '') {
+            fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+              method: 'POST',
+              type: 'cors',
+              headers: {
+                'Authorization': `Bearer ${cookieData}`,
+                'Content-Type': 'application/json',
+              },
+            })
+          .then(json)
+          .then((respons) => {
+            console.log(respons);
+            this.setState({allData: respons});
+          }).catch((error) => {
+            console.log(error);
+          });
+          }
+        }
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
   }
 
   _handleClose() {
@@ -395,9 +448,8 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _handleValidationEmail(e, input) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.setState({
-      isEmailValid: re.test(String(input).toLowerCase()),
       textField: {...this.state.textField, email: input},
     });
   }
@@ -423,7 +475,7 @@ export default class ManageUser extends React.PureComponent {
         onTouchTap={() => this._handleClose()}
           />,
     ];
-    // console.log(this.state.dataRole);
+
     let _renderCreateUser = () => {
       const dataRole = this.state.dataRole;
       const user_data = this.state.role;
@@ -631,7 +683,7 @@ export default class ManageUser extends React.PureComponent {
                     className="mdl-data-table"
                     columns={this.columns}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    dataArray={this.state.allData}
                     draggable={true}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
