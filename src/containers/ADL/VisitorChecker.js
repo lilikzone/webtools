@@ -15,7 +15,7 @@ class VistorChecker extends Component {
     const cookiesToken = cookies.get('ssid');
     // console.log(cookiesToken);
     if (cookiesToken !== undefined && cookiesToken !== '') {
-      this.setState({url: `/admin/${cookiesToken}`});
+      this.setState({url: '/admin'});
     }
   }
 

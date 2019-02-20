@@ -18,6 +18,10 @@ import Footer from '../components/footer';
 
 import './ui/spin.scss';
 
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
 
 class App extends React.Component {
 
@@ -31,6 +35,7 @@ class App extends React.Component {
       defaultLoadingContent: 'Loading..',
       pageOptions: '',
       page_type: '',
+      url: '',
     };
   }
 
@@ -143,6 +148,11 @@ class App extends React.Component {
 
   componentWillMount() {
     this.setState({defaultLoading: true});
+    const cookiesToken = cookies.get('ssid');
+    // console.log(cookiesToken);
+    if (cookiesToken === undefined || cookiesToken === '') {
+      this.setState({url: '/login'});
+    }
   }
   render() {
     const {navDrawerOpen, pageOptions} = this.state;
@@ -167,11 +177,11 @@ class App extends React.Component {
     };
 
     this.setState.pageOptions = styles;
-
+    const url = this.state.url;
     return (
-
       <MuiThemeProvider muiTheme={ChosenTheme} >
         <div style={this.state.pageOptions.app}>
+          {url !== '' ? <div>{window.location.pathname = url}</div> : ''}
 
           <Scrollbars universal={true}>
             <div >
