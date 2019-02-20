@@ -13,6 +13,13 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import Card from 'material-ui/Card';
 const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/vendor/';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+// const HOSTNAME = 'http://13.229.149.228:8081/api/vendor/';
+
+const cookies = new Cookies();
+const HOSTNAME = 'http://13.229.149.228:8081/api/vendor/';
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
@@ -72,6 +79,7 @@ export default class ManageVendor extends React.Component {
     {'id': '0176299440', 'name': 'Samuel', 'last_name': 'Long', 'email': 'slong14@ebay.co.uk', 'gender': 'Male', 'ip_address': '8.4.54.35', 'country': {'id': 41, 'name': 'Turkmenistan', 'code': 'TM'}, 'city': {'id': 41, 'name': 'Serhetabat'}}];
     this.state = {
       loaded: false,
+      cookies: '',
       currentTab: 0,
       isGenderValid: true,
       isEmailValid: true,
@@ -122,6 +130,14 @@ export default class ManageVendor extends React.Component {
     ];
   }
 
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+
   componentDidMount() {
     this._getAPI(`${HOSTNAME}all`, 'textField');
   }
@@ -131,7 +147,7 @@ export default class ManageVendor extends React.Component {
       {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Authorization': `Bearer ${this.state.cookies}`,
           'Content-Type': 'application/json',
         },
       })
@@ -154,7 +170,7 @@ export default class ManageVendor extends React.Component {
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Authorization': `Bearer ${this.state.cookies}`,
           'Content-Type': 'application/json',
         },
       })
@@ -172,7 +188,7 @@ export default class ManageVendor extends React.Component {
       {
         method: 'DELETE',
         headers: {
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Authorization': `Bearer ${this.state.cookies}`,
           'Content-Type': 'application/json',
         },
       })
