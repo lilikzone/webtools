@@ -14,6 +14,9 @@ import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 const HOSTNAME = 'http://13.229.149.228:8081/api/va/';
 const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
@@ -520,6 +523,7 @@ export default class ManageVA extends React.Component {
       nameTemp: '',
       textField: [],
       dataTable: this.data,
+      cookies: '',
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -646,6 +650,15 @@ export default class ManageVA extends React.Component {
     ];
   }
 
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+
+
   componentDidMount() {
     this._getAPI(`${HOSTNAME}all`, 'textField');
   }
@@ -654,8 +667,7 @@ export default class ManageVA extends React.Component {
     fetch(apiUrl, {
       method: 'GET',
       headers: {
-        Authorization:
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
@@ -677,8 +689,7 @@ export default class ManageVA extends React.Component {
     fetch(`${apiUrl}va_number=${va_number}&issuer=${issuer}&ip=${ip}&subnet=${subnet}`, {
       method: 'POST',
       headers: {
-        Authorization:
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
@@ -695,8 +706,7 @@ export default class ManageVA extends React.Component {
     fetch(`${apiUrl}ids=${ids}`, {
       method: 'DELETE',
       headers: {
-        Authorization:
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMjQzMywiZXhwIjoxNTUwNjI2MDMzLCJuYmYiOjE1NTA2MjI0MzMsImp0aSI6IkRZeFZrT2lLUG1qUUk5VDkiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.u7qwBC66bYwh0TgFKy74eONTdaS2aapkM11g_jdx8gQ',
+        'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
