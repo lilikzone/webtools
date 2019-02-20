@@ -332,32 +332,12 @@ export default class ManageUser extends React.PureComponent {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        if (respons.token !== '') {
+        if (respons.user.token !== '') {
           this.setState({
             currentTab: 1,
             isRegistered: true,
             textField: {},
           });
-
-          const cookieData = cookies.get('ssid');
-
-          if (cookieData !== undefined && cookieData !== '') {
-            fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
-              method: 'POST',
-              type: 'cors',
-              headers: {
-                'Authorization': `Bearer ${cookieData}`,
-                'Content-Type': 'application/json',
-              },
-            })
-          .then(json)
-          .then((respons) => {
-            console.log(respons);
-            this.setState({allData: respons});
-          }).catch((error) => {
-            console.log(error);
-          });
-          }
         }
       }).catch((error) => {
         console.log(`error: ${error}`);
