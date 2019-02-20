@@ -14,7 +14,7 @@ import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
-const HOSTNAME = 'http://13.229.149.228:8081/api/va/';
+const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/va/';
 const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
