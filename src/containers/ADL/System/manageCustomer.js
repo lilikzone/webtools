@@ -16,10 +16,13 @@ import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/customer/';
-import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 // const HOSTNAME = 'http://13.229.149.228:8081/api/customer/';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const HOSTNAME = 'http://13.229.149.228:8081/api/customer/';
 const dataGender = ['Male', 'Female'];
 const dataRole = [
   'Admin',
