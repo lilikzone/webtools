@@ -934,19 +934,6 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationNumber(e, input);
                     }}
                   />
-                  {/* <AutoComplete
-                    required={true}
-                    fullWidth={true}
-                    floatingLabelText="Role"
-                    searchText={this.state.textField.role}
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataRole}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationRole(input, dataSource);
-                    }}
-                    errorText={!this.state.isRoleValid}
-                  /> */}
 
                   <SelectField
                     fullWidth={true}
