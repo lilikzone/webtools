@@ -15,7 +15,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Avatar from 'material-ui/Avatar';
 import {Row} from 'react-flexbox-grid';
 import Subheader from 'material-ui/Subheader';
+import TextField from 'material-ui/TextField';
 import './loginPage.scss';
+import Snackbar from 'material-ui/Snackbar';
+import Cookies from 'universal-cookie';
 
 const styles = {
   loginContainer: {
@@ -94,8 +97,63 @@ const styles = {
   },
 };
 
+
+const cookies = new Cookies();
+
 class LoginPage extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username: '',
+      password: '',
+      validation: {
+        username: false,
+        password: false,
+      },
+      alert: false,
+      alertMessage: '',
+      token: '',
+    };
+  }
+  _handleChange = (input, value) => {
+    const target = input.target;
+    const valid = value === '';
+
+    this.setState({
+      validation: {...this.state.validation, [target.name]: valid},
+    });
+
+    this.setState({
+      [target.name]: value,
+    });
+  }
+
+  _handleClick = () => {
+    if (this.state.username === '' || this.state.password === '') {
+      this.setState({alert: true, alertMessage: 'Username/password is Invalid'});
+    }
+
+    if (!this.state.validation.username && !this.state.validation.password) {
+      const username = this.state.username;
+      const password = this.state.password;
+      const json = (response) => response.json();
+      fetch(`http://13.229.149.228:8081/api/admin/login?username=${username}&password=${password}`, {
+        method: 'post',
+        type: 'cors',
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        cookies.set('ssid', respons.token, {maxAge: 86400});
+        this.setState({token: respons.token});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
   render() {
+    const validation = this.state.validation;
+    const token = this.state.token;
     return (
       <MuiThemeProvider muiTheme={ThemeDefault}>
         <div className="login-background">
@@ -103,24 +161,68 @@ class LoginPage extends Component {
             <div className="card-content" style={styles.loginContainer}>
               <h3 style={styles.title}>SIGN IN</h3>
               <form>
-                <IconTextField hint="Username" label="Username" name="username" icon="perm_identity" floatingLabelStyle={{color: 'white'}} style={{color: 'white'}} type="text" />
-                <IconTextField hint="Password" label="Password" name="password" icon="https" floatingLabelStyle={{color: 'white'}} style={{color: 'white'}} type="password" />
-                <Link to="./" className="forMobileButton">
-                  <RaisedButton
-                    fullWidth={true}
-                    label="Login"
-                    primary={true}
-                    style={styles.loginBtn}
-                  />
-                  <br />
-                  <br />
-                </Link>
+                {token !== '' ? <div style={{display: 'none'}} >{window.location.pathname = '/admin' }</div> : ''}
+                <div className="input-group">
+                  <span className="input-group-icon">
+                    <i className="material-icons">perm_identity</i>
+                  </span>
+                  <div className="input-group-text">
+                    <TextField
+                      hintText="Username"
+                      floatingLabelText="Username"
+                      className="form-control" fullWidth={true}
+                      name="username"
+                      floatingLabelStyle={{color: 'white'}}
+                      style={{color: 'white'}}
+                      type="text"
+                      onChange={this._handleChange}
+                      errorText={validation.username}
+                    />
+
+                  </div>
+                </div>
+                <div className="input-group">
+                  <span className="input-group-icon">
+                    <i className="material-icons">https</i>
+                  </span>
+                  <div className="input-group-text">
+                    <TextField
+                      hintText="Password"
+                      floatingLabelText="Password"
+                      className="form-control" fullWidth={true}
+                      name="password"
+                      floatingLabelStyle={{color: 'white'}}
+                      style={{color: 'white'}}
+                      type="password"
+                      onChange={this._handleChange}
+                      errorText={validation.password}
+                    />
+
+                  </div>
+                </div>
+                {/* <Link to="./" className="forMobileButton"> */}
+                <RaisedButton
+                  fullWidth={true}
+                  label="Login"
+                  primary={true}
+                  style={styles.loginBtn}
+                  onTouchTap={this._handleClick}
+                />
+                <br />
+                <br />
+                {/* </Link> */}
 
                 <div style={styles.controls} className="displayNone">
 
-                  <Link to="/admin">
-                    <RaisedButton label="Login" primary={true} style={styles.loginBtn} />
-                  </Link>
+                  {/* <Link to="/admin"> */}
+                  <RaisedButton label="Login" onTouchTap={this._handleClick} primary={true} style={styles.loginBtn} />
+                  {/* </Link> */}
+                  <Snackbar
+                    open={this.state.alert}
+                    message={this.state.alertMessage}
+                    autoHideDuration={2000}
+                    bodyStyle={{backgroundColor: 'teal'}}
+                  />
                 </div>
               </form>
             </div>
