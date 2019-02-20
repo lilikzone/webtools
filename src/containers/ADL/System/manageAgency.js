@@ -11,20 +11,12 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+const HOSTNAME = 'http://13.229.149.228:8081/api/agency/';
 import Card from 'material-ui/Card';
 
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
-  </div>
-);
-
-
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-      Delete
-    </button>
   </div>
 );
 
@@ -508,15 +500,13 @@ export default class ManageAgency extends React.Component {
     this.state = {
       isAgencyValid: true,
       isRegistered: false,
+      loaded: false,
       currentTab: 0,
       onEdit: false,
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: {
-        code: '',
-        agency: '',
-      },
+      textField: [],
       dataTable: this.data,
     };
     const EditBtn = (data) => (
@@ -533,6 +523,16 @@ export default class ManageAgency extends React.Component {
          }
         >
         Edit</button>
+      </div>
+    );
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+        >
+        Delete
+        </button>
       </div>
     );
     this.columns = [
@@ -555,7 +555,7 @@ export default class ManageAgency extends React.Component {
       {
         id: 3,
         title: 'Agency Name',
-        prop: 'agency',
+        prop: 'name',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -577,11 +577,83 @@ export default class ManageAgency extends React.Component {
     ];
   }
 
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson) {
+        this.setState({
+          [stateName]: responseJson,
+          loaded: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  _postAPI(apiUrl, stateName, code, name) {
+    fetch( `${apiUrl}code=${code}&name=${name}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('res', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _deleteAPI(apiUrl, ids) {
+    fetch( `${apiUrl}ids=${ids}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({
+          currentTab: 0,
+        });
+      }
+
+      )
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+
   _handleTouchTap() {
     this.data.push({
       code: this.state.textField.code,
       agency: this.state.textField.agency,
     });
+    this._postAPI(`${HOSTNAME}register?`, 'test', this.state.textField.code, this.state.textField.agency);
+    this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
       dataTable: this.data,
       currentTab: 1,
@@ -625,8 +697,8 @@ export default class ManageAgency extends React.Component {
           <TextField
             required={true}
             value={this.state.idTemp}
-            hintText="ID"
-            floatingLabelText="ID"
+            // hintText="ID"
+            floatingLabelFixed={true}
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
@@ -638,7 +710,8 @@ export default class ManageAgency extends React.Component {
             fullWidth={true}
             required={true}
             value={this.state.codeTemp}
-            hintText="Code"
+            // hintText="Code"
+            floatingLabelFixed={true}
             floatingLabelText="Code"
             onChange={(e, input) => {
               this.setState({
@@ -649,7 +722,8 @@ export default class ManageAgency extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
-            hintText="Agency Name"
+            // hintText="Agency Name"
+            floatingLabelFixed={true}
             floatingLabelText="Agency Name"
             value={this.state.nameTemp}
             onChange={(e, input) => {
@@ -671,8 +745,9 @@ export default class ManageAgency extends React.Component {
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="Code"
+                    // hintText="Code"
                     value={this.state.textField.code}
+                    floatingLabelFixed={true}
                     floatingLabelText="Code"
                     fullWidth={true}
                     onChange={(e, input) => {
@@ -682,9 +757,10 @@ export default class ManageAgency extends React.Component {
 
                   <TextField
                     required={true}
-                    hintText="Agency Name"
+                    // hintText="Agency Name"
                     floatingLabelText="Agency Name"
                     fullWidth={true}
+                    floatingLabelFixed={true}
                     value={this.state.textField.agency}
                     onChange={(e, input) => {
                       this.setState({
@@ -735,7 +811,7 @@ export default class ManageAgency extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    dataArray={this.state.textField}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
@@ -775,7 +851,7 @@ export default class ManageAgency extends React.Component {
                     });
                   }}
                 >
-                  {this.state.currentTab == 1 && _renderManageUser()}
+                  {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
                 </Tab>
               </Tabs>
             </Col>

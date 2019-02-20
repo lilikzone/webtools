@@ -12,23 +12,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import Card from 'material-ui/Card';
-
+const HOSTNAME = 'http://13.229.149.228:8081/api/vendor/';
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
-  </div>
-);
-
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-
-  </div>
-);
-
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Delete</button>
   </div>
 );
 
@@ -41,6 +28,7 @@ const CheckBtn = () => (
 export default class ManageVendor extends React.Component {
   constructor(props) {
     super(props);
+    this.bearier = 'Bearier eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYwNTk1MCwiZXhwIjoxNTUwNjA5NTUwLCJuYmYiOjE1NTA2MDU5NTAsImp0aSI6InBGMFdBSU1Ld09vdFpxMkoiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.jWdkPFWvlVoNQTegNzJPv3sAVQSVRVSiTNB48cXz3cY';
     this.data = [{'id': '6584278700', 'name': 'Anna', 'last_name': 'Jackson', 'email': 'ajackson0@forbes.com', 'gender': 'Female', 'ip_address': '51.46.225.94', 'country': {'id': 1, 'name': 'China', 'code': 'CN'}, 'city': {'id': 1, 'name': 'Xiaoruo'}, 'pic': 'https://robohash.org/inquiaearum.bmp?size=50x50&set=set1'},
     {'id': '5918167633', 'name': 'Douglas', 'last_name': 'Morales', 'email': 'dmorales1@noaa.gov', 'gender': 'Male', 'ip_address': '238.135.116.252', 'country': {'id': 2, 'name': 'China', 'code': 'CN'}, 'city': {'id': 2, 'name': 'Daqiao'}, 'pic': 'https://robohash.org/perferendisminimaautem.bmp?size=50x50&set=set1'},
     {'id': '0907148174', 'name': 'Adam', 'last_name': 'Walker', 'email': 'awalker2@cmu.edu', 'gender': 'Male', 'ip_address': '228.254.30.193', 'country': {'id': 3, 'name': 'Vietnam', 'code': 'VN'}, 'city': {'id': 3, 'name': 'Phú Thái'}, 'pic': 'https://robohash.org/possimuscumesse.jpg?size=50x50&set=set1'},
@@ -83,6 +71,8 @@ export default class ManageVendor extends React.Component {
     {'id': '3886955052', 'name': 'Ashley', 'last_name': 'Gilbert', 'email': 'agilbert13@lycos.com', 'gender': 'Female', 'ip_address': '47.152.82.48', 'country': {'id': 40, 'name': 'China', 'code': 'CN'}, 'city': {'id': 40, 'name': 'Sujiatuo'}, 'pic': 'https://robohash.org/necessitatibusautquo.png?size=50x50&set=set1'},
     {'id': '0176299440', 'name': 'Samuel', 'last_name': 'Long', 'email': 'slong14@ebay.co.uk', 'gender': 'Male', 'ip_address': '8.4.54.35', 'country': {'id': 41, 'name': 'Turkmenistan', 'code': 'TM'}, 'city': {'id': 41, 'name': 'Serhetabat'}}];
     this.state = {
+      loaded: false,
+      currentTab: 0,
       isGenderValid: true,
       isEmailValid: true,
       isPhoneValid: true,
@@ -94,10 +84,7 @@ export default class ManageVendor extends React.Component {
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: {
-        code: '',
-        vendor: '',
-      },
+      textField: [],
       dataTable: this.data,
     };
     const EditBtn = (data) => (
@@ -116,6 +103,16 @@ export default class ManageVendor extends React.Component {
         Edit</button>
       </div>
     );
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+        >
+        Delete
+        </button>
+      </div>
+    );
     this.columns = [
       {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 2, title: 'Code', prop: 'code', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -125,11 +122,81 @@ export default class ManageVendor extends React.Component {
     ];
   }
 
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson) {
+        this.setState({
+          [stateName]: responseJson,
+          loaded: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  _postAPI(apiUrl, stateName, code, name) {
+    fetch( `${apiUrl}code=${code}&name=${name}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('res', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _deleteAPI(apiUrl, ids) {
+    fetch( `${apiUrl}ids=${ids}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYxODMzMSwiZXhwIjoxNTUwNjIxOTMxLCJuYmYiOjE1NTA2MTgzMzEsImp0aSI6InpsSGx0YlRiYjlwaDExdzIiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x_2geVKXlChBGIzMPV15KWxOT6_bzta3ci9jLMhpE-M',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({
+          currentTab: 0,
+        });
+      }
+
+      )
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   _handleTouchTap() {
     this.data.push({
       'code': this.state.textField.code,
       'vendor': this.state.textField.vendor,
     });
+    this._postAPI(`${HOSTNAME}register?`, 'test', this.state.textField.code, this.state.textField.vendor);
+    this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
       dataTable: this.data,
       isRegistered: true,
@@ -175,7 +242,8 @@ export default class ManageVendor extends React.Component {
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="Code"
+                    // hintText="Code"
+                    floatingLabelFixed={true}
                     value={this.state.textField.code}
                     floatingLabelText="Code"
                     fullWidth={true}
@@ -186,7 +254,8 @@ export default class ManageVendor extends React.Component {
 
                   <TextField
                     required={true}
-                    hintText="Vendor"
+                    // hintText="Vendor"
+                    floatingLabelFixed={true}
                     floatingLabelText="Vendor"
                     fullWidth={true}
                     value={this.state.textField.vendor}
@@ -281,7 +350,7 @@ export default class ManageVendor extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    dataArray={this.state.textField}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
@@ -299,12 +368,28 @@ export default class ManageVendor extends React.Component {
         <Grid item={true} xs={10} md={12} lg={12}>
           <Paper style={styles.paper}>
             <Col xs={12} md={12} lg={12}>
-              <Tabs initialSelectedIndex={0}>
-                <Tab key={1}label="Create Vendor">
-                  {_renderCreateVendor()}
+              <Tabs value={this.state.currentTab}>
+                <Tab
+                  value={0}label="Create Vendor"
+                  onActive={(val) => {
+                    this.setState({
+                      currentTab: val.props.index,
+                      isRegistered: false,
+                    });
+                  }}
+                >
+                  {this.state.currentTab == 0 && _renderCreateVendor()}
                 </Tab>
-                <Tab key={2}label="Manage Vendor">
-                  {_renderManageUser()}
+                <Tab
+                  value={1}
+                  label="Manage Vendor"
+                  onActive={(val) => {
+                    this.setState({
+                      currentTab: val.props.index,
+                    });
+                  }}
+                >
+                  {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
                 </Tab>
               </Tabs>
             </Col>

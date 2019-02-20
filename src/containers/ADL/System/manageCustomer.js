@@ -15,6 +15,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+const HOSTNAME = 'http://13.229.149.228:8081/api/customer/';
 const dataGender = ['Male', 'Female'];
 const dataRole = [
   'Admin',
@@ -41,15 +42,6 @@ const style = {
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
-  </div>
-);
-
-
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-      Delete
-    </button>
   </div>
 );
 
@@ -541,6 +533,7 @@ export default class ManageCustomer extends React.Component {
       },
     ];
     this.state = {
+      loaded: false,
       onEdit: false,
       nameTemp: '',
       emailTemp: '',
@@ -574,15 +567,26 @@ export default class ManageCustomer extends React.Component {
         <button
           className="mdl-button mdl-button--raised"
           onClick={() =>
-           this.setState({
-             onEdit: true,
-             nameTemp: data.name,
-             emailTemp: data.email,
-             phoneNumberTemp: data.phoneNumber,
-           })
-         }
+            this.setState({
+              onEdit: true,
+              nameTemp: data.name,
+              emailTemp: data.email,
+              phoneNumberTemp: data.phoneNumber,
+            })
+          }
         >
-        Edit</button>
+          Edit
+        </button>
+      </div>
+    );
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+        >
+          Delete
+        </button>
       </div>
     );
     this.columns = [
@@ -600,7 +604,7 @@ export default class ManageCustomer extends React.Component {
       {
         id: 2,
         title: 'Subscriber ID',
-        prop: 'subscriberId',
+        prop: 'custom_customer_id',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -608,7 +612,7 @@ export default class ManageCustomer extends React.Component {
       {
         id: 2,
         title: 'Customer Name',
-        prop: 'customerName',
+        prop: 'customer_name',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -624,114 +628,208 @@ export default class ManageCustomer extends React.Component {
       {
         id: 4,
         title: 'DOB Place',
-        prop: 'dobPlace',
+        prop: 'birth_place',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 5,
-        title: 'Type ID',
-        prop: 'typeId',
+        title: 'Gender',
+        prop: 'gender',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 6,
-        title: 'ID Number',
-        prop: 'idNumber',
+        title: 'Group',
+        prop: 'group',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 7,
-        title: 'ID Address',
-        prop: 'idAddress',
+        title: 'ID Type',
+        prop: 'identification_type',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 8,
-        title: 'Primary Phone',
-        prop: 'primaryPhone',
+        title: 'ID Number',
+        prop: 'identification_number',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 9,
-        title: 'Alternative Phone 1',
-        prop: 'alternativePhone1',
+        title: 'ID Address',
+        prop: 'identification_address',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 10,
-        title: 'Alternative Phone 2',
-        prop: 'alternativePhone2',
+        title: 'Primary Phone',
+        prop: 'phone1',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 11,
-        title: 'Email',
-        prop: 'email',
+        title: 'Alternative Phone 1',
+        prop: 'phone2',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 12,
-        title: 'Alternative Email',
-        prop: 'alternativeEmail',
+        title: 'Alternative Phone 2',
+        prop: 'phone3',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 13,
-        title: 'Created At',
-        prop: 'createdAt',
+        title: 'Email',
+        prop: 'email1',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 14,
-        title: 'Balance',
-        prop: 'balance',
+        title: 'Alternative Email',
+        prop: 'email2',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 15,
-        title: 'Due Date',
-        prop: 'dueDate',
+        title: 'Created At',
+        prop: 'created_at',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 16,
+        title: 'updated At',
+        prop: 'updated_at',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 17,
         title: 'Action',
         render: EditBtn,
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 17,
+        id: 18,
         title: 'Action',
         render: DeleteBtn,
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+  }
+
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          this.setState({
+            [stateName]: responseJson,
+            loaded: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _postAPI(
+    apiUrl,
+    stateName,
+    dob,
+    birth_place,
+    gender,
+    identification_type,
+    identification_number,
+    identification_address,
+    phone1,
+    phone2,
+    phone3,
+    email1,
+    email2,
+    group,
+    name
+  ) {
+    fetch(
+      `${apiUrl}dob=${dob}&birth_place=${birth_place}&gender=${gender}&identification_type=${identification_type}&identification_number=${identification_number}&identification_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&group=${group}&name=${name}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization:
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('res', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _deleteAPI(apiUrl, ids) {
+    fetch(`${apiUrl}ids=${ids}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization:
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYyMDMzMiwiZXhwIjoxNTUwNjIzOTMyLCJuYmYiOjE1NTA2MjAzMzIsImp0aSI6Ik1KTHlLb2Nvc01RTm1LNlQiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mKg4zs8SZxoSdFaxSGFQU9aoCTAJUVziqF18xxeBQ3s',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({
+          currentTab: 0,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   _handleClose() {
@@ -755,6 +853,25 @@ export default class ManageCustomer extends React.Component {
       email: this.state.textField.email,
       alternativeEmail: this.state.textField.alternativeEmail,
     });
+
+    this._postAPI(
+      `${HOSTNAME}register?`,
+      'test',
+      this.state.textField.dob,
+      this.state.textField.birth_place,
+      this.state.textField.gender,
+      this.state.textField.identification_type,
+      this.state.textField.identification_number,
+      this.state.textField.identification_address,
+      this.state.textField.phone1,
+      this.state.textField.phone2,
+      this.state.textField.phone3,
+      this.state.textField.email1,
+      this.state.textField.email2,
+      this.state.textField.group,
+      this.state.textField.name,
+    );
+    this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
       currentTab: 1,
       isRegistered: true,
@@ -770,7 +887,7 @@ export default class ManageCustomer extends React.Component {
 
   _handleValidationCustomerName(input, data) {
     this.setState({
-      textField: {...this.state.textField, customerName: data},
+      textField: {...this.state.textField, name: data},
     });
   }
 
@@ -842,13 +959,16 @@ export default class ManageCustomer extends React.Component {
   render() {
     let actions = [
       <FlatButton
-        label="Cancel" primary={true}
+        label="Cancel"
+        primary={true}
         onTouchTap={() => this._handleClose()}
-      />, <FlatButton
-        label="Submit" primary={true}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleClose()}
-          />,
+      />,
     ];
     let _renderModalComponent = () => {
       return (
@@ -894,6 +1014,21 @@ export default class ManageCustomer extends React.Component {
       );
     };
     let _renderCreateUser = () => {
+        // apiUrl,
+    // stateName,
+    // dob,
+    // birth_place,
+    // gender,
+    // identification_type,
+    // identification_number,
+    // identification_address,
+    // phone1,
+    // phone2,
+    // phone3,
+    // email1,
+    // email2,
+    // group,
+    // name
       return (
         <div>
           <h3 style={styles.navigation}>Create User</h3>
@@ -903,19 +1038,21 @@ export default class ManageCustomer extends React.Component {
                 <Col xs={12} md={6} lg={6}>
                   <TextField
                     required={true}
-                    hintText="Customer Name"
-                    value={this.state.textField.customerName}
+                    // hintText="Customer Name"
+                    floatingLabelFixed={true}
+                    value={this.state.textField.name}
                     floatingLabelText="Customer Name"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this._handleValidationCustomerName(e, input);
                     }}
                   />
-
+                  {/* no param to post for subscriberId */}
                   <TextField
                     required={true}
                     type={'number'}
-                    hintText="Subscriber ID"
+                    // hintText="Subscriber ID"
+                    floatingLabelFixed={true}
                     value={this.state.textField.subscriberId}
                     floatingLabelText="Subscriber ID"
                     fullWidth={true}
@@ -948,14 +1085,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.dobPlace}
+                    value={this.state.textField.birth_place}
                     floatingLabelText="DOB Place"
+                    floatingLabelFixed={true}
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          dobPlace: input,
+                          birth_place: input,
                         },
                       });
                     }}
@@ -963,15 +1101,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.typeId}
-                    hintText={'Type ID'}
+                    value={this.state.textField.identification_type}
+                    floatingLabelFixed={true}
                     floatingLabelText="Type ID"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          typeId: input,
+                          identification_type: input,
                         },
                       });
                     }}
@@ -979,15 +1117,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.idNumber}
-                    hintText={'ID Number'}
+                    value={this.state.textField.identification_number}
+                    floatingLabelFixed={true}
                     floatingLabelText="ID Number"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          idNumber: input,
+                          identification_number: input,
                         },
                       });
                     }}
@@ -995,15 +1133,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.idAddress}
-                    hintText={'ID Address'}
+                    value={this.state.textField.identification_address}
+                    floatingLabelFixed={true}
                     floatingLabelText="ID Address"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          idAddress: input,
+                          identification_address: input,
                         },
                       });
                     }}
@@ -1011,15 +1149,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.primaryPhone}
-                    hintText={'Primary Phone'}
+                    value={this.state.textField.phone1}
+                    floatingLabelFixed={true}
                     floatingLabelText="Primary Phone"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          primaryPhone: input,
+                          phone1: input,
                         },
                       });
                     }}
@@ -1027,15 +1165,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.alternativePhone1}
-                    hintText={'Alternative Phone 1'}
+                    value={this.state.textField.phone2}
+                    floatingLabelFixed={true}
                     floatingLabelText="Alternative Phone 1"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          alternativePhone1: input,
+                          phone2: input,
                         },
                       });
                     }}
@@ -1043,15 +1181,15 @@ export default class ManageCustomer extends React.Component {
 
                   <TextField
                     required={true}
-                    value={this.state.textField.alternativePhone2}
-                    hintText={'Alternative Phone 2'}
+                    value={this.state.textField.phone3}
+                    floatingLabelFixed={true}
                     floatingLabelText="Alternative Phone 2"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
                         textField: {
                           ...this.state.textField,
-                          alternativePhone2: input,
+                          phone3: input,
                         },
                       });
                     }}
@@ -1060,8 +1198,8 @@ export default class ManageCustomer extends React.Component {
                   <TextField
                     fullWidth={true}
                     required={true}
-                    value={this.state.textField.email}
-                    hintText="Email"
+                    value={this.state.textField.email1}
+                    floatingLabelFixed={true}
                     floatingLabelText="Email"
                     errorText={!this.state.isEmailValid1}
                     onChange={(e, input) => {
@@ -1069,7 +1207,7 @@ export default class ManageCustomer extends React.Component {
                         e,
                         input,
                         'isEmailValid1',
-                        'email'
+                        'email1'
                       );
                     }}
                   />
@@ -1077,8 +1215,8 @@ export default class ManageCustomer extends React.Component {
                   <TextField
                     fullWidth={true}
                     required={true}
-                    value={this.state.textField.alternativeEmail}
-                    hintText="Alternative Email"
+                    value={this.state.textField.email2}
+                    floatingLabelFixed={true}
                     floatingLabelText="Alternative Email"
                     errorText={!this.state.isEmailValid2}
                     onChange={(e, input) => {
@@ -1086,7 +1224,7 @@ export default class ManageCustomer extends React.Component {
                         e,
                         input,
                         'isEmailValid2',
-                        'alternativeEmail'
+                        'email2'
                       );
                     }}
                   />
@@ -1129,7 +1267,7 @@ export default class ManageCustomer extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    dataArray={this.state.textField}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
@@ -1169,7 +1307,9 @@ export default class ManageCustomer extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 1 && _renderManageUser()}
+                {this.state.loaded &&
+                  this.state.currentTab == 1 &&
+                  _renderManageUser()}
               </Tab>
             </Tabs>
             <Snackbar
