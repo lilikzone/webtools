@@ -13,23 +13,28 @@ import {MaterialContainer} from 'react-table-components';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 import DatePicker from 'material-ui/DatePicker';
-import '../../table/datatable.scss';
+const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/product/';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
+import '../../table/datatable.scss';
 
 const promoType = ['BANTEN', 'JAKARTA'];
 const dataType = require('json!../../table/data.json');
 const dataDummy = [
-  {'id': 1,
-    'name': 'xl fiber',
-    'description': 'speed up to 100 MB/s',
-    'charging_name': 'Bejo',
-    'price': 'Rp 3.000.000',
+  {
+    id: 1,
+    name: 'xl fiber',
+    description: 'speed up to 100 MB/s',
+    charging_name: 'Bejo',
+    price: 'Rp 3.000.000',
   },
-  {'id': 2,
-    'name': 'xl fiber 2',
-    'description': 'speed up to 200 MB/s',
-    'charging_name': 'Bejo',
-    'price': 'Rp 3.100.000',
+  {
+    id: 2,
+    name: 'xl fiber 2',
+    description: 'speed up to 200 MB/s',
+    charging_name: 'Bejo',
+    price: 'Rp 3.100.000',
   },
 ];
 
@@ -47,13 +52,6 @@ const generateRowProps = (row) => {
 const EditBtn = () => (
   <div className="text-center">
     <button className="mdl-button mdl-button--raised">Edit</button>
-
-  </div>
-);
-
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Delete</button>
   </div>
 );
 
@@ -67,6 +65,24 @@ export default class ManageProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      cookies: '',
+      promo: 0,
+      currentTab: 0,
+      loaded: false,
+      code: '',
+      name: '',
+      promo_percentage: '',
+      promo_area: '',
+      promo_type: '',
+      price: '',
+      charging_name: '',
+      promo_value: '',
+      promo_price: '',
+      soc_label: '',
+      soc_id: '',
+      description: '',
+      promo_end: '',
+      promo_start: '',
       validation: {
         code: false,
         promo: false,
@@ -82,50 +98,275 @@ export default class ManageProduct extends React.Component {
         promo_end: false,
         promo_start: false,
       },
-      TextField: {
-        code: '',
-        promo: false,
-        name: '',
-        promo_percentage: '',
-        promo_area: '',
-        promo_type: '',
-        price: '0',
-        charging_name: '',
-        soc_label: '',
-        soc_id: '',
-        description: '',
-        promo_end: '',
-        promo_start: '',
-      },
+      textField: [],
     };
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+        >
+          Delete
+        </button>
+      </div>
+    );
+    this.columns = [
+      {
+        id: 1,
+        title: 'Id',
+        prop: 'id',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Code',
+        prop: 'code',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Name',
+        prop: 'name',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Description',
+        prop: 'description',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'SOC ID',
+        prop: 'soc_id',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'SOC LABEL',
+        prop: 'soc_label',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Charging Name',
+        prop: 'charging_name',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'Price',
+        prop: 'price',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
+        title: 'Promo',
+        prop: 'promo',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Promo Type',
+        prop: 'promo_type',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 11,
+        title: 'Promo Value',
+        prop: 'promo_value',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 12,
+        title: 'Promo Price',
+        prop: 'promo_price',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 13,
+        title: 'Created At',
+        prop: 'created_at',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 14,
+        title: 'Updated At',
+        prop: 'updated_at',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 15,
+        title: '',
+        render: EditBtn,
+        width: '2%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 16,
+        title: '',
+        render: DeleteBtn,
+        width: '2%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
+  }
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`, 'textField');
+  }
+
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('get', responseJson);
+        if (responseJson) {
+          this.setState({
+            [stateName]: responseJson,
+            loaded: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _postAPI() {
+    fetch(
+      `https://ibase.adlsandbox.com:8081/api/product/register?code=${
+        this.state.code
+      }&name=${this.state.name}&description=${this.state.description}&soc_id=${
+        this.state.soc_id
+      }&soc_label=${this.state.soc_label}&charging_name=${
+        this.state.charging_name
+      }&price=${this.state.price}&promo_type=${
+        this.state.promo_type
+      }&promo_value=${this.state.promo_value}&promo_price=${
+        this.state.promo_price
+      }`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.state.cookies}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('post', responseJson);
+        this._getAPI(`${HOSTNAME}all?`, 'textField');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _deleteAPI(apiUrl, ids) {
+    fetch(`${apiUrl}ids=${ids}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this._getAPI(`${HOSTNAME}all?`, 'textField');
+        this.setState({
+          currentTab: 0,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _handleTouchTap() {
+    this._postAPI(
+      `register?code=${this.state.code}&name=${this.state.name}&description=${
+        this.state.description
+      }&soc_id=${this.state.soc_id}&soc_label=${
+        this.state.soc_label
+      }&charging_name=${this.state.charging_name}&price=${
+        this.state.price
+      }&promo=${this.state.promo}&promo_type=${
+        this.state.promo_type
+      }&promo_value=${this.state.promo_value}&promo_price=${
+        this.state.promo_price
+      }`
+    );
+    this._getAPI(`${HOSTNAME}all?`, 'textField');
+    this.setState({
+      dataTable: this.data,
+      textField: {},
+    });
   }
 
   promoToggle = (input, inputChecked) => {
     const tab = this.state.currentTab === 1 ? 0 : 1;
-    this.setState({TextField: {
-      ...this.state.TextField, promo: inputChecked,
-    },
-    });
-  }
-
-  handleChangeText = (input, value) => {
-    const target = input.target;
-    const valid = value === '';
-
     this.setState({
-      validation: {...this.state.validation, [target.name]: valid},
+      promo: inputChecked,
     });
+  };
 
+  _handleValidationPromoArea(input, data) {
+    let dataInput = input.toLowerCase();
+    let dataVendor = data.map((val) => val.toLowerCase());
     this.setState({
-      TextField: {...this.state.TextField, [target.name]: value},
+      isVendorValid: dataVendor.includes(dataInput),
     });
+    if (dataVendor.includes(dataInput)) {
+      this.setState({
+        textField: {...this.state.textField, vendor: dataInput},
+      });
+    }
   }
-
 
   render() {
     let _renderCreateProduct = () => {
-      const promo_activation = this.state.TextField.promo;
-      const validation = this.state.validation;
+      const promo_activation = this.state.promo;
+      // const validation = this.state.validation;
 
       return (
         <div>
@@ -138,19 +379,27 @@ export default class ManageProduct extends React.Component {
                     required={true}
                     hintText="Code"
                     floatingLabelText="Code"
+                    value={this.state.code}
                     name="code"
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.code}
+                    onChange={(e, input) => {
+                      this.setState({
+                        code: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
                     hintText="Name"
                     floatingLabelText="Name"
                     name="name"
+                    value={this.state.name}
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.name}
+                    onChange={(e, input) => {
+                      this.setState({
+                        name: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
@@ -159,19 +408,27 @@ export default class ManageProduct extends React.Component {
                     multiLine={true}
                     rows={2}
                     rowsMax={4}
+                    value={this.state.description}
                     name="description"
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.description}
+                    onChange={(e, input) => {
+                      this.setState({
+                        description: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
                     hintText="SOC ID"
                     floatingLabelText="SOC ID"
                     name="soc_id"
+                    value={this.state.soc_id}
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.soc_id}
+                    onChange={(e, input) => {
+                      this.setState({
+                        soc_id: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
@@ -179,78 +436,134 @@ export default class ManageProduct extends React.Component {
                     floatingLabelText="SOC Label"
                     name="soc_label"
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.soc_label}
+                    value={this.state.soc_label}
+                    onChange={(e, input) => {
+                      this.setState({
+                        soc_label: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
                     hintText="Charging Name"
                     floatingLabelText="Charging Name"
                     name="charging_name"
+                    value={this.state.charging_name}
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.charging_name}
+                    onChange={(e, input) => {
+                      this.setState({
+                        charging_name: input,
+                      });
+                    }}
                   />
                   <TextField
                     required={true}
-                    hintText="Price"
+                    // hintText="Price"
                     floatingLabelText="Price"
+                    floatingLabelFixed={true}
                     name="price"
                     fullWidth={true}
-                    onChange={this.handleChangeText}
-                    errorText={validation.price}
+                    value={this.state.price}
+                    onChange={(e, input) => {
+                      this.setState({
+                        price: input,
+                      });
+                    }}
+                    // errorText={validation.price}
                     type="number"
                   />
-                  <Toggle name="promo" label="Promo" style={styles.toggle} onToggle={this.promoToggle} toggled={promo_activation} />
-                  {promo_activation ? <div>
-                    <DatePicker
-                      hintText="Promo Start"
-                      floatingLabelText="Promo Start"
-                      name="promo_start"
-                      fullWidth={true}
-                      onChange={this.handleChangeText}
-                      errorText={validation.promo_start}
-                    />
-                    <DatePicker
-                      hintText="Promo End"
-                      floatingLabelText="Promo End"
-                      name="promo_end"
-                      fullWidth={true}
-                      onChange={this.handleChangeText}
-                      errorText={validation.promo_end}
-                    />
-                    <SelectField
-                      fullWidth={true}
-                      floatingLabelText="Promo Type"
-                      name="promo_type"
-                    >
-                      <MenuItem value={'olt'} primaryText="OLT" />
-                      <MenuItem value={'city'} primaryText="City" />
-                      <MenuItem value={'region'} primaryText="Region" />
-                      <MenuItem value={'fdt'} primaryText="FDT" />
-                    </SelectField>
+                  <Toggle
+                    name="promo"
+                    label="Promo"
+                    style={styles.toggle}
+                    onToggle={(input, inputChecked) => {
+                      this.setState({
+                        promo: inputChecked == false ? 0 : 1,
+                      });
+                    }}
+                    toggled={promo_activation}
+                  />
+                  {promo_activation ? (
                     <div>
-                      <AutoComplete
-                        name="promo_area"
+                      <DatePicker
+                        hintText="Promo Start"
+                        floatingLabelText="Promo Start"
+                        name="promo_start"
+                        value={this.state.promo_start}
                         fullWidth={true}
-                        hintText="Promo area"
-                        filter={AutoComplete.noFilter}
-                        dataSource={promoType}
-                        openOnFocus={true}
+                        onChange={(e, input) => {
+                          this.setState({
+                            promo_start: input,
+                          });
+                        }}
+                        // errorText={validation.promo_start}
+                      />
+                      <DatePicker
+                        hintText="Promo End"
+                        floatingLabelText="Promo End"
+                        name="promo_end"
+                        value={this.state.promo_end}
+                        fullWidth={true}
+                        onChange={(e, input) => {
+                          this.setState({
+                            promo_end: input,
+                          });
+                        }}
+                        // errorText={validation.promo_end}
+                      />
+                      <SelectField
+                        fullWidth={true}
+                        floatingLabelText="Promo Type"
+                        name="promo_type"
+                        value={this.state.promo_type}
+                        onChange={(e, index, value) => {
+                          this.setState({
+                            promo_type: value,
+                          });
+                        }}
+                      >
+                        <MenuItem value={'olt'} primaryText="OLT" />
+                        <MenuItem value={'city'} primaryText="City" />
+                        <MenuItem value={'region'} primaryText="Region" />
+                        <MenuItem value={'fdt'} primaryText="FDT" />
+                      </SelectField>
+                      <div>
+                        <AutoComplete
+                          name="promo_area"
+                          fullWidth={true}
+                          hintText="Promo area"
+                          floatingLabelText="Promo Type"
+                          filter={AutoComplete.noFilter}
+                          dataSource={promoType}
+                          openOnFocus={true}
+                          onUpdateInput={(input, dataSource) => {
+                            this._handleValidationPromoArea(input, dataSource);
+                          }}
+                        />
+                      </div>
+                      <TextField
+                        required={true}
+                        hintText="Promo Percentage"
+                        floatingLabelText="Promo Percentage"
+                        name="promo_percentage"
+                        fullWidth={true}
+                        type="number"
+                        onChange={(e, input) => {
+                          this.setState({
+                            promo_percentage: input,
+                          });
+                        }}
                       />
                     </div>
-                    <TextField
-                      required={true}
-                      hintText="Promo Percentage"
-                      floatingLabelText="Promo Percentage"
-                      name="promo_percentage"
-                      fullWidth={true}
-                      type="number"
-                      onChange={this.handleChangeText}
-                      errorText={validation.promo_percentage}
-                    />
-                  </div> : ''}
-                  <RaisedButton label="Create Product" secondary={true} style={styles.raisedButton} />
+                  ) : (
+                    ''
+                  )}
+                  <RaisedButton
+                    onTouchTap={() => this._handleTouchTap()}
+                    label="Create Product"
+                    secondary={true}
+                    style={styles.raisedButton}
+                  />
                 </Col>
               </form>
             </Col>
@@ -260,20 +573,6 @@ export default class ManageProduct extends React.Component {
     };
 
     let _renderTableProduct = () => {
-      const columns = [
-        {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
-        // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 2, title: 'ID', prop: 'id', width: '10%', headerClass: 'mdl-data-table__cell--numeric', cellClass: 'mdl-data-table__cell--numeric'},
-        {id: 3, title: 'Product Name', prop: 'name', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 4, title: 'Description', prop: 'description', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 5, title: 'Charging Name', prop: 'charging_name', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 6, title: 'Price', prop: 'price', width: '150px', headerClass: 'mdl-data-table__cell--numeric', cellClass: 'mdl-data-table__cell--numeric'},
-        // {id: 7, title: 'Country', prop: 'country.name', visible: false, width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        // {id: 8, title: 'Code', prop: 'country.code', width: '80px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 9, title: 'Action', render: EditBtn, width: '10%', headerClass: 'mdl-data-table__cell--non-numeric'},
-        {id: 10, title: 'Action', render: DeleteBtn, width: '10%', headerClass: 'mdl-data-table__cell--non-numeric'},
-      ];
-
       return (
         <Row>
           <Col xs={12} md={12} lg={12}>
@@ -284,13 +583,12 @@ export default class ManageProduct extends React.Component {
                 <MaterialContainer
                   keys="id"
                   className="mdl-data-table"
-                  columns={columns}
-                  onDragColumn={(columns) => console.log(columns)}
-                  onChangeColumnsVisibility={(columns) => console.log(columns)}
-                  dataArray={dataDummy}
+                  columns={this.columns}
+                  dataArray={this.state.textField}
                   draggable={true}
                   sortable={true}
-                  sortBy={{prop: 'id', order: 'desc'}} generateRowProps={generateRowProps}
+                  sortBy={{prop: 'id', order: 'desc'}}
+                  generateRowProps={generateRowProps}
                   pageSizeOptions={[5]}
                 />
               </div>
@@ -300,23 +598,38 @@ export default class ManageProduct extends React.Component {
         </Row>
       );
     };
-
-    console.log(this.state);
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
-            <Tabs initialSelectedIndex={0}>
-              <Tab label="Add Product" >
-                {_renderCreateProduct()}
+            <Tabs value={this.state.currentTab}>
+              <Tab
+                value={0}
+                label="Add Product"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab == 0 && _renderCreateProduct()}
               </Tab>
-              <Tab  label="Manage Product" >
-                {_renderTableProduct()}
+              <Tab
+                value={1}
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+                label="Manage Product"
+              >
+                {this.state.loaded &&
+                  this.state.currentTab == 1 &&
+                  _renderTableProduct()}
               </Tab>
             </Tabs>
           </Col>
         </Paper>
-
       </Row>
     );
   }
