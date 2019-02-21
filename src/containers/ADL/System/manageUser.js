@@ -97,7 +97,8 @@ export default class ManageUser extends React.PureComponent {
       token: '',
       dataVendor: [],
       dataAgency: [],
-      allData: [],
+      allData: '',
+      loaded: false,
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -223,7 +224,22 @@ export default class ManageUser extends React.PureComponent {
       {'name': 'Sales', 'value': 'sales'}];
     }
   }
-
+  componentDidMount() {
+    fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+      method: 'GET',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${cookieData}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allData: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
   componentWillMount() {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -235,7 +251,7 @@ export default class ManageUser extends React.PureComponent {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
         const role = respons.user.role;
         this.setState({role: role});
         const dataRole = this._dataRole(role);
@@ -255,7 +271,7 @@ export default class ManageUser extends React.PureComponent {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
 
         const dataVendorObject = respons;
         const dataVendor = [];
@@ -278,7 +294,7 @@ export default class ManageUser extends React.PureComponent {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
 
         const dataAgencyObject = respons;
         const dataAgency = [];
@@ -291,22 +307,6 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-
-      fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
-        method: 'GET',
-        type: 'cors',
-        headers: {
-          'Authorization': `Bearer ${cookieData}`,
-          'Content-Type': 'application/json',
-        },
-      })
-          .then(json)
-          .then(( ) => {
-            console.log(respons);
-            this.setState({allData: respons});
-          }).catch((error) => {
-            console.log(error);
-          });
     }
   }
 
@@ -340,6 +340,20 @@ export default class ManageUser extends React.PureComponent {
         }
       }).catch((error) => {
         console.log(`error: ${error}`);
+      });
+    fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+      method: 'GET',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${cookieData}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allData: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
       });
   }
 
@@ -665,7 +679,7 @@ export default class ManageUser extends React.PureComponent {
                     dataArray={this.state.allData}
                     draggable={true}
                     sortable={false}
-                    sortBy={{prop: 'country.name', order: 'asc'}}
+                    sortBy={{prop: 'id', order: 'desc'}}
                     pageSizeOptions={[5]}
                   />
                 </div>
@@ -697,9 +711,14 @@ export default class ManageUser extends React.PureComponent {
               <Tab
                 value={1}
                 label="Manage User"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
 
               >
-                {_renderManageUser()}
+                {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
               </Tab>
             </Tabs>
             <Snackbar

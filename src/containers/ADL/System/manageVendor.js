@@ -383,7 +383,8 @@ export default class ManageVendor extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <Tabs value={this.state.currentTab}>
                 <Tab
-                  value={0}label="Create Vendor"
+                  value={0}
+                  label="Create Vendor"
                   onActive={(val) => {
                     this.setState({
                       currentTab: val.props.index,
