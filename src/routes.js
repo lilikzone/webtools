@@ -65,6 +65,7 @@ import lockPage from './containers/extra_page/lock';
 import Documents from './containers/doc/documents';
 import ManageProduct from './containers/ADL/Product/ManageProduct';
 import VisitorChecker from './containers/ADL/VisitorChecker';
+import Logout from './containers/ADL/Logout';
 
 
 export default (
@@ -73,6 +74,7 @@ export default (
     <Route path="lock" component={lockPage} />
     <Route path="404" component={NotFoundPage404} />
     <Route path="/" component={VisitorChecker} />
+    <Route path="/logout" component={Logout} />
     <Route path="/admin" component={App}>
       <IndexRoute component={DashboardPage} />
       {/* custom page start here */}
