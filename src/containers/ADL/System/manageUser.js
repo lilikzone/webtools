@@ -307,6 +307,20 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+      fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allData: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   }
 
@@ -316,7 +330,7 @@ export default class ManageUser extends React.PureComponent {
     const name = this.state.textField.name;
     // const gender = this.state.textField.gender;
     const email = this.state.textField.email;
-    const phone = this.state.textField.phoneNumber;
+    // const phone = this.state.textField.phoneNumber;
     const role = this.state.textField.role;
     const vendor = this.state.textField.vendor;
     const agency = this.state.textField.agency;
@@ -324,7 +338,7 @@ export default class ManageUser extends React.PureComponent {
     const json = (response) => response.json();
 
 
-    fetch(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}`, {
+    fetch(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}&vendor=${vendor}&agency=${agency}`, {
       method: 'POST',
       type: 'cors',
     })
