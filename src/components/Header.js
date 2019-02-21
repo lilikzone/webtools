@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
+import {Link} from 'react-router';
 import {List, ListItem} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
@@ -220,7 +221,7 @@ class Header extends React.Component {
               }}
             >
               <MenuItem key={1} primaryText="Change Password" leftIcon={<FontIcon color="#212121" className="material-icons">edit</FontIcon>} />
-              <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} />
+              <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} containerElement={<Link to={'/logout'} />} />
               {/* <MenuItem key={3} primaryText="Price List" /> */}
             </IconMenu>
             {/* <IconButton onTouchTap={this.handleToggle} > <FontIcon color={'#707780'} className="material-icons">
