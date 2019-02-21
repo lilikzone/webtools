@@ -137,19 +137,31 @@ class LoginPage extends Component {
       const username = this.state.username;
       const password = this.state.password;
       const json = (response) => response.json();
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+
       fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${username}&password=${password}`, {
         method: 'post',
         type: 'cors',
-      })
+      }).then(status)
       .then(json)
       .then((respons) => {
-        console.log(respons);
-        cookies.set('ssid', respons.token, {maxAge: 86400});
-        this.setState({token: respons.token});
+        if (respons.token !== undefined) {
+          cookies.set('ssid', respons.token, {maxAge: 86400});
+          this.setState({token: respons.token});
+        }
       }).catch((error) => {
-        console.log(`error: ${error}`);
+        this.setState({alert: true, alertMessage: `${error}`});
       });
     }
+  }
+
+  _onRequestClose=(data) => {
+    this.setState({alert: false});
   }
   render() {
     const validation = this.state.validation;
@@ -222,6 +234,7 @@ class LoginPage extends Component {
                     message={this.state.alertMessage}
                     autoHideDuration={2000}
                     bodyStyle={{backgroundColor: 'teal'}}
+                    onRequestClose={this._onRequestClose}
                   />
                 </div>
               </form>

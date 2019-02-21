@@ -267,6 +267,7 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+
       fetch('https://ibase.adlsandbox.com:8081/api/agency/all', {
         method: 'GET',
         type: 'cors',
@@ -300,7 +301,7 @@ export default class ManageUser extends React.PureComponent {
         },
       })
           .then(json)
-          .then((respons) => {
+          .then(( ) => {
             console.log(respons);
             this.setState({allData: respons});
           }).catch((error) => {
@@ -310,7 +311,6 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _handleTouchTap() {
-    // this.data.push({
     const username = this.state.textField.username;
     const password = this.state.textField.password;
     const name = this.state.textField.name;
@@ -322,8 +322,7 @@ export default class ManageUser extends React.PureComponent {
     const agency = this.state.textField.agency;
 
     const json = (response) => response.json();
-    // });
-    console.log(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}`);
+
 
     fetch(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}`, {
       method: 'POST',
@@ -698,13 +697,9 @@ export default class ManageUser extends React.PureComponent {
               <Tab
                 value={1}
                 label="Manage User"
-                onActive={(val) => {
-                  this.setState({
-                    currentTab: val.props.index,
-                  });
-                }}
+
               >
-                {this.state.currentTab == 1 && _renderManageUser()}
+                {_renderManageUser()}
               </Tab>
             </Tabs>
             <Snackbar
