@@ -26,6 +26,11 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
+import {grey50, teal300, red400} from 'material-ui/styles/colors';
+import Cookies from 'universal-cookie';
+
+
+const cookies = new Cookies();
 const dataCity = [
   'Tangerang',
   'Tangerang Selatan',
@@ -38,6 +43,15 @@ const dataCity = [
   'Denpasar',
   'Jakarta Selatan',
 ];
+const dataCluster = [
+  'PALEM GANDA ASRI 1',
+  'PALEM GANDA ASRI 2',
+
+];
+const dataStreet = [
+  'JL.BLOCK C5 ',
+  'JL.BLOCK C5 ',
+];
 const dobPlace = [
   'KAB BOGOR',
   'KAB PONOGORO',
@@ -49,9 +63,9 @@ const dobPlace = [
 const dataTypePayment = ['Regular', 'Pay After Installation'];
 const idType = ['KTP', 'KITAS', 'SIM'];
 // all data with empty array will considered false in type input
-const dataCluster = [];
-const dataStreet = [];
-const dataAddress = [];
+// const dataCluster = [];
+// const dataStreet = [];
+const dataAddress = ['JL.BLOCK C5 - NO. 6 - PALEM GANDA ASRI 1 - TANGERANG', 'JL.BLOCK C5 - NO. 4 - PALEM GANDA ASRI 1 - TANGERANG', 'JL.BLOCK C5 - NO. 2 - PALEM GANDA ASRI 1 - TANGERANG'];
 const style = {
   card: {
     padding: 20,
@@ -180,6 +194,7 @@ const columns = [
     headerClass: 'mdl-data-table__cell--non-numeric',
   },
 ];
+
 
 export default class SalesOrder extends React.Component {
   constructor(props) {
@@ -321,42 +336,118 @@ export default class SalesOrder extends React.Component {
         phone3: '',
         email1: '',
         email2: '',
+        gender: '',
         dob: {},
         installationDate: {},
       },
+      dataProduct: [],
+      productId: '',
+      selectedProduct: false,
     };
+    const ChooseBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() => {
+            const dataArray = [];
+            dataArray.push(data);
+            this.setState({
+              dataSelectedProduct: dataArray,
+              isGetProduct: false,
+              selectedProduct: true,
+            });
+          }
+        }
+
+        >
+        Choose</button>
+      </div>
+    );
+    this.Productcolumns = [
+      {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 3, title: 'promo type', prop: 'promo_type', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: 'price', prop: 'price', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 5, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+    ];
+    this.SelectedProductcolumns = [
+      {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 3, title: 'promo type', prop: 'promo_type', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: 'price', prop: 'price', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    ];
   }
 
+
   _handleTouchTap() {
-    this.data.push({
-      name: this.state.textField.name,
-      olt: this.state.textField.olt,
-      city: this.state.textField.city,
-      region: this.state.textField.region,
-      fdt: this.state.textField.fdt,
-      cluster: this.state.textField.cluster,
-      street: this.state.textField.street,
-      fullAddress: this.state.textField.fullAddress,
-      homepassedId: this.state.textField.homepassedId,
-      typePayment: this.state.textField.typePayment,
-      idType: this.state.textField.idType,
-      dobPlace: this.state.textField.dobPlace,
-      idNumber: this.state.textField.idNumber,
-      address: this.state.textField.address,
-      phone1: this.state.textField.phone1,
-      phone2: this.state.textField.phone2,
-      phone3: this.state.textField.phone3,
-      email1: this.state.textField.email1,
-      email2: this.state.textField.email2,
-      dob: this.state.textField.dob,
-      installationDate: this.state.textField.installationDate,
-    });
-    this.setState({
-      currentTab: 1,
-      isRegistered: true,
-      textField: {},
-    });
+    const name = this.state.textField.name;
+    const olt = this.state.textField.olt;
+    const city = this.state.textField.city;
+    const region = this.state.textField.region;
+    const fdt = this.state.textField.fdt;
+    const cluster = this.state.textField.cluster;
+    const street = this.state.textField.street;
+    const fullAddress = this.state.textField.fullAddress;
+    const homepassedId = this.state.textField.homepassedId;
+    const typePayment = this.state.textField.typePayment;
+    const idType = this.state.textField.idType;
+    const dobPlace = this.state.textField.dobPlace;
+    const idNumber = this.state.textField.idNumber;
+    const address = this.state.textField.address;
+    const phone1 = this.state.textField.phone1;
+    const phone2 = this.state.textField.phone2;
+    const phone3 = this.state.textField.phone3;
+    const email1 = this.state.textField.email1;
+    const email2 = this.state.textField.email2;
+    const dob = this.state.textField.dob;
+    const installationDate = this.state.textField.installationDate;
+    const gender = this.state.textField.gender;
+    const status = 'new';
+    const product_id = this.state.productId;
+
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/created?status=${status}&customer_email1=${email1}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}`, {
+        method: 'POST',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        const json = (response) => response.json();
+        const cookieData = cookies.get('ssid');
+
+        fetch('https://ibase.adlsandbox.com:8081/api/order/all', {
+          method: 'GET',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    // });
+      this.setState({
+        currentTab: 1,
+        isRegistered: true,
+        textField: {},
+      });
+    }
   }
+
 
   _handleValidationEmail(e, input, email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -397,90 +488,118 @@ export default class SalesOrder extends React.Component {
   }
   _handleValidationCluster(input, data) {
     let dataInput = input.toLowerCase();
-    let dataCluster = data.map((val) => val.toLowerCase());
+    let dataCluster = dataInput;
     this.setState({
-      isClusterValid: dataCluster.includes(dataInput),
+      textField: {...this.state.textField, cluster: dataCluster},
     });
-    if (dataCluster.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, cluster: dataCluster},
-      });
-    }
   }
   _handleValidationStreet(input, data) {
     let dataInput = input.toLowerCase();
-    let dataStreet = data.map((val) => val.toLowerCase());
+    let dataStreet = dataInput;
+
     this.setState({
-      isStreetValid: dataStreet.includes(dataInput),
+      textField: {...this.state.textField, street: dataStreet},
     });
-    if (dataStreet.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, street: dataStreet},
-      });
-    }
   }
-  _handleValidationTypePayment(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataTypePayment = data.map((val) => val.toLowerCase());
+  _handleValidationTypePayment(input, index, data) {
+    let dataInput = data.toLowerCase();
+
     this.setState({
-      isTypePaymentValid: dataTypePayment.includes(dataInput),
+      textField: {...this.state.textField, typePayment: dataInput},
     });
-    if (dataTypePayment.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, typePayment: dataInput},
-      });
-    }
+  }
+  _handleValidationGender(input, index, data) {
+    let dataInput = data.toLowerCase();
+
+    this.setState({
+      textField: {...this.state.textField, gender: dataInput},
+    });
   }
   _handleValidationFullAddress(input, data) {
     let dataInput = input.toLowerCase();
-    let dataFullAddress = data.map((val) => val.toLowerCase());
+    // let dataFullAddress = data.map((val) => val.toLowerCase());
+    // this.setState({
+    //   isFullAddressValid: dataFullAddress.includes(dataInput),
+    // });
+    // if (dataFullAddress.includes(dataInput)) {
     this.setState({
-      isFullAddressValid: dataFullAddress.includes(dataInput),
+      textField: {...this.state.textField, fullAddress: dataInput},
     });
-    if (dataFullAddress.includes(dataInput)) {
-      this.setState({
-        textField: {...this.state.textField, fullAddress: dataFullAddress},
+    // }
+  }
+  _reselectProduct = () => {
+    this.setState({selectedProduct: false, isGetProduct: true});
+  }
+
+  componentWillMount() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+      fetch('https://ibase.adlsandbox.com:8081/api/homepassed/sort', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+
+        // const dataVendorObject = respons;
+        // const dataVendor = [];
+        // let i;
+        // for (i = 0;i < dataVendorObject.length;i++) {
+        //   dataVendor.push(dataVendorObject[i].name);
+        // }
+        // this.setState({dataVendor: dataVendor});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+
+      fetch('https://ibase.adlsandbox.com:8081/api/product/all', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        this.setState({dataProduct: respons});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
       });
     }
   }
 
+  // _handleRowCLick(row, data) {
+  //   this.setState({selectedField: row});
+  // }
+
   render() {
+    // console.log(this.state.selectedField);
+
     let _renderProduct = (data) => {
       if (data) {
         return (
           <div>
             <h1 style={{marginTop: 30, textAlign: 'center'}}>Product</h1>
             <Card style={style.card}>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHeaderColumn style={style.columns.name}>
-                      Name
-                    </TableHeaderColumn>
-                    <TableHeaderColumn style={style.columns.promo}>
-                      Promo
-                    </TableHeaderColumn>
-                    <TableHeaderColumn style={style.columns.price}>
-                      Price
-                    </TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {Data.tablePage.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableRowColumn style={style.columns.name}>
-                        {item.name}
-                      </TableRowColumn>
-                      <TableRowColumn style={style.columns.promo}>
-                        {item.price}
-                      </TableRowColumn>
-                      <TableRowColumn style={style.columns.price}>
-                        {item.category}
-                      </TableRowColumn>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <MaterialContainer
+                keys="id"
+                className="mdl-data-table"
+                columns={this.Productcolumns}
+                // onDragColumn={(columns) => console.log(columns)}
+                // onChangeColumnsVisibility={(columns) => console.log(columns)}
+                dataArray={this.state.dataProduct}
+                draggable={false}
+                sortable={false}
+                sortBy={{prop: 'id', order: 'desc'}}
+                pageSizeOptions={[10]}
+              />
             </Card>
           </div>
         );
@@ -610,6 +729,7 @@ export default class SalesOrder extends React.Component {
       return (
         <div>
           <h1 style={{marginTop: 15, textAlign: 'center'}}>Customer Data</h1>
+
           <Card style={style.card}>
             <form>
               <Col xs={12} md={6} lg={6}>
@@ -620,7 +740,7 @@ export default class SalesOrder extends React.Component {
                   floatingLabelText="Homepassed ID"
                   fullWidth={true}
                 />
-                <AutoComplete
+                {/* <AutoComplete
                   fullWidth={true}
                   required={true}
                   floatingLabelText="Type Payment"
@@ -633,7 +753,20 @@ export default class SalesOrder extends React.Component {
                     this._handleValidationTypePayment(input, dataSource);
                   }}
                   errorText={!this.state.isTypePaymentValid}
-                />
+                /> */}
+                <SelectField
+                  fullWidth={true}
+                  required={true}
+                  floatingLabelText="Type Payment"
+                  name="type_payment"
+                  value={this.state.textField.typePayment}
+                  onChange={(input, index, dataSource) => {
+                    this._handleValidationTypePayment(input, index, dataSource);
+                  }}
+                >
+                  <MenuItem  value="pbi" primaryText="Regular" />
+                  <MenuItem  value="pai" primaryText="Pay after Installation" />
+                </SelectField>
                 <TextField
                   value={this.state.textField.name}
                   hintText="Name"
@@ -657,7 +790,7 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
-                <SelectField
+                {/* <SelectField
                   floatingLabelText="DoB Place"
                   value={this.state.textField.dobPlace}
                   fullWidth={true}
@@ -671,6 +804,32 @@ export default class SalesOrder extends React.Component {
                   }}
                 >
                   {_renderSelection(dobPlace)}
+                </SelectField> */}
+                <TextField
+                  floatingLabelText="DoB Place"
+                  value={this.state.textField.dobPlace}
+                  fullWidth={true}
+                  onChange={(e, value) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        dobPlace: value,
+                      },
+                    });
+                  }}
+                />
+                <SelectField
+                  fullWidth={true}
+                  required={true}
+                  floatingLabelText="Gender"
+                  name="gender"
+                  value={this.state.textField.gender}
+                  onChange={(input, index, dataSource) => {
+                    this._handleValidationGender(input, index, dataSource);
+                  }}
+                >
+                  <MenuItem  value="male" primaryText="Male" />
+                  <MenuItem  value="female" primaryText="Female" />
                 </SelectField>
                 <SelectField
                   floatingLabelText="ID Type"
@@ -835,6 +994,35 @@ export default class SalesOrder extends React.Component {
         );
       }
     };
+    let _renderSelectedProduct = (selectedProduct) => {
+      if (selectedProduct) {
+        return (<div>
+          <h1 style={{marginTop: 30, textAlign: 'center'}}>Product</h1>
+          <Card style={style.card}>
+            <RaisedButton
+              backgroundColor={teal300}
+              style={{marginTop: 10}}
+              labelColor={grey50}
+              containerElement="label"
+              label="Change Product"
+              onClick={this._reselectProduct}
+            />
+            <MaterialContainer
+              keys="id"
+              className="mdl-data-table"
+              columns={this.SelectedProductcolumns}
+            // onDragColumn={(columns) => console.log(columns)}
+            // onChangeColumnsVisibility={(columns) => console.log(columns)}
+              dataArray={this.state.dataSelectedProduct}
+              draggable={false}
+              sortable={false}
+              sortBy={{prop: 'id', order: 'desc'}}
+              pageSizeOptions={[10]}
+            />
+          </Card>
+        </div>);
+      }
+    };
     let _renderCreateUser = () => {
       return (
         <div>
@@ -843,6 +1031,7 @@ export default class SalesOrder extends React.Component {
             <Col xs={12} md={12} lg={12}>
               {_renderCustomerForm()}
               {_renderProduct(this.state.isGetProduct)}
+              {_renderSelectedProduct(this.state.selectedProduct)}
               {_renderCustomerData()}
               {_renderButton(this.state.textField.homepassedId)}
             </Col>
@@ -905,7 +1094,7 @@ export default class SalesOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 1 && _renderManageUser()}
+                {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
               </Tab>
             </Tabs>
             <Snackbar
