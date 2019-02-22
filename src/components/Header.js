@@ -29,6 +29,7 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import {grey500, cyan300, grey300, pink300, fullWhite} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import {Link} from 'react-router';
 
 var CustomDiv = React.createClass({
   render: function() {
