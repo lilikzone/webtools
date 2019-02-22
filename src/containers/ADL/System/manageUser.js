@@ -67,7 +67,7 @@ export default class ManageUser extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isGenderValid: true,
+      // isGenderValid: true,
       isEmailValid: true,
       isEmailValidTemp: true,
       isPhoneValid: true,
@@ -86,7 +86,7 @@ export default class ManageUser extends React.PureComponent {
         email: '',
         username: '',
         password: '',
-        gender: '',
+        // gender: '',
         phoneNumber: '',
         role: '',
         vendor: '',
@@ -200,7 +200,6 @@ export default class ManageUser extends React.PureComponent {
         'name': 'Installer',
       }];
     }
-
     if (role === 'admin') {
       return [
         {'name': 'Admin', 'value': 'admin'},
@@ -212,7 +211,7 @@ export default class ManageUser extends React.PureComponent {
         {'name': 'Sales Admin', 'value': 'salesadmin'},
         {'name': 'Sales', 'value': 'sales'},
         {'name': 'Manage Service', 'value': 'manageservice'},
-        {'name': 'Dispacher', 'value': 'dispacher'},
+        {'name': 'Dispatcher', 'value': 'dispatcher'},
         {'name': 'Installer', 'value': 'installer'},
         {'name': 'CS', 'value': 'cs'},
         {'name': 'CS External', 'value': 'csexternal'},
@@ -355,6 +354,7 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+
     fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
       method: 'GET',
       type: 'cors',
@@ -471,7 +471,6 @@ export default class ManageUser extends React.PureComponent {
 
 
   render() {
-    const params = this.props.params;
     let actions = [
       <FlatButton
         label="Cancel" primary={true}
@@ -530,7 +529,7 @@ export default class ManageUser extends React.PureComponent {
                     }}
                   />
 
-                  <AutoComplete
+                  {/* <AutoComplete
                     fullWidth={true}
                     required={true}
                     floatingLabelText="Gender"
@@ -542,7 +541,7 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationGender(input, dataSource);
                     }}
                     errorText={!this.state.isGenderValid}
-                  />
+                  /> */}
 
                   <TextField
                     fullWidth={true}
@@ -671,7 +670,6 @@ export default class ManageUser extends React.PureComponent {
           <h3 style={styles.navigation}>Manage User</h3>
           <Row>
             <Col xs={12} md={12} lg={12}>
-              {/* <Card style={style.card}> */}
 
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
@@ -689,7 +687,6 @@ export default class ManageUser extends React.PureComponent {
                     keys="id"
                     className="mdl-data-table"
                     columns={this.columns}
-                    // onChangeColumnsVisibility={(columns) => console.log(columns)}
                     dataArray={this.state.allData}
                     draggable={true}
                     sortable={false}
@@ -698,7 +695,6 @@ export default class ManageUser extends React.PureComponent {
                   />
                 </div>
               </div>
-              {/* </Card> */}
             </Col>
           </Row>
         </div>
@@ -720,7 +716,7 @@ export default class ManageUser extends React.PureComponent {
                   });
                 }}
               >
-                {this.state.currentTab == 0 && _renderCreateUser(params)}
+                {this.state.currentTab == 0 && _renderCreateUser()}
               </Tab>
               <Tab
                 value={1}

@@ -23,7 +23,7 @@ const salesmanagementShowRule = ['admin', 'operation', 'internalsales', 'salesad
 const manageMSuserShowRule = ['admin', 'operation', 'manageservice'];
 const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
 const ticketShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
-const customerserviceShowRule = ['admin', 'operation', 'cs', 'csext'];
+const customerserviceShowRule = ['admin', 'operation', 'cs', 'csexternal'];
 
 const styles_list = {
 
