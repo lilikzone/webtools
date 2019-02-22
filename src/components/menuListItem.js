@@ -202,7 +202,7 @@ export class MenuList extends React.Component {
 
               nestedItems={[
                 <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createsalesorder} containerElement={<Link to={'/admin/salesOrder'} />} />,
-                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.trackorder} containerElement={<Link to={'/admin/trackingOrder'} />} />,
                 <ListItem style={styles_list_item} key={3} primaryText={strings.menu.salesinvoice} containerElement={<Link to={'/admin/dashboard'} />} />,
               ]}
                                                           /> : ''}

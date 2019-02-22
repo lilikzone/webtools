@@ -28,43 +28,357 @@ import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 import {grey50, teal300, red400} from 'material-ui/styles/colors';
 import Cookies from 'universal-cookie';
+import moment from  'moment';
 
 
 const cookies = new Cookies();
-const dataCity = [
-  'Tangerang',
-  'Tangerang Selatan',
-  'Bogor',
-  'Depok',
-  'Bekasi',
-  'Banjarmasin',
-  'Balikpapan',
-  'Makassar',
-  'Denpasar',
-  'Jakarta Selatan',
-];
-const dataCluster = [
-  'PALEM GANDA ASRI 1',
-  'PALEM GANDA ASRI 2',
+// const dataCity = [
+//   'Tangerang',
+//   'Tangerang Selatan',
+//   'Bogor',
+//   'Depok',
+//   'Bekasi',
+//   'Banjarmasin',
+//   'Balikpapan',
+//   'Makassar',
+//   'Denpasar',
+//   'Jakarta Selatan',
+// ];
+// const dataCluster = [
+//   'PALEM GANDA ASRI 1',
+//   'PALEM GANDA ASRI 2',
 
-];
-const dataStreet = [
-  'JL.BLOCK C5 ',
-  'JL.BLOCK C5 ',
-];
-const dobPlace = [
-  'KAB BOGOR',
-  'KAB PONOGORO',
-  'KAB LEBAK',
-  'KAB LOMBOK BARAT',
-  'KAB KUPANG',
-  'KAB GORONTALO',
-];
+// ];
+// const dataStreet = [
+//   'JL.BLOCK C5 ',
+//   'JL.BLOCK C5 ',
+// ];
+// const dobPlace = [
+//   'KAB BOGOR',
+//   'KAB PONOGORO',
+//   'KAB LEBAK',
+//   'KAB LOMBOK BARAT',
+//   'KAB KUPANG',
+//   'KAB GORONTALO',
+// ];
 const dataTypePayment = ['Regular', 'Pay After Installation'];
 const idType = ['KTP', 'KITAS', 'SIM'];
 // all data with empty array will considered false in type input
 // const dataCluster = [];
-// const dataStreet = [];
+const dataExample = [
+  {
+    'id': 1,
+    'custom_customer_id': 434579135,
+    'customer_name': 'Loretha',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'male',
+    'group': 'test',
+    'type_id': 'KTP',
+    'id_number': 888,
+    'id_address': 'Cipinang Besar Selatan',
+    'phone1': 812888,
+    'phone2': 81288,
+    'phone3': 812888,
+    'email1': 'billy.haen@gmail.com',
+    'email2': '',
+    'created_at': '2019-02-20 06:34:28',
+    'updated_at': '2019-02-20 06:34:28',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 2,
+    'custom_customer_id': 523834817,
+    'customer_name': 'Sylvia Saint',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'male',
+    'group': 'test',
+    'type_id': 'KTP',
+    'id_number': 989898,
+    'id_address': 'Cipinang Besar UTARA',
+    'phone1': 812888,
+    'phone2': 81288,
+    'phone3': 812888,
+    'email1': 'billy.haen@gmail.com',
+    'email2': 'billy.haen@gmail.com',
+    'created_at': '2019-02-20 07:05:52',
+    'updated_at': '2019-02-20 09:59:36',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 5,
+    'custom_customer_id': 396839001,
+    'customer_name': 'adw2',
+    'dob': '1983-06-19',
+    'birth_place': 'Jaawakarta',
+    'gender': 'male',
+    'group': 'test',
+    'type_id': 'KTPawdad',
+    'id_number': 810000,
+    'id_address': 'Cipinang Besar Selatan',
+    'phone1': 812888,
+    'phone2': 81288,
+    'phone3': 812888,
+    'email1': 'baden@gmail.com',
+    'email2': '',
+    'created_at': '2019-02-20 11:28:38',
+    'updated_at': '2019-02-20 11:28:38',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 6,
+    'custom_customer_id': 255025603,
+    'customer_name': 'wawa',
+    'dob': '4444-12-31',
+    'birth_place': 'ajkan',
+    'gender': 'undefined',
+    'group': 'undefined',
+    'type_id': 'ad',
+    'id_number': 1213,
+    'id_address': '314',
+    'phone1': 911,
+    'phone2': 1290,
+    'phone3': 318,
+    'email1': 'awmldk@gma.com',
+    'email2': 'awkldj@ss.com',
+    'created_at': '2019-02-20 11:43:25',
+    'updated_at': '2019-02-20 11:43:25',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 7,
+    'custom_customer_id': 888714405,
+    'customer_name': 'wawwwww',
+    'dob': '0001-11-21',
+    'birth_place': '2z',
+    'gender': 'undefined',
+    'group': 'undefined',
+    'type_id': '12121',
+    'id_number': 11,
+    'id_address': '111',
+    'phone1': 21222,
+    'phone2': 222,
+    'phone3': 888,
+    'email1': '88@satu.com',
+    'email2': 'awd@ql.com',
+    'created_at': '2019-02-20 11:55:58',
+    'updated_at': '2019-02-20 11:55:58',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 8,
+    'custom_customer_id': 72787234,
+    'customer_name': 'aaaa',
+    'dob': '0001-01-01',
+    'birth_place': '121121',
+    'gender': 'undefined',
+    'group': 'undefined',
+    'type_id': '21',
+    'id_number': 12,
+    'id_address': '1121',
+    'phone1': 121,
+    'phone2': 1211212,
+    'phone3': 1212,
+    'email1': '121@ma.com',
+    'email2': 'awj1@2A.COM',
+    'created_at': '2019-02-20 12:16:40',
+    'updated_at': '2019-02-20 12:16:40',
+    'subs_id': '',
+    'homepassed_id': null,
+    'balance': 0,
+    'sales_name': '',
+    'due_date': null,
+  },
+  {
+    'id': 9,
+    'custom_customer_id': 71653764,
+    'customer_name': 'qazws',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'Pria',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 32324233,
+    'id_address': 'Jl. Jalan',
+    'phone1': 3243432,
+    'phone2': 53452,
+    'phone3': 754636,
+    'email1': 'qavas@safdw.com',
+    'email2': '423443',
+    'created_at': '2019-02-21 10:48:08',
+    'updated_at': '2019-02-21 10:48:08',
+    'subs_id': '323200000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'billy',
+    'due_date': null,
+  },
+  {
+    'id': 10,
+    'custom_customer_id': 85382213,
+    'customer_name': 'qazws',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'Pria',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 1231321321,
+    'id_address': 'Jl. Jalan',
+    'phone1': 3243432,
+    'phone2': 53452,
+    'phone3': 754636,
+    'email1': 'vas@safdw.com',
+    'email2': '423443',
+    'created_at': '2019-02-21 10:52:08',
+    'updated_at': '2019-02-21 10:52:08',
+    'subs_id': '123100000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'vani test',
+    'due_date': null,
+  },
+  {
+    'id': 11,
+    'custom_customer_id': 49775014,
+    'customer_name': 'qazws',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'Pria',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 32324233,
+    'id_address': 'Jl. Jalan',
+    'phone1': 3243432,
+    'phone2': 53452,
+    'phone3': 754636,
+    'email1': 'qavas@safdw.com',
+    'email2': '423443',
+    'created_at': '2019-02-21 14:33:02',
+    'updated_at': '2019-02-21 14:33:02',
+    'subs_id': '323200000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'billy',
+    'due_date': null,
+  },
+  {
+    'id': 12,
+    'custom_customer_id': 79823765,
+    'customer_name': 'qazws',
+    'dob': '1983-06-19',
+    'birth_place': 'Jakarta',
+    'gender': 'Pria',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 1111111111111111,
+    'id_address': 'Jl. Jalan',
+    'phone1': 3243432,
+    'phone2': 53452,
+    'phone3': 754636,
+    'email1': 'qavas@safdw.com',
+    'email2': '423443',
+    'created_at': '2019-02-21 14:46:00',
+    'updated_at': '2019-02-21 14:46:00',
+    'subs_id': '111100000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'billy',
+    'due_date': null,
+  },
+  {
+    'id': 13,
+    'custom_customer_id': 18988378,
+    'customer_name': 'Vani',
+    'dob': '2019-01-18',
+    'birth_place': 'Bekasi',
+    'gender': 'male',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 172371231231231,
+    'id_address': 'jaskdaksdnnnaskdakskdaksdkaskdkasd',
+    'phone1': 812361263612,
+    'phone2': null,
+    'phone3': null,
+    'email1': 'vani@yuhuu.com',
+    'email2': null,
+    'created_at': '2019-02-21 14:55:08',
+    'updated_at': '2019-02-21 14:55:08',
+    'subs_id': '172300000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'vani test',
+    'due_date': null,
+  },
+  {
+    'id': 14,
+    'custom_customer_id': 37107171,
+    'customer_name': 'Vani testatstatsdtatstd',
+    'dob': '2018-11-06',
+    'birth_place': 'Bekasi',
+    'gender': 'male',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 128713123123,
+    'id_address': 'asdasdashdbajhsdjha',
+    'phone1': 8126312312,
+    'phone2': null,
+    'phone3': null,
+    'email1': 'vani@yuhuuuuu.com',
+    'email2': null,
+    'created_at': '2019-02-21 15:07:29',
+    'updated_at': '2019-02-21 15:07:29',
+    'subs_id': '012800000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'vani test',
+    'due_date': null,
+  },
+  {
+    'id': 15,
+    'custom_customer_id': 14448299,
+    'customer_name': 'vani test sembilan sembilan',
+    'dob': '2016-02-16',
+    'birth_place': 'jakarta',
+    'gender': 'male',
+    'group': 'VIP',
+    'type_id': 'KTP',
+    'id_number': 128319823192,
+    'id_address': 'dataasdnajsnkdjaksndkjasnkjdnaskjdnas',
+    'phone1': 812361263123,
+    'phone2': null,
+    'phone3': null,
+    'email1': 'vani@ajsdkasjdkajsdk.com',
+    'email2': null,
+    'created_at': '2019-02-21 16:40:00',
+    'updated_at': '2019-02-21 16:40:00',
+    'subs_id': '012800000',
+    'homepassed_id': null,
+    'balance': 5000,
+    'sales_name': 'vani test',
+    'due_date': null,
+  },
+];
 const dataAddress = ['JL.BLOCK C5 - NO. 6 - PALEM GANDA ASRI 1 - TANGERANG', 'JL.BLOCK C5 - NO. 4 - PALEM GANDA ASRI 1 - TANGERANG', 'JL.BLOCK C5 - NO. 2 - PALEM GANDA ASRI 1 - TANGERANG'];
 const style = {
   card: {
@@ -120,77 +434,152 @@ const columns = [
   // {id: 1, title: 'Avatar', render: UserPic, width: '50px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   {
     id: 1,
-    title: 'Username',
-    prop: 'username',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'Role',
-    prop: 'role',
-    width: '10%',
+    title: 'id',
+    prop: 'id',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 2,
-    title: 'Name',
-    prop: 'name',
-    width: '10%',
+    title: 'Subscriber ID',
+    prop: 'custom_customer_id',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 0,
-    title: 'City',
-    prop: 'City',
-    width: '10%',
+    id: 2,
+    title: 'Customer Name',
+    prop: 'customer_name',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 3,
-    title: 'Email',
-    prop: 'email',
-    width: '10%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'Vendor',
-    prop: 'vendor',
-    width: '10%',
+    title: 'DOB',
+    prop: 'dob',
+    width: '5.5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 4,
-    title: 'Agency',
-    prop: 'agency',
-    width: '10%',
+    title: 'DOB Place',
+    prop: 'birth_place',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
-  // {id: 5, title: 'Created at', prop: 'created_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Updated at', prop: 'updated_at', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 6, title: 'Ip address', prop: 'ip_address', width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 7, title: 'Country', prop: 'country.name', visible: false, width: '150px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  // {id: 8, title: 'Code', prop: 'country.code', width: '80px', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {
+    id: 5,
+    title: 'Gender',
+    prop: 'gender',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 6,
+    title: 'Group',
+    prop: 'group',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 7,
+    title: 'ID Type',
+    prop: 'identification_type',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 8,
+    title: 'ID Number',
+    prop: 'identification_number',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
   {
     id: 9,
-    title: 'Action',
-    render: EditBtn,
-    width: '10%',
+    title: 'ID Address',
+    prop: 'identification_address',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
     id: 10,
+    title: 'Primary Phone',
+    prop: 'phone1',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 11,
+    title: 'Alternative Phone 1',
+    prop: 'phone2',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 12,
+    title: 'Alternative Phone 2',
+    prop: 'phone3',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 13,
+    title: 'Email',
+    prop: 'email1',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 14,
+    title: 'Alternative Email',
+    prop: 'email2',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 15,
+    title: 'Created At',
+    prop: 'created_at',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 16,
+    title: 'updated At',
+    prop: 'updated_at',
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+    cellClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 17,
+    title: 'Action',
+    render: EditBtn,
+    width: '5%',
+    headerClass: 'mdl-data-table__cell--non-numeric',
+  },
+  {
+    id: 18,
     title: 'Action',
     render: DeleteBtn,
-    width: '10%',
+    width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
   },
 ];
@@ -303,6 +692,7 @@ export default class SalesOrder extends React.Component {
       },
     ];
     this.state = {
+      loaded: false,
       isGetProduct: false,
       isClusterValid: true,
       isTypePaymentValid: true,
@@ -343,6 +733,11 @@ export default class SalesOrder extends React.Component {
       dataProduct: [],
       productId: '',
       selectedProduct: false,
+      dataCity: [],
+      dataCluster: [],
+      dataStreet: [],
+      dataFullAddress: [],
+      dataCustomer: [],
     };
     const ChooseBtn = (data) => (
       <div className="text-center">
@@ -355,6 +750,7 @@ export default class SalesOrder extends React.Component {
               dataSelectedProduct: dataArray,
               isGetProduct: false,
               selectedProduct: true,
+              productId: data.id,
             });
           }
         }
@@ -388,7 +784,8 @@ export default class SalesOrder extends React.Component {
     const cluster = this.state.textField.cluster;
     const street = this.state.textField.street;
     const fullAddress = this.state.textField.fullAddress;
-    const homepassedId = this.state.textField.homepassedId;
+    // const homepassedId = this.state.textField.homepassedId;
+    const homepassedId = '1461-01.PGA 1.001.A01.03';
     const typePayment = this.state.textField.typePayment;
     const idType = this.state.textField.idType;
     const dobPlace = this.state.textField.dobPlace;
@@ -399,16 +796,20 @@ export default class SalesOrder extends React.Component {
     const phone3 = this.state.textField.phone3;
     const email1 = this.state.textField.email1;
     const email2 = this.state.textField.email2;
-    const dob = this.state.textField.dob;
+    const dob = moment(this.state.textField.dob).format('YYYY-MM-DD');
     const installationDate = this.state.textField.installationDate;
     const gender = this.state.textField.gender;
     const status = 'new';
     const product_id = this.state.productId;
+    // const group = this.state.group;
+    const group = 'VIP';
 
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
+      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&identification_type=${idType}&identification_number=${idNumber}&identification_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}`);
+
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/created?status=${status}&customer_email1=${email1}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}`, {
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&identification_type=${idType}&identification_number=${idNumber}&identification_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}`, {
         method: 'POST',
         type: 'cors',
         headers: {
@@ -419,29 +820,33 @@ export default class SalesOrder extends React.Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        const json = (response) => response.json();
-        const cookieData = cookies.get('ssid');
-
-        fetch('https://ibase.adlsandbox.com:8081/api/order/all', {
-          method: 'GET',
-          type: 'cors',
-          headers: {
-            'Authorization': `Bearer ${cookieData}`,
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(json)
-        .then((respons) => {
-          console.log(respons);
-        }).catch((error) => {
-          console.log(`error: ${error}`);
-        });
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
     // });
+
+      // const json = (response) => response.json();
+      // const cookieData = cookies.get('ssid');
+
+      fetch('https://ibase.adlsandbox.com:8081/api/customer/all', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({dataCustomer: respons});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+
       this.setState({
         currentTab: 1,
+        loaded: true,
         isRegistered: true,
         textField: {},
       });
@@ -480,7 +885,8 @@ export default class SalesOrder extends React.Component {
       this.setState({
         textField: {...this.state.textField, city: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
       });
-    }    else {
+      this._getClusterDataAPI(dataInput);
+    } else {
       this.setState({
         textField: {...this.state.textField, homepassedId: ''}, // homepassedID just for SAMPLE
       });
@@ -488,18 +894,37 @@ export default class SalesOrder extends React.Component {
   }
   _handleValidationCluster(input, data) {
     let dataInput = input.toLowerCase();
-    let dataCluster = dataInput;
+    let dataCluster = data.map((val) => val.toLowerCase());
     this.setState({
-      textField: {...this.state.textField, cluster: dataCluster},
+      isClusterValid: dataCluster.includes(dataInput),
     });
+    if (dataCluster.includes(dataInput)) {
+      this.setState({
+        textField: {...this.state.textField, cluster: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+      });
+      this._getStreetDataAPI(dataInput);
+    } else {
+      this.setState({
+        textField: {...this.state.textField, homepassedId: ''}, // homepassedID just for SAMPLE
+      });
+    }
   }
   _handleValidationStreet(input, data) {
     let dataInput = input.toLowerCase();
-    let dataStreet = dataInput;
-
+    let dataStreet = data.map((val) => val.toLowerCase());
     this.setState({
-      textField: {...this.state.textField, street: dataStreet},
+      isClusterValid: dataStreet.includes(dataInput),
     });
+    if (dataStreet.includes(dataInput)) {
+      this.setState({
+        textField: {...this.state.textField, street: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+      });
+      this._getFullAddressDataAPI(dataInput);
+    } else {
+      this.setState({
+        textField: {...this.state.textField, homepassedId: ''}, // homepassedID just for SAMPLE
+      });
+    }
   }
   _handleValidationTypePayment(input, index, data) {
     let dataInput = data.toLowerCase();
@@ -517,25 +942,31 @@ export default class SalesOrder extends React.Component {
   }
   _handleValidationFullAddress(input, data) {
     let dataInput = input.toLowerCase();
-    // let dataFullAddress = data.map((val) => val.toLowerCase());
-    // this.setState({
-    //   isFullAddressValid: dataFullAddress.includes(dataInput),
-    // });
-    // if (dataFullAddress.includes(dataInput)) {
+    let dataFullAddress = data.map((val) => val.toLowerCase());
     this.setState({
-      textField: {...this.state.textField, fullAddress: dataInput},
+      isClusterValid: dataFullAddress.includes(dataInput),
     });
-    // }
+    if (dataFullAddress.includes(dataInput)) {
+      this.setState({
+        textField: {...this.state.textField, fullAddress: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+      });
+      this._getHomespassedId(dataInput);
+    } else {
+      this.setState({
+        textField: {...this.state.textField, homepassedId: ''}, // homepassedID just for SAMPLE
+      });
+    }
   }
+
   _reselectProduct = () => {
     this.setState({selectedProduct: false, isGetProduct: true});
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/homepassed/sort', {
+      fetch('https://ibase.adlsandbox.com:8081/api/homespassed/sort', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -547,13 +978,13 @@ export default class SalesOrder extends React.Component {
       .then((respons) => {
         console.log(respons);
 
-        // const dataVendorObject = respons;
-        // const dataVendor = [];
-        // let i;
-        // for (i = 0;i < dataVendorObject.length;i++) {
-        //   dataVendor.push(dataVendorObject[i].name);
-        // }
-        // this.setState({dataVendor: dataVendor});
+        const dataCityObject = respons[0].city;
+        const dataCity = [];
+        let i;
+        for (i = 0;i < dataCityObject.length;i++) {
+          dataCity.push(dataCityObject[i].city);
+        }
+        this.setState({dataCity: dataCity});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -572,16 +1003,149 @@ export default class SalesOrder extends React.Component {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
+
+      fetch('https://ibase.adlsandbox.com:8081/api/customer/all', {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({dataCustomer: respons, loaded: true});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
     }
   }
 
-  // _handleRowCLick(row, data) {
-  //   this.setState({selectedField: row});
-  // }
+  _getClusterDataAPI(city) {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+
+      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?city=${city}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+
+          const dataClusterObject = respons.data;
+          const dataCluster = [];
+          let i;
+          for (i = 0;i < dataClusterObject.length;i++) {
+            dataCluster.push(dataClusterObject[i].cluster);
+          }
+          this.setState({
+            dataCluster: dataCluster,
+            textField: {...this.state.textField, cluster: '', street: '', fullAddress: '', olt: '', region: '', fdt: ''},
+          });
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+  _getStreetDataAPI(cluster) {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+
+      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?cluster=${cluster}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+
+          const dataStreetObject = respons.data;
+          const dataStreet = [];
+          let i;
+          for (i = 0;i < dataStreetObject.length;i++) {
+            dataStreet.push(dataStreetObject[i].street);
+          }
+          this.setState({
+            dataStreet: dataStreet,
+            textField: {...this.state.textField, street: '', fullAddress: '', olt: '', region: '', fdt: ''},
+          });
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+
+  _getFullAddressDataAPI(street) {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+
+      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?street=${street}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+
+          const dataFullAddressObject = respons;
+          const dataFullAddress = [];
+          let i;
+          for (i = 0;i < dataFullAddressObject.length;i++) {
+            dataFullAddress.push(dataFullAddressObject[i].full_address);
+          }
+          this.setState({
+            dataFullAddress: dataFullAddress,
+            textField: {...this.state.textField,  fullAddress: '', olt: '', region: '', fdt: ''},
+          });
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+  _getHomespassedId(address) {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const json = (response) => response.json();
+
+      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?full_address=${address}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+          const dataHomepass = respons[0];
+          this.setState({
+            textField: {...this.state.textField,  olt: dataHomepass.olt_location, region: dataHomepass.region, fdt: dataHomepass.fdt_code, homepassedId: dataHomepass.homepass_id}});
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+
 
   render() {
-    // console.log(this.state.selectedField);
-
     let _renderProduct = (data) => {
       if (data) {
         return (
@@ -592,8 +1156,6 @@ export default class SalesOrder extends React.Component {
                 keys="id"
                 className="mdl-data-table"
                 columns={this.Productcolumns}
-                // onDragColumn={(columns) => console.log(columns)}
-                // onChangeColumnsVisibility={(columns) => console.log(columns)}
                 dataArray={this.state.dataProduct}
                 draggable={false}
                 sortable={false}
@@ -618,7 +1180,7 @@ export default class SalesOrder extends React.Component {
                 searchText={this.state.textField.city}
                 filter={AutoComplete.caseInsensitiveFilter}
                 openOnFocus={true}
-                dataSource={dataCity}
+                dataSource={this.state.dataCity}
                 onUpdateInput={(input, dataSource) => {
                   this._handleValidationCity(input, dataSource);
                 }}
@@ -633,7 +1195,7 @@ export default class SalesOrder extends React.Component {
                 searchText={this.state.textField.cluster}
                 filter={AutoComplete.caseInsensitiveFilter}
                 openOnFocus={true}
-                dataSource={dataCluster}
+                dataSource={this.state.dataCluster}
                 onUpdateInput={(input, dataSource) => {
                   this._handleValidationCluster(input, dataSource);
                 }}
@@ -648,7 +1210,7 @@ export default class SalesOrder extends React.Component {
                 searchText={this.state.textField.street}
                 filter={AutoComplete.caseInsensitiveFilter}
                 openOnFocus={true}
-                dataSource={dataStreet}
+                dataSource={this.state.dataStreet}
                 onUpdateInput={(input, dataSource) => {
                   this._handleValidationStreet(input, dataSource);
                 }}
@@ -663,7 +1225,7 @@ export default class SalesOrder extends React.Component {
                 searchText={this.state.textField.fullAddress}
                 filter={AutoComplete.caseInsensitiveFilter}
                 openOnFocus={true}
-                dataSource={dataAddress}
+                dataSource={this.state.dataFullAddress}
                 onUpdateInput={(input, dataSource) => {
                   this._handleValidationFullAddress(input, dataSource);
                 }}
@@ -673,7 +1235,7 @@ export default class SalesOrder extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <TextField
                 disabled={true}
-                value={`${this.state.textField.city} SAMPLE WITH LONG TEXT`}
+                value={this.state.textField.olt}
                 style={{marginRight: 20}}
                 hintText="OLT"
                 floatingLabelText="OLT"
@@ -686,7 +1248,7 @@ export default class SalesOrder extends React.Component {
               />
               <TextField
                 disabled={true}
-                value={`${this.state.textField.city} SAMPLE ONLY`}
+                value={this.state.textField.region}
                 hintText="Region"
                 floatingLabelText="Region"
                 fullWidth={false}
@@ -699,7 +1261,7 @@ export default class SalesOrder extends React.Component {
             </Col>
             <TextField
               disabled={true}
-              value={`${this.state.textField.city} SAMPLE ONLY`}
+              value={this.state.textField.fdt}
               hintText="FDT"
               floatingLabelText="FDT"
               fullWidth={false}
@@ -740,20 +1302,6 @@ export default class SalesOrder extends React.Component {
                   floatingLabelText="Homepassed ID"
                   fullWidth={true}
                 />
-                {/* <AutoComplete
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Type Payment"
-                  hintText="Type Payment"
-                  searchText={this.state.textField.typePayment}
-                  filter={AutoComplete.caseInsensitiveFilter}
-                  openOnFocus={true}
-                  dataSource={dataTypePayment}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationTypePayment(input, dataSource);
-                  }}
-                  errorText={!this.state.isTypePaymentValid}
-                /> */}
                 <SelectField
                   fullWidth={true}
                   required={true}
@@ -790,21 +1338,6 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
-                {/* <SelectField
-                  floatingLabelText="DoB Place"
-                  value={this.state.textField.dobPlace}
-                  fullWidth={true}
-                  onChange={(e, index, value) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        dobPlace: value,
-                      },
-                    });
-                  }}
-                >
-                  {_renderSelection(dobPlace)}
-                </SelectField> */}
                 <TextField
                   floatingLabelText="DoB Place"
                   value={this.state.textField.dobPlace}
@@ -1011,8 +1544,6 @@ export default class SalesOrder extends React.Component {
               keys="id"
               className="mdl-data-table"
               columns={this.SelectedProductcolumns}
-            // onDragColumn={(columns) => console.log(columns)}
-            // onChangeColumnsVisibility={(columns) => console.log(columns)}
               dataArray={this.state.dataSelectedProduct}
               draggable={false}
               sortable={false}
@@ -1053,13 +1584,13 @@ export default class SalesOrder extends React.Component {
                       keys="id"
                       className="mdl-data-table"
                       columns={columns}
-                      dataArray={this.data}
+                      dataArray={dataExample}
                       draggable={false}
                       sortable={false}
                       sortBy={{prop: 'country.name', order: 'asc'}}
                       pageSizeOptions={[5]}
                     />
-                    {_renderProduct(true)}
+                    {/* {_renderProduct(true)} */}
                   </div>
                 </div>
               </Col>

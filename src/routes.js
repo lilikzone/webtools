@@ -15,6 +15,10 @@ import ManageVA from './containers/ADL/System/manageVA';
 import HomesPassed from './containers/ADL/Homespassed/Homespassed';
 // Sales Management
 import SalesOrder from './containers/ADL/SalesOrder/SalesOrder';
+import TrackingOrder from './containers/ADL/SalesOrder/TrackingOrder';
+// product management
+import ManageProduct from './containers/ADL/Product/ManageProduct';
+
 // Ui Pages Routes
 import Button from './containers/ui/Button';
 import Icon from './containers/ui/Icons';
@@ -63,7 +67,7 @@ import LoginPage from './containers/extra_page/LoginPage';
 import lockPage from './containers/extra_page/lock';
 
 import Documents from './containers/doc/documents';
-import ManageProduct from './containers/ADL/Product/ManageProduct';
+
 import VisitorChecker from './containers/ADL/VisitorChecker';
 
 
@@ -86,6 +90,7 @@ export default (
       <Route path="manageProduct" component={ManageProduct} />
       <Route path="homesPassed" component={HomesPassed} />
       <Route path="salesOrder" component={SalesOrder} />
+      <Route path="trackingOrder" component={TrackingOrder} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
