@@ -1584,7 +1584,7 @@ export default class SalesOrder extends React.Component {
                       keys="id"
                       className="mdl-data-table"
                       columns={columns}
-                      dataArray={dataExample}
+                      dataArray={this.state.dataCustomer}
                       draggable={false}
                       sortable={false}
                       sortBy={{prop: 'country.name', order: 'asc'}}

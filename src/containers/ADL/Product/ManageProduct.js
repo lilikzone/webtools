@@ -532,7 +532,7 @@ export default class ManageProduct extends React.Component {
                           name="promo_area"
                           fullWidth={true}
                           hintText="Promo area"
-                          floatingLabelText="Promo Type"
+                          floatingLabelText="Promo Area"
                           filter={AutoComplete.noFilter}
                           dataSource={promoType}
                           openOnFocus={true}
