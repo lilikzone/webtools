@@ -28,6 +28,7 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import {grey500, cyan300, grey300, pink300, fullWhite} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import {Link} from 'react-router';
 
 var CustomDiv = React.createClass({
   render: function() {
@@ -220,7 +221,7 @@ class Header extends React.Component {
               }}
             >
               <MenuItem key={1} primaryText="Change Password" leftIcon={<FontIcon color="#212121" className="material-icons">edit</FontIcon>} />
-              <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} />
+              <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} containerElement={<Link to={'/logout'} />} />
               {/* <MenuItem key={3} primaryText="Price List" /> */}
             </IconMenu>
             {/* <IconButton onTouchTap={this.handleToggle} > <FontIcon color={'#707780'} className="material-icons">
