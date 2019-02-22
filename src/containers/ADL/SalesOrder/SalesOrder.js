@@ -866,7 +866,6 @@ export default class SalesOrder extends React.Component {
     }
   }
 
-
   render() {
     let _renderProduct = (data) => {
       if (data) {

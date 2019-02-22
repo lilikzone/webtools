@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
+import {Link} from 'react-router';
 import {List, ListItem} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
