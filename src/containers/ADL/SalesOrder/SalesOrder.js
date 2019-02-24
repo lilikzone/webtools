@@ -513,7 +513,7 @@ export default class SalesOrder extends React.Component {
     const cluster = this.state.textField.cluster;
     const street = this.state.textField.street;
     const fullAddress = this.state.textField.fullAddress;
-    const homepassedId = this.state.homepassedId;
+    const homepassedId = this.state.textField.homepassedId;
     const typePayment = this.state.textField.typePayment;
     const idType = this.state.textField.idType;
     const dobPlace = this.state.textField.dobPlace;
@@ -533,23 +533,25 @@ export default class SalesOrder extends React.Component {
 
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
-      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&identification_type=${idType}&identification_number=${idNumber}&identification_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}`);
+      const accessData = cookies.get('npaccess');
+      const username = accessData.split('+');
+      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&id_type=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
-      // fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&identification_type=${idType}&identification_number=${idNumber}&identification_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}`, {
-      //   method: 'POST',
-      //   type: 'cors',
-      //   headers: {
-      //     'Authorization': `Bearer ${cookieData}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
-      // .then(json)
-      // .then((respons) => {
-      //   console.log(respons);
-      // }).catch((error) => {
-      //   console.log(`error: ${error}`);
-      // });
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&id_type=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
+        method: 'POST',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
 
       fetch('https://ibase.adlsandbox.com:8081/api/customer/all', {
         method: 'GET',
@@ -568,7 +570,6 @@ export default class SalesOrder extends React.Component {
       });
 
       this.setState({
-        // currentTab: 1,
         loaded: true,
         isRegistered: true,
         textField: {},
@@ -605,7 +606,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataCity.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, city: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, city: dataInput, homepassedId: ''}, // homepassedID just for SAMPLE
       });
       this._getClusterDataAPI(dataInput);
     } else {
@@ -622,7 +623,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataCluster.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, cluster: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, cluster: dataInput}, // homepassedID just for SAMPLE
       });
       this._getStreetDataAPI(dataInput);
     } else {
@@ -639,7 +640,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataStreet.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, street: dataInput, homepassedId: `${dataInput } SAMPLE ONLY`}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, street: dataInput, homepassedId: ''}, // homepassedID just for SAMPLE
       });
       this._getFullAddressDataAPI(dataInput);
     } else {
@@ -649,7 +650,7 @@ export default class SalesOrder extends React.Component {
     }
   }
   _handleValidationTypePayment(input, index, data) {
-    let dataInput = data.toLowerCase();
+    let dataInput = data;
 
     this.setState({
       textField: {...this.state.textField, typePayment: dataInput},

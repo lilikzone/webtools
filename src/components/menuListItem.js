@@ -223,7 +223,7 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'/admin/dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'/admin/reportWorkOrder'} />} />,
               ]}
                                                     /> : ''}
 
@@ -248,10 +248,10 @@ export class MenuList extends React.Component {
               primaryTogglesNestedList={true}
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
-                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createticket} containerElement={<Link to={'dashboard'} />} />,
+                <ListItem style={styles_list_item} key={1} primaryText={strings.menu.createticket} containerElement={<Link to={'/admin/createTicket'} />} />,
                 <ListItem style={styles_list_item} key={2} primaryText={strings.menu.reportticket} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageleads} containerElement={<Link to={'dashboard'} />} />,
-                <ListItem style={styles_list_item} key={4} primaryText={strings.menu.spamreport} containerElement={<Link to={'dashboard'} />} />,
+                // <ListItem style={styles_list_item} key={3} primaryText={strings.menu.manageleads} containerElement={<Link to={'dashboard'} />} />,
+                // <ListItem style={styles_list_item} key={4} primaryText={strings.menu.spamreport} containerElement={<Link to={'dashboard'} />} />,
 
               ]}
                                                           /> : ''}

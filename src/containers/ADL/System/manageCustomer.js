@@ -10,7 +10,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Subheader} from 'material-ui';
+import {Subheader, DatePicker} from 'material-ui';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
@@ -1070,13 +1070,11 @@ export default class ManageCustomer extends React.Component {
               });
             }}
           />
-
-          <TextField
-            required={true}
-            type={'date'}
+          <DatePicker
             value={this.state.dobTemp}
             floatingLabelFixed={true}
             floatingLabelText="DOB"
+            hintText="DOB"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
@@ -1260,13 +1258,11 @@ export default class ManageCustomer extends React.Component {
                       });
                     }}
                   />
-
-                  <TextField
-                    required={true}
-                    type={'date'}
+                  <DatePicker
                     value={this.state.textField.dob}
                     floatingLabelFixed={true}
                     floatingLabelText="DOB"
+                    hintText="DOB"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
