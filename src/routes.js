@@ -18,6 +18,11 @@ import SalesOrder from './containers/ADL/SalesOrder/SalesOrder';
 import TrackingOrder from './containers/ADL/SalesOrder/TrackingOrder';
 // product management
 import ManageProduct from './containers/ADL/Product/ManageProduct';
+// Work Order
+import reportWorkOrder from './containers/ADL/WorkingOrder/WorkingOrder';
+// ticket
+import CreateTicket from './containers/ADL/Ticket/CreateTicket';
+import TicketExistingCustomer from './containers/ADL/Ticket/TicketExistingCustomer';
 
 // Ui Pages Routes
 import Button from './containers/ui/Button';
@@ -93,6 +98,9 @@ export default (
       <Route path="homesPassed" component={HomesPassed} />
       <Route path="salesOrder" component={SalesOrder} />
       <Route path="trackingOrder" component={TrackingOrder} />
+      <Route path="reportWorkOrder" component={reportWorkOrder} />
+      <Route path="createTicket" component={CreateTicket} />
+      <Route path="ticketExistingCustomer" component={TicketExistingCustomer} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />

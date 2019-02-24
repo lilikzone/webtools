@@ -152,6 +152,8 @@ class LoginPage extends Component {
       .then((respons) => {
         if (respons.token !== undefined) {
           cookies.set('ssid', respons.token, {maxAge: 86400});
+          const npaccess = `${username}+${password}`;
+          cookies.set('npaccess', npaccess, {maxAge: 86400});
           this.setState({token: respons.token});
         }
       }).catch((error) => {
