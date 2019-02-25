@@ -524,6 +524,7 @@ export default class ManageVA extends React.Component {
       nameTemp: '',
       textField: [],
       dataTable: this.data,
+      allData: [],
       cookies: '',
     };
     const EditBtn = (data) => (
@@ -661,7 +662,7 @@ export default class ManageVA extends React.Component {
 
 
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'allData');
   }
 
   _getAPI(apiUrl, stateName) {
@@ -676,7 +677,7 @@ export default class ManageVA extends React.Component {
       .then((responseJson) => {
         if (responseJson) {
           this.setState({
-            [stateName]: responseJson,
+            [stateName]: responseJson.data,
             loaded: true,
           });
         }
@@ -686,8 +687,8 @@ export default class ManageVA extends React.Component {
       });
   }
 
-  _postAPI(apiUrl, stateName, va_number, issuer, ip, subnet) {
-    fetch(`${apiUrl}va_number=${va_number}&issuer=${issuer}&ip=${ip}&subnet=${subnet}`, {
+  _postAPI(apiUrl, stateName, va_number, issuer, ip, subnet, type_payment) {
+    fetch(`${apiUrl}va_number=${va_number}&issuer=${issuer}&ip=${ip}&subnet=${subnet}&type_payment=${type_payment}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.state.cookies}`,
@@ -697,7 +698,7 @@ export default class ManageVA extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('res', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'allData');
       })
       .catch((error) => {
         console.error(error);
@@ -714,7 +715,7 @@ export default class ManageVA extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'allData');
         this.setState({
           currentTab: 0,
         });
@@ -735,9 +736,10 @@ export default class ManageVA extends React.Component {
       this.state.textField.va_number,
       this.state.textField.issuer,
       this.state.textField.ip,
-      this.state.textField.subnet
+      this.state.textField.subnet,
+      this.state.textField.paymentType
     );
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'allData');
     this.setState({
       dataTable: this.data,
       isRegistered: true,
@@ -963,15 +965,15 @@ export default class ManageVA extends React.Component {
                     {_renderModalComponent()}
                   </Dialog>
                   <MaterialContainer
-                    keys="name"
+                    keys="id"
                     className="mdl-data-table"
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.state.textField}
+                    dataArray={this.state.allData}
                     draggable={false}
                     sortable={false}
-                    sortBy={{prop: 'country.name', order: 'asc'}}
+                    sortBy={{prop: 'id', order: 'asc'}}
                     pageSizeOptions={[5]}
                   />
                 </div>

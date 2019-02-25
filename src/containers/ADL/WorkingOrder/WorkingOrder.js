@@ -213,32 +213,34 @@ export default class WorkingOrder extends React.Component {
     return (<div>
       <h3 style={styles.navigation}>Manage Work Order</h3>
       <Row>
-        <Col xs={12} md={12} lg={12}>
-          <div className="mdl-layout mdl-layout--no-drawer-button container">
-            <div className="mdl-layout--fixed-drawer" id="asa">
-              <br />
-              <Dialog
-                title="Edit Work Order"
-                actions={actions}
-                modal={false}
-                open={this.state.onEdit}
-                onRequestClose={() => this._handleClose()}
-              >
-                {_renderModalComponent()}
-              </Dialog>
-              <MaterialContainer
-                keys="id"
-                className="mdl-data-table"
-                columns={this.WorkOrdersColumns}
-                dataArray={this.state.workOrderData}
-                draggable={false}
-                sortable={false}
-                sortBy={{prop: 'id', order: 'desc'}}
-                pageSizeOptions={[5]}
-              />
+        <Paper  style={styles.paper}>
+          <Col xs={12} md={12} lg={12}>
+            <div className="mdl-layout mdl-layout--no-drawer-button container">
+              <div className="mdl-layout--fixed-drawer" id="asa">
+                <br />
+                <Dialog
+                  title="Edit Work Order"
+                  actions={actions}
+                  modal={false}
+                  open={this.state.onEdit}
+                  onRequestClose={() => this._handleClose()}
+                >
+                  {_renderModalComponent()}
+                </Dialog>
+                <MaterialContainer
+                  keys="id"
+                  className="mdl-data-table"
+                  columns={this.WorkOrdersColumns}
+                  dataArray={this.state.workOrderData}
+                  draggable={false}
+                  sortable={false}
+                  sortBy={{prop: 'id', order: 'desc'}}
+                  pageSizeOptions={[5]}
+                />
+              </div>
             </div>
-          </div>
-        </Col>
+          </Col>
+        </Paper>
       </Row>
     </div>);
   }

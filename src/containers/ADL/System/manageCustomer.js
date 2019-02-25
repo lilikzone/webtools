@@ -1207,21 +1207,6 @@ export default class ManageCustomer extends React.Component {
       );
     };
     let _renderCreateUser = () => {
-        // apiUrl,
-    // stateName,
-    // dob,
-    // birth_place,
-    // gender,
-    // identification_type,
-    // identification_number,
-    // identification_address,
-    // phone1,
-    // phone2,
-    // phone3,
-    // email1,
-    // email2,
-    // group,
-    // name
       return (
         <div>
           <h3 style={styles.navigation}>Create User</h3>

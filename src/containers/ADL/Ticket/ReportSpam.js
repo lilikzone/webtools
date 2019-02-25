@@ -22,7 +22,7 @@ const style = {
   },
 };
 
-export default class TicketExistingCustomer extends React.Component {
+export default class ReportSpam extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,34 +32,37 @@ export default class TicketExistingCustomer extends React.Component {
     };
   }
   render() {
-    let _createLeads = () => {
+    let _createPrankData = () => {
       return (<div>
         <Col xs={12} md={6} lg={6} sm={12}>
           <form>
+            <TextField
+              floatingLabelText="Msisdn"
+              hintText="Msisdn"
+              fullWidth={true}
+              required={true}
+            />
+
             <SelectField
               fullWidth={true}
               required={true}
-              floatingLabelText="Type"
-              name="type"
+              floatingLabelText="Category"
+              name="category"
             >
-              <MenuItem value="future_leads" primaryText="Future Leads" />
-              <MenuItem value="inquiry" primaryText="Inquiry" />
+              <MenuItem value="prank_caller" primaryText="Prank Caller" />
+              <MenuItem value="false_information" primaryText="False Information" />
             </SelectField>
             <TextField
               floatingLabelText="Name"
               fullWidth={true}
             />
             <TextField
-              hintText="Address"
+              hintText="Reason"
+              floatingLabelText="Reason"
               multiLine={true}
               rows={2}
               rowsMax={5}
               fullWidth={true}
-            />
-            <TextField
-              floatingLabelText="Phone Number"
-              fullWidth={true}
-              hintText="+62"
             />
             <RaisedButton
               label="Submit Data"
@@ -70,9 +73,9 @@ export default class TicketExistingCustomer extends React.Component {
         </Col>
       </div>);
     };
-    let _leadsInquiryTable = () => {
+    let _prankTable = () => {
       return (<div className="mdl-layout">
-        <h3 style={style.title}>Leads Table</h3>
+        <h3 style={style.title}>Prank Caller Table</h3>
         <MaterialContainer
           keys="msisdn"
           className="mdl-data-table"
@@ -83,43 +86,32 @@ export default class TicketExistingCustomer extends React.Component {
           sortBy={{prop: 'msisdn', order: 'asc'}}
           pageSizeOptions={[5]}
         />
-        <h3 style={style.title}>Inquiry Table</h3>
-        <MaterialContainer
-          keys="msisdn"
-          className="mdl-data-table"
-          columns={futureLeadsColumn}
-          dataArray={this.state.dataInquiry}
-          draggable={false}
-          sortable={false}
-          sortBy={{prop: 'msisdn', order: 'asc'}}
-          pageSizeOptions={[5]}
-        />
       </div>);
     };
     return (
       <Row>
         <Col xs={12} md={12} lg={12} sm={12}>
-          <h3>New Customer</h3>
+          <h3>Report Spam</h3>
           <Paper style={styles.paper}>
             <Tabs value={this.state.currentTab} >
               <Tab
                 value={0}
-                label="Leads Data"
+                label="Create Prank Caller"
                 onActive={(val) => {
                   this.setState({
                     currentTab: val.props.index,
                   });
                 }}
-              >{_createLeads()}</Tab>
+              >{_createPrankData()}</Tab>
               <Tab
                 value={1}
-                label="Manage Leads"
+                label="Manage Prank Caller"
                 onActive={(val) => {
                   this.setState({
                     currentTab: val.props.index,
                   });
                 }}
-              >{_leadsInquiryTable()}</Tab>
+              >{_prankTable()}</Tab>
             </Tabs>
           </Paper>
         </Col>
