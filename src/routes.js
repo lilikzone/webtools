@@ -16,6 +16,7 @@ import HomesPassed from './containers/ADL/Homespassed/Homespassed';
 // Sales Management
 import SalesOrder from './containers/ADL/SalesOrder/SalesOrder';
 import TrackingOrder from './containers/ADL/SalesOrder/TrackingOrder';
+import SalesInvoice from './containers/ADL/SalesOrder/SalesInvoice';
 // product management
 import ManageProduct from './containers/ADL/Product/ManageProduct';
 // Work Order
@@ -117,6 +118,7 @@ export default (
       <Route path="transactionDaily" component={TransactionDaily} />
       <Route path="transactionMonth" component={TransactionMonth} />
       <Route path="ticketSpamReport" component={ReportSpam} />
+      <Route path="salesInvoice" component={SalesInvoice} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
