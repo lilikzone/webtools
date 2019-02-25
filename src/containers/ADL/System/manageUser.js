@@ -23,7 +23,7 @@ const cookies = new Cookies();
 const dataGender = ['Male', 'Female'];
 
 const vendorShowRole = ['manageservice', 'operation', 'admin'];
-const agentShowRole = ['operation', 'admin'];
+const agentShowRole = ['operation', 'admin', 'internalsales'];
 
 // const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 // const dataAgency = ['Agency1', 'Agency2'];
@@ -528,20 +528,6 @@ export default class ManageUser extends React.PureComponent {
                       this._handleValidationName(e, input);
                     }}
                   />
-
-                  {/* <AutoComplete
-                    fullWidth={true}
-                    required={true}
-                    floatingLabelText="Gender"
-                    searchText={this.state.textField.gender}
-                    filter={AutoComplete.caseInsensitiveFilter}
-                    openOnFocus={true}
-                    dataSource={dataGender}
-                    onUpdateInput={(input, dataSource) => {
-                      this._handleValidationGender(input, dataSource);
-                    }}
-                    errorText={!this.state.isGenderValid}
-                  /> */}
 
                   <TextField
                     fullWidth={true}

@@ -25,6 +25,7 @@ import CreateTicket from './containers/ADL/Ticket/CreateTicket';
 import TicketExistingCustomer from './containers/ADL/Ticket/TicketExistingCustomer';
 import TicketNewCustomer from './containers/ADL/Ticket/TicketNewCustomer';
 import ReportTicket from './containers/ADL/Ticket/ReportTicket';
+import ReportSpam from './containers/ADL/Ticket/ReportSpam';
 // tax
 import TaxManagement from './containers/ADL/TaxManagement/TaxManagement';
 // transaction
@@ -115,6 +116,7 @@ export default (
       <Route path="transactionCustomer" component={TransactionCustomer} />
       <Route path="transactionDaily" component={TransactionDaily} />
       <Route path="transactionMonth" component={TransactionMonth} />
+      <Route path="ticketSpamReport" component={ReportSpam} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
