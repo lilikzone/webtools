@@ -23,6 +23,8 @@ import reportWorkOrder from './containers/ADL/WorkingOrder/WorkingOrder';
 // ticket
 import CreateTicket from './containers/ADL/Ticket/CreateTicket';
 import TicketExistingCustomer from './containers/ADL/Ticket/TicketExistingCustomer';
+import TicketNewCustomer from './containers/ADL/Ticket/TicketNewCustomer';
+import ReportTicket from './containers/ADL/Ticket/ReportTicket';
 
 // Ui Pages Routes
 import Button from './containers/ui/Button';
@@ -101,6 +103,8 @@ export default (
       <Route path="reportWorkOrder" component={reportWorkOrder} />
       <Route path="createTicket" component={CreateTicket} />
       <Route path="ticketExistingCustomer" component={TicketExistingCustomer} />
+      <Route path="ticketNewCustomer" component={TicketNewCustomer} />
+      <Route path="reportTicket" component={ReportTicket} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
