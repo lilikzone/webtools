@@ -128,7 +128,11 @@ class LoginPage extends Component {
     });
   }
 
-  _handleClick = () => {
+  _handleClick= () => {
+    this._postLogin();
+  }
+
+  _postLogin() {
     if (this.state.username === '' || this.state.password === '') {
       this.setState({alert: true, alertMessage: 'Username/password is Invalid'});
     }
@@ -162,9 +166,15 @@ class LoginPage extends Component {
     }
   }
 
+  _handleEnter() {
+    this._postLogin();
+  }
+
+
   _onRequestClose=(data) => {
     this.setState({alert: false});
   }
+
   render() {
     const validation = this.state.validation;
     const token = this.state.token;
@@ -210,6 +220,12 @@ class LoginPage extends Component {
                       type="password"
                       onChange={this._handleChange}
                       errorText={validation.password}
+                      onKeyPress={(ev) => {
+                        if (ev.key === 'Enter') {
+                          console.log(this.state.password);
+                          this._handleEnter();
+                        }
+                      }}
                     />
 
                   </div>
@@ -221,6 +237,7 @@ class LoginPage extends Component {
                     primary={true}
                     style={styles.loginBtn}
                     onTouchTap={this._handleClick}
+
                   />
                   <br />
                   <br />
@@ -229,7 +246,12 @@ class LoginPage extends Component {
                 <div style={styles.controls} className="displayNone">
 
                   {/* <Link to="/admin"> */}
-                  <RaisedButton label="Login" onTouchTap={this._handleClick} primary={true} style={styles.loginBtn} />
+                  <RaisedButton
+                    label="Login"
+                    onTouchTap={this._handleClick}
+                    primary={true}
+                    style={styles.loginBtn}
+                  />
                   {/* </Link> */}
                   <Snackbar
                     open={this.state.alert}

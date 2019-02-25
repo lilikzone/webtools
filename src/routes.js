@@ -25,6 +25,12 @@ import CreateTicket from './containers/ADL/Ticket/CreateTicket';
 import TicketExistingCustomer from './containers/ADL/Ticket/TicketExistingCustomer';
 import TicketNewCustomer from './containers/ADL/Ticket/TicketNewCustomer';
 import ReportTicket from './containers/ADL/Ticket/ReportTicket';
+// tax
+import TaxManagement from './containers/ADL/TaxManagement/TaxManagement';
+// transaction
+import TransactionCustomer from './containers/ADL/Transaction/TransactionCustomer';
+import TransactionDaily from './containers/ADL/Transaction/TransactionDaily';
+import TransactionMonth from './containers/ADL/Transaction/TransactionMonth';
 
 // Ui Pages Routes
 import Button from './containers/ui/Button';
@@ -105,6 +111,10 @@ export default (
       <Route path="ticketExistingCustomer" component={TicketExistingCustomer} />
       <Route path="ticketNewCustomer" component={TicketNewCustomer} />
       <Route path="reportTicket" component={ReportTicket} />
+      <Route path="taxManagement" component={TaxManagement} />
+      <Route path="transactionCustomer" component={TransactionCustomer} />
+      <Route path="transactionDaily" component={TransactionDaily} />
+      <Route path="transactionMonth" component={TransactionMonth} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
