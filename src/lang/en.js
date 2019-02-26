@@ -30,6 +30,7 @@ const eng_lang = {
     createticket: 'Create ticket',
     manageleads: 'Manage leads',
     spamreport: 'Spam report',
+    installation: 'Installation',
   },
   options: {
     headerText: 'Options',

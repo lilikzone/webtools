@@ -46,11 +46,7 @@ const style = {
     },
   },
 };
-const UserPic = (row) => (
-  <div className="text-center">
-    <img src={row.pic} />
-  </div>
-);
+
 
 const EditBtn = () => (
   <div className="text-center">
@@ -58,24 +54,17 @@ const EditBtn = () => (
   </div>
 );
 
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-      Delete
-    </button>
-  </div>
-);
 const ChooseCustBtn = (data) => (
   <div className="text-center">
     <button
       className="mdl-button mdl-button--raised"
       onClick={() => {
-        console.log(data);
-        // const custDataArray = [];
-        // custDataArray.push(data);
-        // this.setState({
-        //   textField: data,
-        // });
+        const custChosen = [];
+        custChosen.push(data);
+        this.setState({
+          custChosen: custChosen,
+          selectedCustomer: true,
+        });
       }
     }
 
@@ -226,13 +215,13 @@ const columns = [
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
-  {
-    id: 17,
-    title: 'Action',
-    render: EditBtn,
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
+  // {
+  //   id: 17,
+  //   title: 'Action',
+  //   render: EditBtn,
+  //   width: '5%',
+  //   headerClass: 'mdl-data-table__cell--non-numeric',
+  // },
   {
     id: 18,
     title: 'Action',
@@ -434,8 +423,10 @@ export default class SalesOrder extends React.Component {
       dataStreet: [],
       dataFullAddress: [],
       custDataArray: [],
+      custChosen: '',
       dataCustomer: {},
       selectedCustomer: false,
+      notifMessage: '',
     };
     const ChooseBtn = (data) => (
       <div className="text-center">
@@ -448,6 +439,8 @@ export default class SalesOrder extends React.Component {
               dataSelectedProduct: dataArray,
               isGetProduct: false,
               selectedProduct: true,
+              isGetAllProduct: false,
+              isGetSelectedAllProduct: true,
               productId: data.id,
             });
           }
@@ -525,10 +518,10 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const accessData = cookies.get('npaccess');
       const username = accessData.split('+');
-      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&id_type=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
+      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&id_type=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
         method: 'POST',
         type: 'cors',
         headers: {
@@ -538,7 +531,13 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
+        if (respons.status === 200) {
+          this.setState({
+            isRegistered: true,
+            notifMessage: respons.message,
+          });
+        }
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -557,12 +556,6 @@ export default class SalesOrder extends React.Component {
         this.setState({dataCustomer: respons});
       }).catch((error) => {
         console.log(`error: ${error}`);
-      });
-
-      this.setState({
-        loaded: true,
-        isRegistered: true,
-        textField: {},
       });
     }
   }
@@ -994,11 +987,7 @@ export default class SalesOrder extends React.Component {
         </Card>
       );
     };
-    let _renderSelection = (data) => {
-      return data.map((val, index) => {
-        return <MenuItem key={index} value={val} primaryText={val} />;
-      });
-    };
+
     let _renderCustomerData = () => {
       return (
         <div>
@@ -1089,7 +1078,9 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 >
-                  {_renderSelection(idType)}
+                  <MenuItem  value="KTP" primaryText="KTP" />
+                  <MenuItem  value="KITAS" primaryText="KITAS" />
+                  <MenuItem  value="SIM" primaryText="SIM" />
                 </SelectField>
                 <TextField
                   required={true}
@@ -1198,20 +1189,7 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
-                <DatePicker
-                  hintText="Installation Date"
-                  floatingLabelText="Installation Date"
-                  fullWidth={true}
-                  value={this.state.textField.installationDate}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        installationDate: input,
-                      },
-                    });
-                  }}
-                />
+
               </Col>
             </form>
           </Card>
@@ -1372,7 +1350,7 @@ export default class SalesOrder extends React.Component {
             </Tabs>
             <Snackbar
               open={this.state.isRegistered}
-              message="User Added"
+              message={this.state.notifMessage}
               autoHideDuration={4000}
               bodyStyle={{backgroundColor: 'teal'}}
             />

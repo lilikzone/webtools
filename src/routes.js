@@ -21,6 +21,7 @@ import SalesInvoice from './containers/ADL/SalesOrder/SalesInvoice';
 import ManageProduct from './containers/ADL/Product/ManageProduct';
 // Work Order
 import reportWorkOrder from './containers/ADL/WorkingOrder/WorkingOrder';
+import Installation from './containers/ADL/WorkingOrder/Installation';
 // ticket
 import CreateTicket from './containers/ADL/Ticket/CreateTicket';
 import TicketExistingCustomer from './containers/ADL/Ticket/TicketExistingCustomer';
@@ -119,6 +120,7 @@ export default (
       <Route path="transactionMonth" component={TransactionMonth} />
       <Route path="ticketSpamReport" component={ReportSpam} />
       <Route path="salesInvoice" component={SalesInvoice} />
+      <Route path="installation" component={Installation} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />
