@@ -452,6 +452,7 @@ export default class TrackingOrder extends React.Component {
         <div>
           <h3 style={styles.navigation}>Manage Sales Order</h3>
           <Row>
+
             <Col xs={12} md={12} lg={12}>
               <div className="mdl-layout">
                 <div >
