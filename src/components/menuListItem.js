@@ -248,6 +248,7 @@ export class MenuList extends React.Component {
               rightIcon={<FontIcon style={styles_right_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> arrow_drop_down </FontIcon>}
               nestedItems={[
                 <ListItem style={styles_list_item} key={1} primaryText={strings.menu.reportorder} containerElement={<Link to={'/admin/reportWorkOrder'} />} />,
+                <ListItem style={styles_list_item} key={2} primaryText={strings.menu.installation} containerElement={<Link to={'/admin/installation'} />} />,
               ]}
                                                     /> : ''}
 

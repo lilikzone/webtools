@@ -30,6 +30,7 @@ const id = {
     createticket: 'Membuat tiket',
     manageleads: 'Pengaturan leads',
     spamreport: 'Laporan spam',
+    installation: 'Instalasi',
   },
   options: {
     headerText: 'Pengaturan',
