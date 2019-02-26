@@ -17,26 +17,8 @@ import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/va/';
+const cookieData = cookies.get('ssid');
 
-const paymentType = ['Open', 'Close'];
-const UserPic = (row) => (
-  <div className="text-center">
-    <img src={row.pic} />
-  </div>
-);
-
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
-
-const CheckBtn = () => (
-  <div style={styles.action}>
-    <Checkbox iconStyle={styles.checkbox} />
-  </div>
-);
 
 export default class TrackingOrder extends React.Component {
   constructor(props) {
@@ -60,17 +42,18 @@ export default class TrackingOrder extends React.Component {
       dataTable: this.data,
       cookies: '',
       workOrderData: [],
+      salesOrderData: [],
+      orderDataTemp: [],
     };
     const EditBtn = (data) => (
       <div className="text-center">
         <button
+          key={data.id}
           className="mdl-button mdl-button--raised"
           onClick={() =>
             this.setState({
               onEdit: true,
-              idTemp: data.id,
-              codeTemp: data.code,
-              nameTemp: data.name,
+              orderDataTemp: data,
             })
           }
         >
@@ -78,16 +61,18 @@ export default class TrackingOrder extends React.Component {
         </button>
       </div>
     );
-    const DeleteBtn = (data) => (
-      <div className="text-center">
-        <button
-          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
-        >
-          Delete
-        </button>
-      </div>
-    );
+    // const DeleteBtn = (data) => (
+    //   <div className="text-center">
+    //     <button
+    //       key={data.id}
+    //       className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+    //       onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+    //     >
+    //       Delete
+    //     </button>
+    //   </div>
+    // );
+
     this.WorkOrdersColumns = [
       {
         id: 0,
@@ -154,10 +139,9 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
-        title: 'Created At',
-        prop: 'created_at',
-        width: '20%',
+        id: 7,
+        title: 'Installation Date',
+        prop: 'installation_date',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
@@ -176,13 +160,13 @@ export default class TrackingOrder extends React.Component {
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 11,
-        title: '',
-        render: DeleteBtn,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 11,
+      //   title: '',
+      //   render: DeleteBtn,
+      //   width: '2%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      // },
     ];
     this.SalesOrdersColumns = [
       {
@@ -266,7 +250,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 10,
         title: 'Materai',
         prop: 'materai',
         width: '20%',
@@ -274,7 +258,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 11,
         title: 'Subtotal',
         prop: 'subtotal',
         width: '20%',
@@ -282,7 +266,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 12,
         title: 'Grandtotal',
         prop: 'grandtotal',
         width: '20%',
@@ -290,7 +274,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 13,
         title: 'Payment Type',
         prop: 'payment_type',
         width: '20%',
@@ -298,7 +282,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 12,
+        id: 14,
         title: 'Due Date',
         prop: 'due_date',
         width: '20%',
@@ -306,7 +290,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 13,
+        id: 15,
         title: 'Sales Name',
         prop: 'sales_name',
         width: '20%',
@@ -314,7 +298,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 14,
+        id: 16,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -322,7 +306,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 15,
+        id: 17,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
@@ -330,7 +314,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 16,
+        id: 18,
         title: 'Flag Status',
         prop: 'flag_status',
         width: '20%',
@@ -338,22 +322,55 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 1,
+        id: 19,
         title: '',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 11,
-        title: '',
-        render: DeleteBtn,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 20,
+      //   title: '',
+      //   render: DeleteBtn,
+      //   width: '2%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      // },
     ];
   }
 
+
+  componentWillMount() {
+    this._getSOdata();
+  }
+
+  _getSOdata() {
+    if (cookieData !== undefined && cookieData !== '') {
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+      fetch('https://ibase.adlsandbox.com:8081/api/order/all',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({salesOrderData: respons.data, load: true});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
 
   _handleClose() {
     this.setState({
@@ -369,25 +386,27 @@ export default class TrackingOrder extends React.Component {
         onTouchTap={() => this._handleClose()}
       />,
       <FlatButton
-        label="Submit"
+        label="Verified"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._handleClose()}
+      />,
+      <FlatButton
+        label="Declined"
         primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleClose()}
       />,
     ];
-    let _renderSelection = (data) => {
-      return data.map((val, index) => {
-        return <MenuItem key={index} value={val} primaryText={val} />;
-      });
-    };
     let _manageSO = () => {
+      const load = this.state.load;
       return (
         <div>
           <h3 style={styles.navigation}>Manage Sales Order</h3>
           <Row>
             <Col xs={12} md={12} lg={12}>
-              <div className="mdl-layout mdl-layout--no-drawer-button container">
-                <div className="mdl-layout--fixed-drawer" id="asa">
+              <div className="mdl-layout">
+                <div >
                   <br />
                   <Dialog
                     title="Edit User"
@@ -395,22 +414,26 @@ export default class TrackingOrder extends React.Component {
                     modal={false}
                     open={this.state.onEdit}
                     onRequestClose={() => this._handleClose()}
+                    autoScrollBodyContent={true}
                   >
                     {_renderModalComponent()}
                   </Dialog>
-                  <MaterialContainer
-                    keys="name"
+                  {load === true ? <MaterialContainer
+                    keys="id"
                     className="mdl-data-table"
                     columns={this.SalesOrdersColumns}
-                    dataArray={this.state.textField}
+                    dataArray={this.state.salesOrderData}
                     draggable={false}
                     sortable={false}
-                    sortBy={{prop: 'country.name', order: 'asc'}}
+                    sortBy={{prop: 'id', order: 'desc'}}
                     pageSizeOptions={[5]}
-                  />
+                                   /> : ''}
+
+
                 </div>
               </div>
             </Col>
+
           </Row>
         </div>
       );
@@ -420,40 +443,234 @@ export default class TrackingOrder extends React.Component {
         <div>
           <TextField
             required={true}
-            value={this.state.idTemp}
+            value={this.state.orderDataTemp.id}
             hintText="ID"
             floatingLabelText="ID"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                idTemp: input,
+                orderDataTemp: {...this.state.orderDataTemp, id: input},
               });
             }}
           />
           <TextField
             fullWidth={true}
             required={true}
-            value={this.state.codeTemp}
-            hintText="Code"
-            floatingLabelText="Code"
+            value={this.state.orderDataTemp.status}
+            hintText="Status"
+            floatingLabelText="Status"
             onChange={(e, input) => {
               this.setState({
-                codeTemp: input,
+                orderDataTemp: {...this.state.orderDataTemp, status: input},
+              });
+            }}
+          />
+
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.customer_id}
+            hintText="Customer ID"
+            floatingLabelText="Customer ID"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, customer_id: input},
               });
             }}
           />
           <TextField
             fullWidth={true}
             required={true}
-            hintText="Name"
-            floatingLabelText="Name"
-            value={this.state.nameTemp}
+            value={this.state.orderDataTemp.product_id}
+            hintText="Product ID"
+            floatingLabelText="Product ID"
             onChange={(e, input) => {
               this.setState({
-                nameTemp: input,
+                orderDataTemp: {...this.state.orderDataTemp, product_id: input},
               });
             }}
           />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.customer_email}
+            hintText="Customer email"
+            floatingLabelText="Customer email"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, customer_email: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.customer_name}
+            hintText="Customer Name"
+            floatingLabelText="Customer Name"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, customer_name: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.product_price}
+            hintText="Product Price"
+            floatingLabelText="Product Price"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, product_price: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.discount_price}
+            hintText="Discount Price"
+            floatingLabelText="Discount Price"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, discount_price: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.tax_amount}
+            hintText="Tax Amount"
+            floatingLabelText="Tax Amount"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, tax_amount: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.tax_price}
+            hintText="Tax Price"
+            floatingLabelText="Tax Price"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, tax_price: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.materai}
+            hintText="Materai"
+            floatingLabelText="Materai"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, materai: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.subtotal}
+            hintText="Subtotal"
+            floatingLabelText="Subtotal"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, subtotal: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.grandtotal}
+            hintText="Grandtotal"
+            floatingLabelText="Grandtotal"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, grandtotal: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.payment_type}
+            hintText="Payment Type"
+            floatingLabelText="Payment Type"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, payment_type: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.due_date}
+            hintText="Due Date"
+            floatingLabelText="Due Date"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, due_date: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.sales_name}
+            hintText="Sales Name"
+            floatingLabelText="Sales Name"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, sales_name: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.created_at}
+            hintText="Created At"
+            floatingLabelText="Created At"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, created_at: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.updated_at}
+            hintText="Updated At"
+            floatingLabelText="Updated At"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, updated_at: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            value={this.state.orderDataTemp.flag_status}
+            hintText="Flag Status"
+            floatingLabelText="Flag Status"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, flag_status: input},
+              });
+            }}
+          />
+
         </div>
       );
     };
@@ -476,7 +693,7 @@ export default class TrackingOrder extends React.Component {
                     {_renderModalComponent()}
                   </Dialog>
                   <MaterialContainer
-                    keys="name"
+                    keys="id"
                     className="mdl-data-table"
                     columns={this.WorkOrdersColumns}
                     dataArray={this.state.workOrderData}
@@ -494,37 +711,34 @@ export default class TrackingOrder extends React.Component {
     };
     return (
       <Row className="m-b-15">
-        <Grid item={true} xs={10} md={12} lg={12}>
-          <Paper style={styles.paper}>
-            <Col xs={12} md={12} lg={12}>
-              <Tabs value={this.state.currentTab}>
-                <Tab
-                  value={0}
-                  label="Sales Order"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                      isRegistered: false,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 0 && _manageSO()}
-                </Tab>
-                <Tab
-                  value={1}
-                  label="Working Order"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 1 && _manageWO()}
-                </Tab>
-              </Tabs>
-            </Col>
-          </Paper>
-        </Grid>
+        <Paper style={styles.paper}>
+          <Col xs={12} md={12} lg={12}>
+            <Tabs value={this.state.currentTab}>
+              <Tab
+                value={0}
+                label="Sales Order"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab === 0 && _manageSO()}
+              </Tab>
+              <Tab
+                value={1}
+                label="Working Order"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab === 1 && _manageWO()}
+              </Tab>
+            </Tabs>
+          </Col>
+        </Paper>
       </Row>
     );
   }
