@@ -91,20 +91,18 @@ export class MenuList extends React.Component {
     try {
       setInterval(async () => {
         const cookieData = cookies.get('ssid');
-        if (cookieData !== undefined && cookieData !== '') {
-          const accessData = cookies.get('npaccess');
-          const userData = accessData.split('+');
-          const res = await  fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${userData[0]}&password=${userData[1]}`, {
-            method: 'post',
-            type: 'cors',
-          });
-          const resJson = await res.json();
-          if (resJson.token !== undefined) {
-            cookies.set('ssid', resJson.token, {maxAge: 86400});
-            console.log('token changed');
-          }
+        const accessData = cookies.get('npaccess');
+        const userData = accessData.split('+');
+        const res = await  fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${userData[0]}&password=${userData[1]}`, {
+          method: 'post',
+          type: 'cors',
+        });
+        const resJson = await res.json();
+        if (resJson.token !== undefined) {
+          cookies.set('ssid', resJson.token, {maxAge: 700});
+          console.log('token changed');
         }
-      }, 900000);
+      }, 400000);
     } catch (e) {
       console.log(e);
     }

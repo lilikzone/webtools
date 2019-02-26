@@ -17,9 +17,8 @@ import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/va/';
+const cookieData = cookies.get('ssid');
 
-const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (
   <div className="text-center">
     <img src={row.pic} />
@@ -60,6 +59,7 @@ export default class TrackingOrder extends React.Component {
       dataTable: this.data,
       cookies: '',
       workOrderData: [],
+      salesOrderData: [],
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -88,6 +88,7 @@ export default class TrackingOrder extends React.Component {
         </button>
       </div>
     );
+
     this.WorkOrdersColumns = [
       {
         id: 0,
@@ -355,6 +356,39 @@ export default class TrackingOrder extends React.Component {
   }
 
 
+  componentWillMount() {
+    this._getSOdata();
+  }
+
+  _getSOdata() {
+    if (cookieData !== undefined && cookieData !== '') {
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+      fetch('https://ibase.adlsandbox.com:8081/api/order/all',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({salesOrderData: respons.data, load: true});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+
   _handleClose() {
     this.setState({
       onEdit: false,
@@ -375,19 +409,15 @@ export default class TrackingOrder extends React.Component {
         onTouchTap={() => this._handleClose()}
       />,
     ];
-    let _renderSelection = (data) => {
-      return data.map((val, index) => {
-        return <MenuItem key={index} value={val} primaryText={val} />;
-      });
-    };
     let _manageSO = () => {
       return (
         <div>
           <h3 style={styles.navigation}>Manage Sales Order</h3>
           <Row>
+
             <Col xs={12} md={12} lg={12}>
-              <div className="mdl-layout mdl-layout--no-drawer-button container">
-                <div className="mdl-layout--fixed-drawer" id="asa">
+              <div className="mdl-layout">
+                <div >
                   <br />
                   <Dialog
                     title="Edit User"
@@ -399,18 +429,19 @@ export default class TrackingOrder extends React.Component {
                     {_renderModalComponent()}
                   </Dialog>
                   <MaterialContainer
-                    keys="name"
+                    keys="id"
                     className="mdl-data-table"
                     columns={this.SalesOrdersColumns}
-                    dataArray={this.state.textField}
+                    dataArray={this.state.salesOrderData}
                     draggable={false}
                     sortable={false}
-                    sortBy={{prop: 'country.name', order: 'asc'}}
+                    sortBy={{prop: 'id', order: 'desc'}}
                     pageSizeOptions={[5]}
                   />
                 </div>
               </div>
             </Col>
+
           </Row>
         </div>
       );
@@ -476,7 +507,7 @@ export default class TrackingOrder extends React.Component {
                     {_renderModalComponent()}
                   </Dialog>
                   <MaterialContainer
-                    keys="name"
+                    keys="id"
                     className="mdl-data-table"
                     columns={this.WorkOrdersColumns}
                     dataArray={this.state.workOrderData}
@@ -494,37 +525,34 @@ export default class TrackingOrder extends React.Component {
     };
     return (
       <Row className="m-b-15">
-        <Grid item={true} xs={10} md={12} lg={12}>
-          <Paper style={styles.paper}>
-            <Col xs={12} md={12} lg={12}>
-              <Tabs value={this.state.currentTab}>
-                <Tab
-                  value={0}
-                  label="Sales Order"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                      isRegistered: false,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 0 && _manageSO()}
-                </Tab>
-                <Tab
-                  value={1}
-                  label="Working Order"
-                  onActive={(val) => {
-                    this.setState({
-                      currentTab: val.props.index,
-                    });
-                  }}
-                >
-                  {this.state.currentTab == 1 && _manageWO()}
-                </Tab>
-              </Tabs>
-            </Col>
-          </Paper>
-        </Grid>
+        <Paper style={styles.paper}>
+          <Col xs={12} md={12} lg={12}>
+            <Tabs value={this.state.currentTab}>
+              <Tab
+                value={0}
+                label="Sales Order"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab == 0 && _manageSO()}
+              </Tab>
+              <Tab
+                value={1}
+                label="Working Order"
+                onActive={(val) => {
+                  this.setState({
+                    currentTab: val.props.index,
+                  });
+                }}
+              >
+                {this.state.currentTab == 1 && _manageWO()}
+              </Tab>
+            </Tabs>
+          </Col>
+        </Paper>
       </Row>
     );
   }
