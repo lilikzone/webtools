@@ -249,7 +249,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 2,
+    id: 3,
     title: 'Customer Name',
     prop: 'customer_name',
     width: '5%',
@@ -257,7 +257,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 3,
+    id: 4,
     title: 'DOB',
     prop: 'dob',
     width: '5.5%',
@@ -265,7 +265,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 4,
+    id: 5,
     title: 'DOB Place',
     prop: 'birth_place',
     width: '5%',
@@ -273,7 +273,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 5,
+    id: 6,
     title: 'Gender',
     prop: 'gender',
     width: '5%',
@@ -281,7 +281,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 6,
+    id: 7,
     title: 'Group',
     prop: 'group',
     width: '5%',
@@ -289,7 +289,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 7,
+    id: 8,
     title: 'ID Type',
     prop: 'type_id',
     width: '5%',
@@ -297,7 +297,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 8,
+    id: 9,
     title: 'ID Number',
     prop: 'id_number',
     width: '5%',
@@ -305,7 +305,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 9,
+    id: 10,
     title: 'ID Address',
     prop: 'id_address',
     width: '5%',
@@ -313,7 +313,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 10,
+    id: 11,
     title: 'Primary Phone',
     prop: 'phone1',
     width: '5%',
@@ -321,7 +321,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 11,
+    id: 12,
     title: 'Alternative Phone 1',
     prop: 'phone2',
     width: '5%',
@@ -329,7 +329,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 12,
+    id: 13,
     title: 'Alternative Phone 2',
     prop: 'phone3',
     width: '5%',
@@ -337,7 +337,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 13,
+    id: 14,
     title: 'Email',
     prop: 'email1',
     width: '5%',
@@ -345,7 +345,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 14,
+    id: 15,
     title: 'Alternative Email',
     prop: 'email2',
     width: '5%',
@@ -353,7 +353,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 15,
+    id: 16,
     title: 'Created At',
     prop: 'created_at',
     width: '5%',
@@ -361,7 +361,7 @@ const columnsSelected = [
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 16,
+    id: 17,
     title: 'updated At',
     prop: 'updated_at',
     width: '5%',
@@ -423,7 +423,7 @@ export default class SalesOrder extends React.Component {
       dataStreet: [],
       dataFullAddress: [],
       custDataArray: [],
-      custChosen: '',
+      custChosen: [],
       dataCustomer: {},
       selectedCustomer: false,
       notifMessage: '',
@@ -1247,25 +1247,24 @@ export default class SalesOrder extends React.Component {
     let _selectedCustomer = (selectedCustomer) => {
       if (selectedCustomer) {
         return (<div>
-          <h1 style={{marginTop: 30, textAlign: 'center'}}>Product</h1>
+          <h1 style={{marginTop: 30, textAlign: 'center'}}>Customer</h1>
           <Card style={style.card}>
             <RaisedButton
               backgroundColor={teal300}
               style={{marginTop: 10}}
               labelColor={grey50}
               containerElement="label"
-              label="Change Product"
-              onClick={this._reselectProduct}
+              label="Change Customer"
+              // onClick={this._reselectProduct}
             />
             <MaterialContainer
               keys="id"
               className="mdl-data-table"
-              columns={this.columnsSelected}
-              dataArray={this.state.custDataArray}
+              columns={columnsSelected}
+              dataArray={this.state.custChosen}
               draggable={false}
               sortable={false}
               sortBy={{prop: 'id', order: 'desc'}}
-              pageSizeOptions={[10]}
             />
           </Card>
         </div>);
