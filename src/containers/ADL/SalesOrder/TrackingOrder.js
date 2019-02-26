@@ -45,14 +45,14 @@ export default class TrackingOrder extends React.Component {
       salesOrderData: [],
       orderDataTemp: [],
     };
-    const EditBtn = (data) => (
+    const EditBtnSO = (data) => (
       <div className="text-center">
         <button
           key={data.id}
           className="mdl-button mdl-button--raised"
           onClick={() =>
             this.setState({
-              onEdit: true,
+              onEditOrder: true,
               orderDataTemp: data,
             })
           }
@@ -61,17 +61,22 @@ export default class TrackingOrder extends React.Component {
         </button>
       </div>
     );
-    // const DeleteBtn = (data) => (
-    //   <div className="text-center">
-    //     <button
-    //       key={data.id}
-    //       className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-    //       onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
-    //     >
-    //       Delete
-    //     </button>
-    //   </div>
-    // );
+    const EditBtnWO = (data) => (
+      <div className="text-center">
+        <button
+          key={data.id}
+          className="mdl-button mdl-button--raised"
+          onClick={() =>
+            this.setState({
+              onEditWo: true,
+              orderDataTemp: data,
+            })
+          }
+        >
+          Edit
+        </button>
+      </div>
+    );
 
     this.WorkOrdersColumns = [
       {
@@ -156,7 +161,7 @@ export default class TrackingOrder extends React.Component {
       {
         id: 10,
         title: '',
-        render: EditBtn,
+        render: EditBtnWO,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
@@ -324,7 +329,7 @@ export default class TrackingOrder extends React.Component {
       {
         id: 19,
         title: '',
-        render: EditBtn,
+        render: EditBtnSO,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
@@ -341,6 +346,10 @@ export default class TrackingOrder extends React.Component {
 
   componentWillMount() {
     this._getSOdata();
+  }
+
+  _onRequestClose=(data) => {
+    this.setState({alert: false});
   }
 
   _getSOdata() {
@@ -378,6 +387,45 @@ export default class TrackingOrder extends React.Component {
     });
   }
 
+  _updateStatus(statusData) {
+    if (cookieData !== undefined && cookieData !== '') {
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      const order_id = this.state.orderDataTemp.id;
+
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/verification?status=${statusData}&id=${order_id}`,
+        {
+          method: 'POST',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({
+          alertMessage: respons.message,
+          alert: true,
+          load: true,
+          onEditOrder: false,
+        });
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+
+      this._getSOdata();
+    }
+  }
+
   render() {
     let actions = [
       <FlatButton
@@ -386,16 +434,16 @@ export default class TrackingOrder extends React.Component {
         onTouchTap={() => this._handleClose()}
       />,
       <FlatButton
+        label="Decline"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._updateStatus('decline')}
+      />,
+      <FlatButton
         label="Verified"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
-      />,
-      <FlatButton
-        label="Declined"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
+        onTouchTap={() => this._updateStatus('verified')}
       />,
     ];
     let _manageSO = () => {
@@ -409,10 +457,10 @@ export default class TrackingOrder extends React.Component {
                 <div >
                   <br />
                   <Dialog
-                    title="Edit User"
+                    title="Update Sales Order"
                     actions={actions}
                     modal={false}
-                    open={this.state.onEdit}
+                    open={this.state.onEditOrder}
                     onRequestClose={() => this._handleClose()}
                     autoScrollBodyContent={true}
                   >
@@ -443,6 +491,7 @@ export default class TrackingOrder extends React.Component {
         <div>
           <TextField
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.id}
             hintText="ID"
             floatingLabelText="ID"
@@ -456,6 +505,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.status}
             hintText="Status"
             floatingLabelText="Status"
@@ -469,6 +519,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.customer_id}
             hintText="Customer ID"
             floatingLabelText="Customer ID"
@@ -481,6 +532,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.product_id}
             hintText="Product ID"
             floatingLabelText="Product ID"
@@ -493,6 +545,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.customer_email}
             hintText="Customer email"
             floatingLabelText="Customer email"
@@ -505,6 +558,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.customer_name}
             hintText="Customer Name"
             floatingLabelText="Customer Name"
@@ -517,6 +571,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.product_price}
             hintText="Product Price"
             floatingLabelText="Product Price"
@@ -529,6 +584,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.discount_price}
             hintText="Discount Price"
             floatingLabelText="Discount Price"
@@ -541,6 +597,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.tax_amount}
             hintText="Tax Amount"
             floatingLabelText="Tax Amount"
@@ -553,6 +610,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.tax_price}
             hintText="Tax Price"
             floatingLabelText="Tax Price"
@@ -565,6 +623,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.materai}
             hintText="Materai"
             floatingLabelText="Materai"
@@ -577,6 +636,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.subtotal}
             hintText="Subtotal"
             floatingLabelText="Subtotal"
@@ -589,6 +649,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.grandtotal}
             hintText="Grandtotal"
             floatingLabelText="Grandtotal"
@@ -601,6 +662,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.payment_type}
             hintText="Payment Type"
             floatingLabelText="Payment Type"
@@ -613,6 +675,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.due_date}
             hintText="Due Date"
             floatingLabelText="Due Date"
@@ -625,6 +688,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.sales_name}
             hintText="Sales Name"
             floatingLabelText="Sales Name"
@@ -637,6 +701,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.created_at}
             hintText="Created At"
             floatingLabelText="Created At"
@@ -649,6 +714,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.updated_at}
             hintText="Updated At"
             floatingLabelText="Updated At"
@@ -661,6 +727,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
+            disabled={true}
             value={this.state.orderDataTemp.flag_status}
             hintText="Flag Status"
             floatingLabelText="Flag Status"
@@ -684,10 +751,10 @@ export default class TrackingOrder extends React.Component {
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
                   <Dialog
-                    title="Edit User"
+                    title="Update"
                     actions={actions}
                     modal={false}
-                    open={this.state.onEdit}
+                    open={this.state.onEditWo}
                     onRequestClose={() => this._handleClose()}
                   >
                     {_renderModalComponent()}
@@ -739,6 +806,13 @@ export default class TrackingOrder extends React.Component {
             </Tabs>
           </Col>
         </Paper>
+        <Snackbar
+          open={this.state.alert}
+          message={this.state.alertMessage}
+          autoHideDuration={2000}
+          bodyStyle={{backgroundColor: 'teal'}}
+          onRequestClose={this._onRequestClose}
+        />
       </Row>
     );
   }
