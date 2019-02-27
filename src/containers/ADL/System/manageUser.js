@@ -84,6 +84,7 @@ export default class ManageUser extends React.PureComponent {
       nameTemp: '',
       emailTemp: '',
       phoneNumberTemp: '',
+      roleTemp: '',
       textField: {
         name: '',
         email: '',
@@ -117,6 +118,7 @@ export default class ManageUser extends React.PureComponent {
              idTemp: data.id,
              emailTemp: data.email,
              phoneNumberTemp: data.phoneNumber,
+             roleTemp: data.role,
            })
          }
         >
@@ -487,23 +489,30 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _handleUpdate() {
-    const name = this.state.nameTemp;
-    const email = this.state.emailTemp;
-    const id = this.state.idTemp;
-    fetch(`https://ibase.adlsandbox.com:8081/api/admin/edit/${id}?${name}&email=${email}`, {
-      method: 'PUT',
-      type: 'cors',
-    })
-      .then(json)
-      .then((respons) => {
-        console.log(respons);
-        this.setState({
-          currentTab: 1,
-          redirect: true,
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const name = this.state.nameTemp;
+      const email = this.state.emailTemp;
+      const id = this.state.idTemp;
+      const role = this.state.roleTemp;
+      fetch(`https://ibase.adlsandbox.com:8081/api/admin/edit/${id}?name=${name}&email=${email}&role=${role}`, {
+        method: 'PUT',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((respons) => {
+          console.log(respons);
+          this.setState({
+            redirect: true,
+          });
+        }).catch((error) => {
+          console.log(`error: ${error}`);
         });
-      }).catch((error) => {
-        console.log(`error: ${error}`);
-      });
+    }
   }
 
   render() {
@@ -514,7 +523,7 @@ export default class ManageUser extends React.PureComponent {
       />, <FlatButton
         label="Submit" primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
+        onTouchTap={() => this._handleUpdate()}
           />,
     ];
 
