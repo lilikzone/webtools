@@ -54,182 +54,13 @@ const EditBtn = () => (
   </div>
 );
 
-const ChooseCustBtn = (data) => (
-  <div className="text-center">
-    <button
-      className="mdl-button mdl-button--raised"
-      onClick={() => {
-        const custChosen = [];
-        custChosen.push(data);
-        this.setState({
-          custChosen: custChosen,
-          selectedCustomer: true,
-        });
-      }
-    }
-
-    >
-    Choose</button>
-  </div>
-);
 
 const CheckBtn = () => (
   <div style={styles.action}>
     <Checkbox iconStyle={styles.checkbox} />
   </div>
 );
-const columns = [
-  {
-    id: 1,
-    title: 'id',
-    prop: 'id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Subscriber ID',
-    prop: 'subs_id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Customer Name',
-    prop: 'customer_name',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 3,
-    title: 'DOB',
-    prop: 'dob',
-    width: '5.5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'DOB Place',
-    prop: 'birth_place',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 5,
-    title: 'Gender',
-    prop: 'gender',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 6,
-    title: 'Group',
-    prop: 'group',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'ID Type',
-    prop: 'type_id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 8,
-    title: 'ID Number',
-    prop: 'id_number',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 9,
-    title: 'ID Address',
-    prop: 'id_address',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 10,
-    title: 'Primary Phone',
-    prop: 'phone1',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 11,
-    title: 'Alternative Phone 1',
-    prop: 'phone2',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 12,
-    title: 'Alternative Phone 2',
-    prop: 'phone3',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 13,
-    title: 'Email',
-    prop: 'email1',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 14,
-    title: 'Alternative Email',
-    prop: 'email2',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 15,
-    title: 'Created At',
-    prop: 'created_at',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 16,
-    title: 'updated At',
-    prop: 'updated_at',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  // {
-  //   id: 17,
-  //   title: 'Action',
-  //   render: EditBtn,
-  //   width: '5%',
-  //   headerClass: 'mdl-data-table__cell--non-numeric',
-  // },
-  {
-    id: 18,
-    title: 'Action',
-    render: ChooseCustBtn,
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-  },
-];
+
 const idType = ['KTP', 'KITAS', 'SIM'];
 const columnsSelected = [
   {
@@ -428,6 +259,24 @@ export default class SalesOrder extends React.Component {
       selectedCustomer: false,
       notifMessage: '',
     };
+    const ChooseCustBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() => {
+            const custChosen = [];
+            custChosen.push(data);
+            this.setState({
+              custChosen: custChosen,
+              selectedCustomer: true,
+            });
+          }
+        }
+
+        >
+        Choose</button>
+      </div>
+    );
     const ChooseBtn = (data) => (
       <div className="text-center">
         <button
@@ -471,6 +320,158 @@ export default class SalesOrder extends React.Component {
         Choose</button>
       </div>
     );
+    this.columns = [
+      {
+        id: 1,
+        title: 'id',
+        prop: 'id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Subscriber ID',
+        prop: 'subs_id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Customer Name',
+        prop: 'customer_name',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'DOB',
+        prop: 'dob',
+        width: '5.5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'DOB Place',
+        prop: 'birth_place',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'Gender',
+        prop: 'gender',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'Group',
+        prop: 'group',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'ID Type',
+        prop: 'type_id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'ID Number',
+        prop: 'id_number',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
+        title: 'ID Address',
+        prop: 'id_address',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Primary Phone',
+        prop: 'phone1',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 11,
+        title: 'Alternative Phone 1',
+        prop: 'phone2',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 12,
+        title: 'Alternative Phone 2',
+        prop: 'phone3',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 13,
+        title: 'Email',
+        prop: 'email1',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 14,
+        title: 'Alternative Email',
+        prop: 'email2',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 15,
+        title: 'Created At',
+        prop: 'created_at',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 16,
+        title: 'updated At',
+        prop: 'updated_at',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      // {
+      //   id: 17,
+      //   title: 'Action',
+      //   render: EditBtn,
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      {
+        id: 18,
+        title: 'Action',
+        render: ChooseCustBtn,
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
     this.Productcolumns = [
       {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -518,10 +519,10 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const accessData = cookies.get('npaccess');
       const username = accessData.split('+');
-      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
+      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
         method: 'POST',
         type: 'cors',
         headers: {
@@ -1270,7 +1271,7 @@ export default class SalesOrder extends React.Component {
         </div>);
       }
     };
-    let _renderCreateUser = () => {
+    let _renderCreateCustomer = () => {
       return (
         <div>
           <h1 style={{marginTop: 15, textAlign: 'center'}}>Region Check</h1>
@@ -1299,7 +1300,7 @@ export default class SalesOrder extends React.Component {
                     <MaterialContainer
                       keys="id"
                       className="mdl-data-table"
-                      columns={columns}
+                      columns={this.  columns}
                       dataArray={this.state.dataCustomer}
                       draggable={false}
                       sortable={false}
@@ -1333,7 +1334,7 @@ export default class SalesOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 0 && _renderCreateUser()}
+                {this.state.currentTab == 0 && _renderCreateCustomer()}
               </Tab>
               <Tab
                 value={1}
