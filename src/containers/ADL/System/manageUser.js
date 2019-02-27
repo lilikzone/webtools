@@ -25,6 +25,9 @@ const dataGender = ['Male', 'Female'];
 const vendorShowRole = ['manageservice', 'operation', 'admin'];
 const agentShowRole = ['operation', 'admin', 'internalsales'];
 
+const enableAgency = ['sales', 'salesadmin'];
+const enableVendor = ['dispatcher', 'installer'];
+
 // const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 // const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -99,6 +102,9 @@ export default class ManageUser extends React.PureComponent {
       dataAgency: [],
       allData: '',
       loaded: false,
+      redirect: false,
+      disableVendorButton: true,
+      disableAgencyButton: true,
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -108,6 +114,7 @@ export default class ManageUser extends React.PureComponent {
            this.setState({
              onEdit: true,
              nameTemp: data.name,
+             idTemp: data.id,
              emailTemp: data.email,
              phoneNumberTemp: data.phoneNumber,
            })
@@ -223,6 +230,8 @@ export default class ManageUser extends React.PureComponent {
       {'name': 'Sales', 'value': 'sales'}];
     }
   }
+
+
   componentDidMount() {
     fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
       method: 'GET',
@@ -397,6 +406,14 @@ export default class ManageUser extends React.PureComponent {
         isRoleValid: false,
       });
     }
+    if (enableAgency.includes(data)) {
+      this.setState({disableVendorButton: true});
+      this.setState({disableAgencyButton: false});
+    }
+    if (enableVendor.includes(data)) {
+      this.setState({disableAgencyButton: true});
+      this.setState({disableVendorButton: false});
+    }
 
     this.setState({
       textField: {...this.state.textField, role: data},
@@ -469,6 +486,25 @@ export default class ManageUser extends React.PureComponent {
     });
   }
 
+  _handleUpdate() {
+    const name = this.state.nameTemp;
+    const email = this.state.emailTemp;
+    const id = this.state.idTemp;
+    fetch(`https://ibase.adlsandbox.com:8081/api/admin/edit/${id}?${name}&email=${email}`, {
+      method: 'PUT',
+      type: 'cors',
+    })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({
+          currentTab: 1,
+          redirect: true,
+        });
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+  }
 
   render() {
     let actions = [
@@ -573,7 +609,7 @@ export default class ManageUser extends React.PureComponent {
                     fullWidth={true}
                     floatingLabelText="Vendor"
                     filter={AutoComplete.caseInsensitiveFilter}
-
+                    disabled={this.state.disableVendorButton}
                     openOnFocus={true}
                     dataSource={this.state.dataVendor}
                     searchText={this.state.textField.vendor}
@@ -583,6 +619,7 @@ export default class ManageUser extends React.PureComponent {
                     errorText={!this.state.isVendorValid}
                                                         /> : ''}
                   {agentShowRole.includes(user_data) ? <AutoComplete
+                    disabled={this.state.disableAgencyButton}
                     required={true}
                     fullWidth={true}
                     floatingLabelText="Agency"
@@ -636,7 +673,7 @@ export default class ManageUser extends React.PureComponent {
               this._handleValidationEmailTemp(e, input);
             }}
           />
-          <TextField
+          {/* <TextField
             fullWidth={true}
             required={true}
             hintText="Phone Number"
@@ -646,7 +683,7 @@ export default class ManageUser extends React.PureComponent {
             onChange={(e, input) => {
               this._handleValidationNumberTemp(e, input);
             }}
-          />
+          /> */}
         </div>
       );
     };
@@ -689,6 +726,7 @@ export default class ManageUser extends React.PureComponent {
 
     return (
       <Row className="m-b-15">
+        {this.state.redirect ? <React.Fragment>{window.location.reload()}</React.Fragment> : '' }
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
             <Tabs value={this.state.currentTab}>
