@@ -145,7 +145,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 8,
         title: 'Installation Date',
         prop: 'installation_date',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -159,13 +159,13 @@ export default class TrackingOrder extends React.Component {
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 10,
-        title: '',
-        render: EditBtnWO,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 10,
+      //   title: '',
+      //   render: EditBtnWO,
+      //   width: '2%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      // },
       // {
       //   id: 11,
       //   title: '',
@@ -347,6 +347,7 @@ export default class TrackingOrder extends React.Component {
 
   componentWillMount() {
     this._getSOdata();
+    this._getWOdata();
   }
 
   _onRequestClose=(data) => {
@@ -376,6 +377,36 @@ export default class TrackingOrder extends React.Component {
       .then((respons) => {
         console.log(respons);
         this.setState({salesOrderData: respons.data, load: true});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+
+  _getWOdata() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+      fetch('https://ibase.adlsandbox.com:8081/api/workorder/all',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({workOrderData: respons.data, load: true});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });

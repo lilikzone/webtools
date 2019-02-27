@@ -105,6 +105,7 @@ export default class ManageProduct extends React.Component {
       createdCode: '',
       warningMessage: '',
       idUpdate: '',
+      dataPromoArea: [],
     };
 
     const EditBtn = (data) => (
@@ -475,7 +476,39 @@ export default class ManageProduct extends React.Component {
         for (i = 0;i < dataCityObject.length;i++) {
           dataCity.push(dataCityObject[i].city);
         }
-        this.setState({dataCity: dataCity});
+        const dataOltObject = respons[0].olt_location;
+        const dataOlt = [];
+        let j;
+        for (j = 0;j < dataOltObject.length;j++) {
+          dataOlt.push(dataOltObject[j].olt_location);
+        }
+        const dataFdtObject = respons[0].fdt_code;
+        const dataFdt = [];
+        let k;
+        for (k = 0;k < dataFdtObject.length;k++) {
+          dataFdt.push(dataFdtObject[k].fdt_code);
+        }
+        const dataRegionObject = respons[0].region;
+        const dataRegion = [];
+        let m;
+        for (m = 0;m < dataRegionObject.length;m++) {
+          dataRegion.push(dataRegionObject[m].region);
+        }
+
+        const dataClusterObject = respons[0].cluster;
+        const dataCluster = [];
+        let n;
+        for (n = 0;n < dataClusterObject.length;n++) {
+          dataCluster.push(dataClusterObject[n].cluster);
+        }
+
+        this.setState({
+          dataCity: dataCity,
+          dataOlt: dataOlt,
+          dataFdt: dataFdt,
+          dataRegion: dataRegion,
+          dataCluster: dataCluster,
+        });
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -649,12 +682,35 @@ export default class ManageProduct extends React.Component {
                           this.setState({
                             textField: {...this.state.textField, promo_type: value},
                           });
+
+                          if (value === 'olt') {
+                            this.setState({
+                              dataPromoArea: this.state.dataOlt,
+                            });
+                          } else if (value === 'fdt') {
+                            this.setState({
+                              dataPromoArea: this.state.dataFdt,
+                            });
+                          } else if (value === 'cluster') {
+                            this.setState({
+                              dataPromoArea: this.state.dataCluster,
+                            });
+                          } else if (value === 'city') {
+                            this.setState({
+                              dataPromoArea: this.state.dataCity,
+                            });
+                          } else {
+                            this.setState({
+                              dataPromoArea: this.state.dataRegion,
+                            });
+                          }
                         }}
                       >
                         <MenuItem value={'olt'} primaryText="OLT" />
                         <MenuItem value={'city'} primaryText="City" />
                         <MenuItem value={'region'} primaryText="Region" />
                         <MenuItem value={'fdt'} primaryText="FDT" />
+                        <MenuItem value={'cluster'} primaryText="Cluster" />
                       </SelectField>
                       <div>
                         <AutoComplete
@@ -663,7 +719,7 @@ export default class ManageProduct extends React.Component {
                           hintText="Promo area"
                           floatingLabelText="Promo Area"
                           filter={AutoComplete.noFilter}
-                          dataSource={this.state.dataCity}
+                          dataSource={this.state.dataPromoArea}
                           openOnFocus={true}
                           onUpdateInput={(input, dataSource) => {
                             this._handleValidationPromoArea(input, dataSource);
