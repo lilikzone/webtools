@@ -41,13 +41,6 @@ const UserPic = (row) => (
   </div>
 );
 
-const DeleteBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-      Delete
-    </button>
-  </div>
-);
 
 const CheckBtn = () => (
   <div style={styles.action}>
@@ -123,6 +116,19 @@ export default class ManageUser extends React.PureComponent {
          }
         >
         Edit</button>
+      </div>
+    );
+    const DeleteBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+          onClick={() => {
+            this._handleDelete(data.id);
+          }
+         }
+        >
+          Delete
+        </button>
       </div>
     );
     this.columns = [
@@ -408,14 +414,18 @@ export default class ManageUser extends React.PureComponent {
         isRoleValid: false,
       });
     }
+
     if (enableAgency.includes(data)) {
       this.setState({disableVendorButton: true});
       this.setState({disableAgencyButton: false});
-    }
-    if (enableVendor.includes(data)) {
+    } else if (enableVendor.includes(data)) {
       this.setState({disableAgencyButton: true});
       this.setState({disableVendorButton: false});
+    } else {
+      this.setState({disableAgencyButton: true});
+      this.setState({disableVendorButton: true});
     }
+
 
     this.setState({
       textField: {...this.state.textField, role: data},
@@ -497,6 +507,28 @@ export default class ManageUser extends React.PureComponent {
       const role = this.state.roleTemp;
       fetch(`https://ibase.adlsandbox.com:8081/api/admin/edit/${id}?name=${name}&email=${email}&role=${role}`, {
         method: 'PUT',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((respons) => {
+          console.log(respons);
+          this.setState({
+            redirect: true,
+          });
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+  _handleDelete(id) {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      fetch(`https://ibase.adlsandbox.com:8081/api/admin/delete?ids=${id}`, {
+        method: 'DELETE',
         type: 'cors',
         headers: {
           'Authorization': `Bearer ${cookieData}`,
