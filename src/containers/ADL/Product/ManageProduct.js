@@ -13,12 +13,14 @@ import {MaterialContainer} from 'react-table-components';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 import DatePicker from 'material-ui/DatePicker';
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/product/';
 import Cookies from 'universal-cookie';
+import Dialog from 'material-ui/Dialog';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const cookies = new Cookies();
 import '../../table/datatable.scss';
 
+const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/product/';
 const promoType = ['BANTEN', 'JAKARTA'];
 const dataType = require('json!../../table/data.json');
 const dataDummy = [
@@ -49,11 +51,6 @@ const generateRowProps = (row) => {
   return options;
 };
 
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
 
 const CheckBtn = () => (
   <div style={styles.action}>
@@ -66,23 +63,8 @@ export default class ManageProduct extends React.Component {
     super(props);
     this.state = {
       cookies: '',
-      promo: 0,
       currentTab: 0,
       loaded: false,
-      code: '',
-      name: '',
-      promo_percentage: '',
-      promo_area: '',
-      promo_type: '',
-      price: '',
-      charging_name: '',
-      promo_value: '',
-      promo_price: '',
-      soc_label: '',
-      soc_id: '',
-      description: '',
-      promo_end: '',
-      promo_start: '',
       validation: {
         code: false,
         promo: false,
@@ -98,8 +80,43 @@ export default class ManageProduct extends React.Component {
         promo_end: false,
         promo_start: false,
       },
-      textField: [],
+      textField: {
+        promo: 0,
+        code: '',
+        name: '',
+        promo_percentage: '',
+        promo_area: '',
+        promo_type: '',
+        price: '',
+        charging_name: '',
+        promo_value: '',
+        promo_price: '',
+        soc_label: '',
+        soc_id: '',
+        description: '',
+        promo_end: '',
+        promo_start: '',
+      },
+      dataCity: [],
+      productAll: [],
+      openWarning: false,
+      openEdit: false,
+      createdName: '',
+      createdCode: '',
+      warningMessage: '',
+      idUpdate: '',
     };
+
+    const EditBtn = (data) => (
+      <div className="text-center">
+        <button
+          onClick={() => {
+            this.setState({openEdit: true, textField: data, idUpdate: data.id});
+          }}
+          className="mdl-button mdl-button--raised"
+        >Edit</button>
+      </div>
+    );
     const DeleteBtn = (data) => (
       <div className="text-center">
         <button
@@ -247,10 +264,11 @@ export default class ManageProduct extends React.Component {
     }
   }
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`);
+    this._getAPICity();
   }
 
-  _getAPI(apiUrl, stateName) {
+  _getAPI(apiUrl) {
     fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -263,7 +281,7 @@ export default class ManageProduct extends React.Component {
         console.log('get', responseJson);
         if (responseJson) {
           this.setState({
-            [stateName]: responseJson,
+            productAll: responseJson,
             loaded: true,
           });
         }
@@ -274,18 +292,43 @@ export default class ManageProduct extends React.Component {
   }
 
   _postAPI() {
+    const code = this.state.textField.code;
+    const name = this.state.textField.name;
+    const description = this.state.textField.description;
+    const soc_id = this.state.textField.soc_id;
+    const soc_label = this.state.textField.soc_label;
+    const charging_name = this.state.textField.charging_name;
+    const price = this.state.textField.price;
+    const promo_type = this.state.textField.promo_type === '' ? 0 : this.state.textField.promo_type;
+    const promo_value = this.state.textField.promo_area === '' ? 0 : this.state.textField.promo_area;
+    const promo_price = this.state.textField.promo_price === '' ? 0 : this.state.textField.promo_price;
+    const promo = this.state.textField.promo;
+
+
+    console.log(`https://ibase.adlsandbox.com:8081/api/product/register?code=${
+      code
+    }&name=${name}&description=${description}&soc_id=${
+      soc_id
+    }&soc_label=${soc_label}&charging_name=${
+      charging_name
+    }&price=${price}&promo_type=${
+      promo_type
+    }&promo_value=${promo_value}&promo_price=${
+      promo_price
+    }&promo=${promo}`);
+
     fetch(
       `https://ibase.adlsandbox.com:8081/api/product/register?code=${
-        this.state.code
-      }&name=${this.state.name}&description=${this.state.description}&soc_id=${
-        this.state.soc_id
-      }&soc_label=${this.state.soc_label}&charging_name=${
-        this.state.charging_name
-      }&price=${this.state.price}&promo_type=${
-        this.state.promo_type
-      }&promo_value=${this.state.promo_value}&promo_price=${
-        this.state.promo_price
-      }`,
+        code
+      }&name=${name}&description=${description}&soc_id=${
+        soc_id
+      }&soc_label=${soc_label}&charging_name=${
+        charging_name
+      }&price=${price}&promo_type=${
+        promo_type
+      }&promo_value=${promo_value}&promo_price=${
+        promo_price
+      }&promo=${promo}`,
       {
         method: 'POST',
         headers: {
@@ -295,8 +338,71 @@ export default class ManageProduct extends React.Component {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log('post', responseJson);
-        this._getAPI(`${HOSTNAME}all?`, 'textField');
+        this.setState({
+          createdCode: responseJson.id,
+          createdName: responseJson.product_name,
+          warningMessage: responseJson.status,
+          openWarning: true,
+        });
+        this._getAPI(`${HOSTNAME}all?`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _putAPI() {
+    const code = this.state.textField.code;
+    const name = this.state.textField.name;
+    const description = this.state.textField.description;
+    const soc_id = this.state.textField.soc_id;
+    const soc_label = this.state.textField.soc_label;
+    const charging_name = this.state.textField.charging_name;
+    const price = this.state.textField.price;
+    const promo_type = this.state.textField.promo_type === '' ? 0 : this.state.textField.promo_type;
+    const promo_value = this.state.textField.promo_area === '' ? 0 : this.state.textField.promo_area;
+    const promo_price = this.state.textField.promo_price === '' ? 0 : this.state.textField.promo_price;
+    const promo = this.state.textField.promo;
+
+
+    console.log(`https://ibase.adlsandbox.com:8081/api/product/${this.state.idUpdate}?code=${
+      code
+    }&name=${name}&description=${description}&soc_id=${
+      soc_id
+    }&soc_label=${soc_label}&charging_name=${
+      charging_name
+    }&price=${price}&promo_type=${
+      promo_type
+    }&promo_value=${promo_value}&promo_price=${
+      promo_price
+    }&promo=${promo}`);
+
+    fetch(
+      `https://ibase.adlsandbox.com:8081/api/product/${this.state.idUpdate}?code=${
+        code
+      }&name=${name}&description=${description}&soc_id=${
+        soc_id
+      }&soc_label=${soc_label}&charging_name=${
+        charging_name
+      }&price=${price}&promo_type=${
+        promo_type
+      }&promo_value=${promo_value}&promo_price=${
+        promo_price
+      }&promo=${promo}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${this.state.cookies}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          textField: [],
+          loaded: false,
+        });
+        this._getAPI(`${HOSTNAME}all?`);
       })
       .catch((error) => {
         console.error(error);
@@ -312,10 +418,11 @@ export default class ManageProduct extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        this._getAPI(`${HOSTNAME}all?`, 'textField');
+        console.log(responseJson);
         this.setState({
-          currentTab: 0,
+          loaded: false,
         });
+        this._getAPI(`${HOSTNAME}all?`);
       })
       .catch((error) => {
         console.error(error);
@@ -323,20 +430,8 @@ export default class ManageProduct extends React.Component {
   }
 
   _handleTouchTap() {
-    this._postAPI(
-      `register?code=${this.state.code}&name=${this.state.name}&description=${
-        this.state.description
-      }&soc_id=${this.state.soc_id}&soc_label=${
-        this.state.soc_label
-      }&charging_name=${this.state.charging_name}&price=${
-        this.state.price
-      }&promo=${this.state.promo}&promo_type=${
-        this.state.promo_type
-      }&promo_value=${this.state.promo_value}&promo_price=${
-        this.state.promo_price
-      }`
-    );
-    this._getAPI(`${HOSTNAME}all?`, 'textField');
+    this._postAPI();
+    this._getAPI(`${HOSTNAME}all?`);
     this.setState({
       dataTable: this.data,
       textField: {},
@@ -344,7 +439,6 @@ export default class ManageProduct extends React.Component {
   }
 
   promoToggle = (input, inputChecked) => {
-    const tab = this.state.currentTab === 1 ? 0 : 1;
     this.setState({
       promo: inputChecked,
     });
@@ -352,21 +446,53 @@ export default class ManageProduct extends React.Component {
 
   _handleValidationPromoArea(input, data) {
     let dataInput = input.toLowerCase();
-    let dataVendor = data.map((val) => val.toLowerCase());
-    this.setState({
-      isVendorValid: dataVendor.includes(dataInput),
-    });
-    if (dataVendor.includes(dataInput)) {
+    let dataArea = data.map((val) => val.toLowerCase());
+
+    if (dataArea.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, vendor: dataInput},
+        textField: {...this.state.textField, promo_area: dataInput},
       });
     }
   }
 
+  _getAPICity() {
+    const json = (response) => response.json();
+    fetch('https://ibase.adlsandbox.com:8081/api/homespassed/sort', {
+      method: 'GET',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+
+        const dataCityObject = respons[0].city;
+        const dataCity = [];
+        let i;
+        for (i = 0;i < dataCityObject.length;i++) {
+          dataCity.push(dataCityObject[i].city);
+        }
+        this.setState({dataCity: dataCity});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+  }
+
+  handleClose = () => {
+    this.setState({openWarning: false, openEdit: false});
+  };
+
+  _handleUpdate = () => {
+    this._putAPI();
+  }
+
   render() {
     let _renderCreateProduct = () => {
-      const promo_activation = this.state.promo;
-      // const validation = this.state.validation;
+      const promo_activation = this.state.textField.promo;
+      // console.log(promo_activation);
 
       return (
         <div>
@@ -379,12 +505,13 @@ export default class ManageProduct extends React.Component {
                     required={true}
                     hintText="Code"
                     floatingLabelText="Code"
-                    value={this.state.code}
+                    value={this.state.textField.code}
                     name="code"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        code: input,
+                        textField: {...this.state.textField, code: input}
+                        ,
                       });
                     }}
                   />
@@ -393,11 +520,11 @@ export default class ManageProduct extends React.Component {
                     hintText="Name"
                     floatingLabelText="Name"
                     name="name"
-                    value={this.state.name}
+                    value={this.state.textField.name}
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        name: input,
+                        textField: {...this.state.textField, name: input},
                       });
                     }}
                   />
@@ -408,12 +535,13 @@ export default class ManageProduct extends React.Component {
                     multiLine={true}
                     rows={2}
                     rowsMax={4}
-                    value={this.state.description}
+                    value={this.state.textField.description}
                     name="description"
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        description: input,
+                        textField: {...this.state.textField, description: input}
+                        ,
                       });
                     }}
                   />
@@ -422,11 +550,11 @@ export default class ManageProduct extends React.Component {
                     hintText="SOC ID"
                     floatingLabelText="SOC ID"
                     name="soc_id"
-                    value={this.state.soc_id}
+                    value={this.state.textField.soc_id}
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        soc_id: input,
+                        textField: {...this.state.textField, soc_id: input},
                       });
                     }}
                   />
@@ -436,10 +564,10 @@ export default class ManageProduct extends React.Component {
                     floatingLabelText="SOC Label"
                     name="soc_label"
                     fullWidth={true}
-                    value={this.state.soc_label}
+                    value={this.state.textField.soc_label}
                     onChange={(e, input) => {
                       this.setState({
-                        soc_label: input,
+                        textField: {...this.state.textField, soc_label: input},
                       });
                     }}
                   />
@@ -448,11 +576,11 @@ export default class ManageProduct extends React.Component {
                     hintText="Charging Name"
                     floatingLabelText="Charging Name"
                     name="charging_name"
-                    value={this.state.charging_name}
+                    value={this.state.textField.charging_name}
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        charging_name: input,
+                        textField: {...this.state.textField, charging_name: input},
                       });
                     }}
                   />
@@ -460,25 +588,26 @@ export default class ManageProduct extends React.Component {
                     required={true}
                     // hintText="Price"
                     floatingLabelText="Price"
-                    floatingLabelFixed={true}
                     name="price"
                     fullWidth={true}
-                    value={this.state.price}
+                    value={this.state.textField.price}
                     onChange={(e, input) => {
                       this.setState({
-                        price: input,
+                        textField: {...this.state.textField, price: input},
                       });
                     }}
                     // errorText={validation.price}
                     type="number"
                   />
+                  <br />
+                  <br />
                   <Toggle
                     name="promo"
                     label="Promo"
                     style={styles.toggle}
                     onToggle={(input, inputChecked) => {
                       this.setState({
-                        promo: inputChecked == false ? 0 : 1,
+                        textField: {...this.state.textField, promo: inputChecked == false ? 0 : 1},
                       });
                     }}
                     toggled={promo_activation}
@@ -489,11 +618,11 @@ export default class ManageProduct extends React.Component {
                         hintText="Promo Start"
                         floatingLabelText="Promo Start"
                         name="promo_start"
-                        value={this.state.promo_start}
+                        value={this.state.textField.promo_start}
                         fullWidth={true}
                         onChange={(e, input) => {
                           this.setState({
-                            promo_start: input,
+                            textField: {...this.state.textField, promo_start: input},
                           });
                         }}
                         // errorText={validation.promo_start}
@@ -502,11 +631,11 @@ export default class ManageProduct extends React.Component {
                         hintText="Promo End"
                         floatingLabelText="Promo End"
                         name="promo_end"
-                        value={this.state.promo_end}
+                        value={this.state.textField.promo_end}
                         fullWidth={true}
                         onChange={(e, input) => {
                           this.setState({
-                            promo_end: input,
+                            textField: {...this.state.textField, promo_end: input},
                           });
                         }}
                         // errorText={validation.promo_end}
@@ -515,10 +644,10 @@ export default class ManageProduct extends React.Component {
                         fullWidth={true}
                         floatingLabelText="Promo Type"
                         name="promo_type"
-                        value={this.state.promo_type}
+                        value={this.state.textField.promo_type}
                         onChange={(e, index, value) => {
                           this.setState({
-                            promo_type: value,
+                            textField: {...this.state.textField, promo_type: value},
                           });
                         }}
                       >
@@ -534,7 +663,7 @@ export default class ManageProduct extends React.Component {
                           hintText="Promo area"
                           floatingLabelText="Promo Area"
                           filter={AutoComplete.noFilter}
-                          dataSource={promoType}
+                          dataSource={this.state.dataCity}
                           openOnFocus={true}
                           onUpdateInput={(input, dataSource) => {
                             this._handleValidationPromoArea(input, dataSource);
@@ -543,14 +672,14 @@ export default class ManageProduct extends React.Component {
                       </div>
                       <TextField
                         required={true}
-                        hintText="Promo Percentage"
-                        floatingLabelText="Promo Percentage"
-                        name="promo_percentage"
+                        hintText="Promo Price"
+                        floatingLabelText="Promo Price"
+                        name="promo_price"
                         fullWidth={true}
                         type="number"
                         onChange={(e, input) => {
                           this.setState({
-                            promo_percentage: input,
+                            textField: {...this.state.textField, promo_price: input},
                           });
                         }}
                       />
@@ -575,7 +704,7 @@ export default class ManageProduct extends React.Component {
     let _renderTableProduct = () => {
       return (
         <Row>
-          <Col xs={12} md={12} lg={12}>
+          {this.state.loaded ?           <Col xs={12} md={12} lg={12}>
             {/* <Card style={styles.card}> */}
             <div className="mdl-layout mdl-layout--no-drawer-button container">
               <div className="mdl-layout--fixed-drawer" id="asa">
@@ -584,7 +713,7 @@ export default class ManageProduct extends React.Component {
                   keys="id"
                   className="mdl-data-table"
                   columns={this.columns}
-                  dataArray={this.state.textField}
+                  dataArray={this.state.productAll}
                   draggable={true}
                   sortable={true}
                   sortBy={{prop: 'id', order: 'desc'}}
@@ -594,14 +723,256 @@ export default class ManageProduct extends React.Component {
               </div>
             </div>
             {/* </Card> */}
-          </Col>
+          </Col> : <Paper style={styles.paper}>
+            <div style={{minWidth: 700}}>
+              <div
+                style={{margin: '0 auto',
+                  width: '20%',
+                  textAlign: 'center'}}
+              >
+                <CircularProgress />
+              </div>
+            </div>
+          </Paper>
+
+        }
+
         </Row>
+      );
+    };
+
+    let actions = [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
+    let actionsModalTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+      <RaisedButton
+        label="Update" primary={true}
+        onTouchTap={this._handleUpdate}
+      />,
+    ];
+    let _renderModalComponent = () => {
+      const promo_activation = this.state.textField.promo;
+      return (
+        <div>
+          <TextField
+            required={true}
+            hintText="Code"
+            floatingLabelText="Code"
+            value={this.state.textField.code}
+            name="code"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, code: input}
+                        ,
+              });
+            }}
+          />
+          <TextField
+            required={true}
+            hintText="Name"
+            floatingLabelText="Name"
+            name="name"
+            value={this.state.textField.name}
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, name: input},
+              });
+            }}
+          />
+          <TextField
+            required={true}
+            hintText="Description"
+            floatingLabelText="Description"
+            multiLine={true}
+            rows={2}
+            rowsMax={4}
+            value={this.state.textField.description}
+            name="description"
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, description: input}
+                        ,
+              });
+            }}
+          />
+          <TextField
+            required={true}
+            hintText="SOC ID"
+            floatingLabelText="SOC ID"
+            name="soc_id"
+            value={this.state.textField.soc_id}
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, soc_id: input},
+              });
+            }}
+          />
+          <TextField
+            required={true}
+            hintText="SOC Label"
+            floatingLabelText="SOC Label"
+            name="soc_label"
+            fullWidth={true}
+            value={this.state.textField.soc_label}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, soc_label: input},
+              });
+            }}
+          />
+          <TextField
+            required={true}
+            hintText="Charging Name"
+            floatingLabelText="Charging Name"
+            name="charging_name"
+            value={this.state.textField.charging_name}
+            fullWidth={true}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, charging_name: input},
+              });
+            }}
+          />
+          <TextField
+            required={true}
+                    // hintText="Price"
+            floatingLabelText="Price"
+            name="price"
+            fullWidth={true}
+            value={this.state.textField.price}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, price: input},
+              });
+            }}
+                    // errorText={validation.price}
+            type="number"
+          />
+          <br />
+          <br />
+          <Toggle
+            name="promo"
+            label="Promo"
+            style={styles.toggle}
+            onToggle={(input, inputChecked) => {
+              this.setState({
+                textField: {...this.state.textField, promo: inputChecked == false ? 0 : 1},
+              });
+            }}
+            toggled={promo_activation}
+          />
+          {promo_activation ? (
+            <div>
+              <DatePicker
+                hintText="Promo Start"
+                floatingLabelText="Promo Start"
+                name="promo_start"
+                value={this.state.textField.promo_start}
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {...this.state.textField, promo_start: input},
+                  });
+                }}
+              />
+              <DatePicker
+                hintText="Promo End"
+                floatingLabelText="Promo End"
+                name="promo_end"
+                value={this.state.textField.promo_end}
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {...this.state.textField, promo_end: input},
+                  });
+                }}
+              />
+              <SelectField
+                fullWidth={true}
+                floatingLabelText="Promo Type"
+                name="promo_type"
+                value={this.state.textField.promo_type}
+                onChange={(e, index, value) => {
+                  this.setState({
+                    textField: {...this.state.textField, promo_type: value},
+                  });
+                }}
+              >
+                <MenuItem value={'olt'} primaryText="OLT" />
+                <MenuItem value={'city'} primaryText="City" />
+                <MenuItem value={'region'} primaryText="Region" />
+                <MenuItem value={'fdt'} primaryText="FDT" />
+              </SelectField>
+              <div>
+                <AutoComplete
+                  name="promo_area"
+                  fullWidth={true}
+                  hintText="Promo area"
+                  floatingLabelText="Promo Area"
+                  filter={AutoComplete.noFilter}
+                  dataSource={this.state.dataCity}
+                  openOnFocus={true}
+                  onUpdateInput={(input, dataSource) => {
+                    this._handleValidationPromoArea(input, dataSource);
+                  }}
+                />
+              </div>
+              <TextField
+                required={true}
+                hintText="Promo Price"
+                floatingLabelText="Promo Price"
+                name="promo_price"
+                fullWidth={true}
+                type="number"
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {...this.state.textField, promo_price: input},
+                  });
+                }}
+              />
+            </div>
+                  ) : (
+                    ''
+                  )}
+        </div>
       );
     };
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
+            <Dialog
+              title="Success"
+              actions={actions}
+              modal={false}
+              open={this.state.openWarning}
+              onRequestClose={this.handleClose}
+            >
+              {this.state.warningMessage}
+              <br />
+              {`${this.state.createdName} ${this.state.createdCode}`}
+            </Dialog>
+            <Dialog
+              title="Edit Product"
+              actions={actionsModalTable}
+              modal={false}
+              open={this.state.openEdit}
+              onRequestClose={this.handleClose}
+              autoScrollBodyContent={true}
+            >
+              {_renderModalComponent()}
+            </Dialog>
             <Tabs value={this.state.currentTab}>
               <Tab
                 value={0}
@@ -623,8 +994,7 @@ export default class ManageProduct extends React.Component {
                 }}
                 label="Manage Product"
               >
-                {this.state.loaded &&
-                  this.state.currentTab == 1 &&
+                { this.state.currentTab == 1 &&
                   _renderTableProduct()}
               </Tab>
             </Tabs>
