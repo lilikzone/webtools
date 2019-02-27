@@ -512,6 +512,7 @@ export default class ManageAgency extends React.Component {
       nameTemp: '',
       textField: [],
       dataTable: this.data,
+      redirect: false,
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -630,6 +631,7 @@ export default class ManageAgency extends React.Component {
       .then((responseJson) => {
         console.log('res', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({redirect: true});
       })
       .catch((error) => {
         console.error(error);
@@ -658,6 +660,33 @@ export default class ManageAgency extends React.Component {
         console.error(error);
       });
   }
+  _putAPI(apiUrl) {
+    const id = this.state.idTemp;
+    const code = this.state.codeTemp;
+    const name = this.state.nameTemp;
+    fetch( `${apiUrl}${id}?code=${code}&name=${name}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${this.state.cookies}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this.setState({
+          currentTab: 0,
+          redirect: true,
+        });
+      }
+
+      )
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
 
   _handleTouchTap() {
@@ -673,6 +702,9 @@ export default class ManageAgency extends React.Component {
       isRegistered: true,
       textField: {},
     });
+  }
+  _handleUpdate() {
+    this._putAPI(`${HOSTNAME}`);
   }
 
   _handleClose() {
@@ -701,7 +733,7 @@ export default class ManageAgency extends React.Component {
       />, <FlatButton
         label="Submit" primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
+        onTouchTap={() => this._handleUpdate()}
           />,
     ];
     let _renderModalComponent = () => {
@@ -710,8 +742,9 @@ export default class ManageAgency extends React.Component {
           <TextField
             required={true}
             value={this.state.idTemp}
-            // hintText="ID"
+            hintText="ID"
             floatingLabelFixed={true}
+            floatingLabelText="ID"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
@@ -839,6 +872,7 @@ export default class ManageAgency extends React.Component {
     };
     return (
       <Row className="m-b-15">
+        {this.state.redirect ? <React.Fragment>{window.location.reload()}</React.Fragment> : '' }
         <Grid item={true} xs={10} md={12} lg={12}>
           <Paper style={styles.paper}>
             <Col xs={12} md={12} lg={12}>
