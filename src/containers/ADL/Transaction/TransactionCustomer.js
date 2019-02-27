@@ -8,7 +8,12 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import CircularProgress from 'material-ui/CircularProgress';
+import Cookies from 'universal-cookie';
 
+
+const cookies = new Cookies();
+const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/customer/';
 const columns = [
   // id','name','email','role','is_admin','created_at','updated_at
   // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
@@ -170,28 +175,79 @@ export default class TransactionCustomer extends React.Component {
     super(props);
     this.state = {
       dataCustomer: [],
+      loaded: false,
     };
+  }
+
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all`);
+  }
+
+  _getAPI(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          dataCustomer: responseJson,
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
     return (<Row>
-      <h3>Customer Data</h3>
-      <Paper style={styles.paper}>
-        <Col xs={12} md={12} lg={12} sm={12}>
-          <div className="mdl-layout" >
-            <MaterialContainer
-              keys="id"
-              className="mdl-data-table"
-              columns={columns}
-              dataArray={this.state.dataCustomer}
-              draggable={false}
-              sortable={false}
-              sortBy={{prop: 'id', order: 'desc'}}
-              pageSizeOptions={[5]}
-            />
+      {this.state.loaded ?
+        <div>
+
+          <h3>Customer Data</h3>
+          <Paper style={styles.paper}>
+            <Col xs={12} md={12} lg={12} sm={12}>
+              <MaterialContainer
+                keys="id"
+                className="mdl-data-table"
+                columns={columns}
+                dataArray={this.state.dataCustomer}
+                draggable={false}
+                sortable={false}
+                sortBy={{prop: 'id', order: 'desc'}}
+                pageSizeOptions={[5]}
+              />
+            </Col>
+          </Paper>
+        </div> :
+
+        <Paper style={styles.paper}>
+          <div style={{minWidth: 700}}>
+            <div
+              style={{margin: '0 auto',
+                width: '20%',
+                textAlign: 'center'}}
+            >
+              <CircularProgress />
+            </div>
           </div>
-        </Col>
-      </Paper>
+        </Paper>
+       }
+
+      {/* </div> */}
     </Row>);
   }
 }
