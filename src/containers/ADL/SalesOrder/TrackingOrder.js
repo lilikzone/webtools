@@ -44,6 +44,7 @@ export default class TrackingOrder extends React.Component {
       workOrderData: [],
       salesOrderData: [],
       orderDataTemp: [],
+      redirect: false,
     };
     const EditBtnSO = (data) => (
       <div className="text-center">
@@ -383,7 +384,7 @@ export default class TrackingOrder extends React.Component {
 
   _handleClose() {
     this.setState({
-      onEdit: false,
+      onEditOrder: false,
     });
   }
 
@@ -417,6 +418,7 @@ export default class TrackingOrder extends React.Component {
           alert: true,
           load: true,
           onEditOrder: false,
+          redirect: true,
         });
       }).catch((error) => {
         console.log(`error: ${error}`);
@@ -779,6 +781,7 @@ export default class TrackingOrder extends React.Component {
     };
     return (
       <Row className="m-b-15">
+        {this.state.redirect ? <React.Fragment>{window.location.reload()}</React.Fragment> : '' }
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
             <Tabs value={this.state.currentTab}>
