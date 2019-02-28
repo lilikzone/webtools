@@ -323,6 +323,14 @@ export default class TrackingOrder extends React.Component {
       },
       {
         id: 18,
+        title: 'Notes',
+        prop: 'notes',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 19,
         title: 'Flag Status',
         prop: 'flag_status',
         width: '20%',
@@ -330,7 +338,7 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 19,
+        id: 20,
         title: '',
         render: EditBtnSO,
         width: '2%',
