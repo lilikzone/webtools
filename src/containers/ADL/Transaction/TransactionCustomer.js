@@ -77,7 +77,7 @@ const columns = [
   {
     id: 7,
     title: 'ID Type',
-    prop: 'identification_type',
+    prop: 'type_id',
     width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
@@ -85,7 +85,7 @@ const columns = [
   {
     id: 8,
     title: 'ID Number',
-    prop: 'identification_number',
+    prop: 'id_number',
     width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
@@ -93,7 +93,7 @@ const columns = [
   {
     id: 9,
     title: 'ID Address',
-    prop: 'identification_address',
+    prop: 'id_address',
     width: '5%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',

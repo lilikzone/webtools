@@ -418,6 +418,8 @@ export default class TrackingOrder extends React.Component {
   _handleClose() {
     this.setState({
       onEditOrder: false,
+      editWarning: false,
+
     });
   }
   _handleWarning() {
