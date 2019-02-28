@@ -45,6 +45,8 @@ export default class TrackingOrder extends React.Component {
       salesOrderData: [],
       orderDataTemp: [],
       redirect: false,
+      note: '',
+      editWarning: false,
     };
     const EditBtnSO = (data) => (
       <div className="text-center">
@@ -418,6 +420,12 @@ export default class TrackingOrder extends React.Component {
       onEditOrder: false,
     });
   }
+  _handleWarning() {
+    this.setState({
+      onEditOrder: false,
+      editWarning: true,
+    });
+  }
 
   _updateStatus(statusData) {
     if (cookieData !== undefined && cookieData !== '') {
@@ -430,8 +438,9 @@ export default class TrackingOrder extends React.Component {
       const json = (response) => response.json();
 
       const order_id = this.state.orderDataTemp.id;
+      const note = this.state.note;
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/verification?status=${statusData}&id=${order_id}`,
+      fetch(`https://ibase.adlsandbox.com:8081/api/order/verification?status=${statusData}&id=${order_id}&note=${note}`,
         {
           method: 'POST',
           type: 'cors',
@@ -449,6 +458,7 @@ export default class TrackingOrder extends React.Component {
           alert: true,
           load: true,
           onEditOrder: false,
+          editWarning: false,
           redirect: true,
         });
       }).catch((error) => {
@@ -470,13 +480,26 @@ export default class TrackingOrder extends React.Component {
         label="Decline"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._updateStatus('decline')}
+        onTouchTap={() => this._handleWarning()}
       />,
       <FlatButton
         label="Verified"
         primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._updateStatus('verified')}
+      />,
+    ];
+    let actionsWarning = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={() => this._handleClose()}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._updateStatus('decline')}
       />,
     ];
     let _manageSO = () => {
@@ -499,6 +522,24 @@ export default class TrackingOrder extends React.Component {
                     autoScrollBodyContent={true}
                   >
                     {_renderModalComponent()}
+                  </Dialog>
+                  <Dialog
+                    title="Decline Notes"
+                    actions={actionsWarning}
+                    modal={false}
+                    open={this.state.editWarning}
+                    onRequestClose={() => this._handleClose()}
+                    autoScrollBodyContent={true}
+                  >
+                    <TextField
+                      multiLine={true}
+                      floatingLabelText="Notes"
+                      onChange={(e, input) => {
+                        this.setState({note: input});
+                      }}
+                      rows={2}
+                      rowsMax={4}
+                    />
                   </Dialog>
                   {load === true ? <MaterialContainer
                     keys="id"
