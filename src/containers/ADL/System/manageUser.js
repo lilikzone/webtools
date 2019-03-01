@@ -504,13 +504,14 @@ export default class ManageUser extends React.PureComponent {
 
   _handleValidationVendor(input, data) {
     let dataInput = input.toLowerCase();
+    let dataInputDua = dataInput.charAt(0).toUpperCase() + dataInput.slice(1);
     let dataVendor = data.map((val) => val.toLowerCase());
     this.setState({
       isVendorValid: dataVendor.includes(dataInput),
     });
     if (dataVendor.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, vendor: dataInput},
+        textField: {...this.state.textField, vendor: dataInputDua},
       });
     }
   }
