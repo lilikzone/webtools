@@ -6,6 +6,8 @@ const cookies = new Cookies();
 class Logout extends Component {
   componentWillMount() {
     cookies.remove('ssid');
+    cookies.remove('npaccess');
+    cookies.remove('rdata');
   }
   render() {
     return (

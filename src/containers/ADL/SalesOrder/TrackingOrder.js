@@ -355,7 +355,7 @@ export default class TrackingOrder extends React.Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
     this._getSOdata();
     this._getWOdata();
   }
@@ -551,7 +551,7 @@ export default class TrackingOrder extends React.Component {
                       rowsMax={4}
                     />
                   </Dialog>
-                  {load === true ? <MaterialContainer
+                  {load ? <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
                     columns={this.SalesOrdersColumns}
@@ -560,7 +560,7 @@ export default class TrackingOrder extends React.Component {
                     sortable={false}
                     sortBy={{prop: 'id', order: 'desc'}}
                     pageSizeOptions={[5]}
-                                   /> : ''}
+                          /> : ''}
 
 
                 </div>
