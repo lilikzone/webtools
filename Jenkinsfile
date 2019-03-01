@@ -3,12 +3,12 @@ pipeline {
   stages {
     stage('Test ') {
       steps {
-        sh 'echo "test"'
+        sh 'sh "./gradlew clean sonarqube"'
       }
     }
     stage('Sonar') {
       steps {
-        sh "./gradlew clean sonarqube"
+        sh './gradlew clean sonarqube'
       }
     }
     stage('Deploy') {
