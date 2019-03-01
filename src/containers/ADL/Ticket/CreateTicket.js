@@ -18,6 +18,12 @@ const introSearch = [
 ];
 
 export default class CreateTicket extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataIntroSearch: [],
+    };
+  }
   render() {
     return (
       <Row>
@@ -44,13 +50,13 @@ export default class CreateTicket extends React.Component {
                 onTouchTap={() => this._handleTouchTap()}
               />
               <MaterialContainer
-                keys="msisdn"
+                keys="id"
                 className="mdl-data-table"
                 columns={introSearch}
-                dataArray={this.state.dataFutureLeads}
+                dataArray={this.state.dataIntroSearch}
                 draggable={false}
                 sortable={false}
-                sortBy={{prop: 'msisdn', order: 'asc'}}
+                sortBy={{prop: 'id', order: 'asc'}}
                 pageSizeOptions={[5]}
               />
               <Link to={'/admin/ticketExistingCustomer'}>
