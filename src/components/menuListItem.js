@@ -81,6 +81,8 @@ export class MenuList extends React.Component {
       .then(json)
       .then((respons) => {
         this.setState({roleUser: respons.user.role});
+        const rdata = `${respons.user.name}+${respons.user.role}`;
+        cookies.set('rdata', rdata, {maxAge: 86400});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });

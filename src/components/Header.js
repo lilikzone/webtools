@@ -29,6 +29,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import {grey500, cyan300, grey300, pink300, fullWhite} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import {Link} from 'react-router';
+import Cookies from 'universal-cookie';
+
+
+const cookies = new Cookies();
 
 var CustomDiv = React.createClass({
   render: function() {
@@ -91,6 +95,7 @@ class Header extends React.Component {
     super(props);
     this.state = {
       open: false,
+      userName: '',
     };
   }
 
@@ -99,9 +104,18 @@ class Header extends React.Component {
   });
   handleClose = () => this.setState({open: false});
 
+  componentDidMount() {
+    const cookieData = cookies.get('rdata');
+
+    if (cookieData !== undefined && cookieData !== '') {
+      const name = cookieData.split('+');
+      this.setState({userName: name[0]});
+    }
+  }
+
   render() {
     const {styles, handleChangeRequestNavDrawer, setLanguages, setMuiTheme, setOptions} = this.props;
-    const userName = 'ADL Admin';
+    const userName = this.state.userName;
     const style = {
       appBar: {
         top: 0,

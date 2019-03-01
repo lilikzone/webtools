@@ -202,6 +202,64 @@ export default class ManageUser extends React.PureComponent {
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+    this.NonAdmincolumns = [
+      {
+        id: 1,
+        title: 'Username',
+        prop: 'username',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Role',
+        prop: 'role',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Name',
+        prop: 'name',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 0,
+        title: 'Gender',
+        prop: 'gender',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Email',
+        prop: 'email',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Vendor',
+        prop: 'vendor',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Agency',
+        prop: 'agency',
+        width: '10%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+    ];
   }
 
   _dataRole(role) {
@@ -749,7 +807,7 @@ export default class ManageUser extends React.PureComponent {
                   <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
-                    columns={this.columns}
+                    columns={this.state.role !== 'admin' ? this.NonAdmincolumns : this.columns}
                     dataArray={this.state.allData}
                     draggable={true}
                     sortable={false}
