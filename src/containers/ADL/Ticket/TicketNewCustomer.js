@@ -11,9 +11,20 @@ import {MaterialContainer} from 'react-table-components';
 import {Subheader, DatePicker} from 'material-ui';
 
 const futureLeadsColumn = [
-  {id: 1, title: 'Msisdn', prop: 'msisdn', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 2, title: 'Category', prop: 'category', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 3, title: 'Reason', prop: 'reason', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 0, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 1, title: 'Leads Id', prop: 'leads_id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 2, title: 'DOB', prop: 'dob', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 3, title: 'Birth Place', prop: 'birth_place', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 4, title: 'Gender', prop: 'gender', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 5, title: 'Type Id', prop: 'type_id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 6, title: 'Id Number', prop: 'id_number', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 7, title: 'Id Address', prop: 'id_address', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 8, title: 'Phone 1', prop: 'phone1', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 9, title: 'Phone 2', prop: 'phone2', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 10, title: 'Phone 3', prop: 'phone3', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 11, title: 'Email 1', prop: 'email1', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 12, title: 'Email 2', prop: 'email2', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 13, title: 'Help Desk Name', prop: 'helpdesk_name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   // {id: 4, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
 ];
 
@@ -30,6 +41,21 @@ export default class TicketExistingCustomer extends React.Component {
       currentTab: 0,
       dataFutureLeads: [],
       dataInquiry: [],
+      dataTemp: {
+        customer_name: '',
+        dob: '',
+        birth_place: '',
+        type_id: '',
+        id_number: '',
+        id_address: '',
+        phone1: '',
+        phone2: '',
+        phone3: '',
+        email1: '',
+        email2: '',
+        sales_name: '',
+        type: '',
+      },
     };
   }
   render() {
@@ -40,8 +66,14 @@ export default class TicketExistingCustomer extends React.Component {
             <SelectField
               fullWidth={true}
               required={true}
+              value={this.state.dataTemp.type}
               floatingLabelText="Type"
               name="type"
+              onChange={(e, index, value) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, type: value},
+                });
+              }}
             >
               <MenuItem value="future_leads" primaryText="Future Leads" />
               <MenuItem value="inquiry" primaryText="Inquiry" />
@@ -59,7 +91,7 @@ export default class TicketExistingCustomer extends React.Component {
               }}
             />
             <DatePicker
-              value={new Date(this.state.dataTemp.dob)}
+              // value={new Date(this.state.dataTemp.dob)}
               floatingLabelFixed={true}
               floatingLabelText="Date of Birth"
               fullWidth={true}
