@@ -74,19 +74,7 @@ const columns = [
 export default class ManageActivity extends React.Component {
   constructor(props) {
     super(props);
-    this.data = [
-      {
-        id: '6584278700',
-        name: 'Anna',
-        last_name: 'Jackson',
-        email: 'ajackson0@forbes.com',
-        gender: 'Female',
-        ip_address: '51.46.225.94',
-        country: {id: 1, name: 'China', code: 'CN'},
-        city: {id: 1, name: 'Xiaoruo'},
-        pic: 'https://robohash.org/inquiaearum.bmp?size=50x50&set=set1',
-      },
-    ];
+    this.data = [];
     this.state = {
       isGenderValid: true,
       isEmailValid: true,
