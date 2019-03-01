@@ -3,14 +3,14 @@ pipeline {
   stages {
     stage('Deploy') {
       parallel {
-        stage('Deploy') {
+        stage('Install') {
           steps {
             sh '/usr/local/n/versions/node/10.15.0/bin/npm install'
           }
         }
         stage('Build') {
           steps {
-            sh '/usr/local/n/versions/node/10.15.0/bin/npm build'
+            sh '/usr/local/n/versions/node/10.15.0/bin/npm run build'
           }
         }
       }
