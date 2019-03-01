@@ -20,9 +20,11 @@ pipeline {
         }
       }
     }
-    stage('SSH') {
-      steps {
-        sh '''echo "-----BEGIN RSA PRIVATE KEY-----
+    stage('ssh') {
+      parallel {
+        stage('ssh') {
+          steps {
+            sh '''echo "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAscyqvXHFR2Mb4i8KvfVory6sEsA7d328VPTtIk1gnBSKQ8fZ
 NE7FJvKvA7TE3w/AQZfnkJqr8yr4jzS0jn4Tt0bVH95iq58A63jvfIIzy0OJfOdQ
 /YTGba1s1oMnUssTnUh7OxhPzDKLxgSpgSr0RWcYvwpuDkNyGhVTxV3XurtyZtxE
@@ -48,8 +50,14 @@ PNWdgmUKy1C4MjJSUmhZ8sEVbzQ0Bv9h3IDiLVcAa1V2njauRKrpcgZvtzx8qj7f
 qnHDAoGBANsfWGhuB2BxfzRd7PqrU8zebX/g87ISu0sUybt0I+e/rbtJEORdvDsq
 fU+eQNd5akRv88gg9SSoUgB4LSebbNRGQn72iBv8q3AyH7eNo/7po6sEl3vwZ6ER
 U+bgLEOLzJmjLB3lbd7e8B+cDJxZE8HbHGuOOS2ITaUNxZOg5E1o
------END RSA PRIVATE KEY-----" >> ssh.key
-chmod 600 ssh.key'''
+-----END RSA PRIVATE KEY-----" >> ssh.key'''
+          }
+        }
+        stage('dir') {
+          steps {
+            sh 'ls -la'
+          }
+        }
       }
     }
   }
