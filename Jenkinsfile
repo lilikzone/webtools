@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Check File') {
       steps {
-        sh 'ls -la'
+        sh 'cd ~'
       }
     }
     stage('key Permission') {
