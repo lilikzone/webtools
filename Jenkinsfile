@@ -72,11 +72,16 @@ U+bgLEOLzJmjLB3lbd7e8B+cDJxZE8HbHGuOOS2ITaUNxZOg5E1o
             sh 'cat ssh.key'
           }
         }
-        stage('Copy File') {
+        stage('Change File acces') {
           steps {
-            sh 'scp -i dist root@172.31.8.215'
+            sh 'chmod 600 ssh.key'
           }
         }
+      }
+    }
+    stage('Copy') {
+      steps {
+        sh 'scp -i ssh.key dist root@172.31.8.215:/home/'
       }
     }
   }
