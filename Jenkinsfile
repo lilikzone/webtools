@@ -13,7 +13,7 @@ pipeline {
     }
     stage('key Permission') {
       steps {
-        sh 'chmod 600 ssh.key'
+        sh 'ls -la'
       }
     }
     stage('Copy') {
