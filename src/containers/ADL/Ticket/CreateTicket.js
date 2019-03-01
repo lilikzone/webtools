@@ -45,6 +45,13 @@ export default class CreateTicket extends React.Component {
             <h3>Create Ticket</h3>
             <Col md={8} lg={8} sm={12} xs={12}>
               <TextField
+                floatingLabelText="Subs Id"
+                fullWidth={true}
+              />
+            </Col>
+            --- OR ---
+            <Col md={8} lg={8} sm={12} xs={12}>
+              <TextField
                 floatingLabelText="Name"
                 fullWidth={true}
               />

@@ -206,15 +206,6 @@ export default class ReportSpam extends React.Component {
                   });
                 }}
               >{_createPrankData()}</Tab>
-              <Tab
-                value={1}
-                label="Manage Prank Caller"
-                onActive={(val) => {
-                  this.setState({
-                    currentTab: val.props.index,
-                  });
-                }}
-              >{_prankTable()}</Tab>
             </Tabs>
           </Paper>
         </Col>

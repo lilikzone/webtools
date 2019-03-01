@@ -284,15 +284,6 @@ export default class TicketExistingCustomer extends React.Component {
                   });
                 }}
               >{_createLeads()}</Tab>
-              <Tab
-                value={1}
-                label="Manage Leads"
-                onActive={(val) => {
-                  this.setState({
-                    currentTab: val.props.index,
-                  });
-                }}
-              >{_leadsInquiryTable()}</Tab>
             </Tabs>
           </Paper>
         </Col>
