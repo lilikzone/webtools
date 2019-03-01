@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Test ') {
       steps {
-        sh 'ping 172.31.8.214 -n 10'
+        sh 'echo "test"'
       }
     }
     stage('Test') {
