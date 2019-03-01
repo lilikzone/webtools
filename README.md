@@ -19,4 +19,5 @@ IBASE Frontend with REACT
   $ npm -v
   
  #troubleshoot
+ ERROR Refres : change webpack ` publicPath: '/',` remove "dot" (.)
  if you have issue with `node-sass` when run `npm install`. Run `npm install --unsafe-perm node-sass`.
