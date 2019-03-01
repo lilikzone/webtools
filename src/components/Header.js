@@ -104,7 +104,7 @@ class Header extends React.Component {
   });
   handleClose = () => this.setState({open: false});
 
-  componentDidMount() {
+  componentWillMount() {
     const cookieData = cookies.get('rdata');
 
     if (cookieData !== undefined && cookieData !== '') {
