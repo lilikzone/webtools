@@ -11,9 +11,10 @@ const introSearch = [
   {id: 1, title: 'id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   {id: 2, title: 'Subscriber ID', prop: 'subs_id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   {id: 3, title: 'Customer Name', prop: 'customer_name', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 4, title: 'DOB', prop: 'dob', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 5, title: 'ID Type', prop: 'type_id', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-  {id: 6, title: 'ID Number', prop: 'id_number', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 4, title: 'ID Address', prop: 'id_address', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 5, title: 'DOB', prop: 'dob', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 6, title: 'ID Type', prop: 'type_id', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+  {id: 7, title: 'ID Number', prop: 'id_number', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   // {id: 4, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
 ];
 
@@ -60,10 +61,19 @@ export default class CreateTicket extends React.Component {
                 pageSizeOptions={[5]}
               />
               <Link to={'/admin/ticketExistingCustomer'}>
-                <div className="custom-large-button" >Existing Customer</div>
+                <RaisedButton
+                  label="Check Existing Customer"
+                  secondary={true}
+                  style={styles.raisedButton}
+                  onTouchTap={() => this._handleTouchTap()}
+                />
               </Link>
               <Link to={'/admin/ticketNewCustomer'}>
-                <div className="custom-large-button" >New Customer</div>
+                <RaisedButton
+                  label="Create New Customer"
+                  secondary={true}
+                  style={styles.raisedButton}
+                />
               </Link>
               <Link to={'/admin/ticketSpamReport'}>
                 <div className="custom-large-button" >Spam Report</div>
