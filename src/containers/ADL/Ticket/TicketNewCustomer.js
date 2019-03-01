@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import {Subheader, DatePicker} from 'material-ui';
 
 const futureLeadsColumn = [
   {id: 1, title: 'Msisdn', prop: 'msisdn', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -46,20 +47,160 @@ export default class TicketExistingCustomer extends React.Component {
               <MenuItem value="inquiry" primaryText="Inquiry" />
             </SelectField>
             <TextField
-              floatingLabelText="Name"
+              required={true}
+              floatingLabelFixed={true}
+              value={this.state.dataTemp.customer_name}
+              floatingLabelText="Customer Name"
               fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, customer_name: input},
+                });
+              }}
+            />
+            <DatePicker
+              value={new Date(this.state.dataTemp.dob)}
+              floatingLabelFixed={true}
+              floatingLabelText="Date of Birth"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, dob: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.birth_place}
+              floatingLabelText="DOB Place"
+              floatingLabelFixed={true}
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, birth_place: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.type_id}
+              floatingLabelFixed={true}
+              floatingLabelText="Type ID"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, type_id: input},
+                });
+              }}
+              disabled={true}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.id_number}
+              floatingLabelFixed={true}
+              floatingLabelText="ID Number"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, id_number: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.id_address}
+              floatingLabelFixed={true}
+              floatingLabelText="ID Address"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, id_address: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.phone1}
+              floatingLabelFixed={true}
+              floatingLabelText="Primary Phone"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, phone1: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.phone2}
+              floatingLabelFixed={true}
+              floatingLabelText="Alternative Phone 1"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, phone2: input},
+                });
+              }}
+            />
+
+            <TextField
+              required={true}
+              value={this.state.dataTemp.phone3}
+              floatingLabelFixed={true}
+              floatingLabelText="Alternative Phone 2"
+              fullWidth={true}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, phone3: input},
+                });
+              }}
+            />
+
+            <TextField
+              fullWidth={true}
+              required={true}
+              value={this.state.dataTemp.email1}
+              floatingLabelFixed={true}
+              floatingLabelText="Email"
+              // errorText={!this.state.isEmailValid1}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, email1: input},
+                });
+              }}
+            />
+
+            <TextField
+              fullWidth={true}
+              required={true}
+              value={this.state.dataTemp.email2}
+              floatingLabelFixed={true}
+              floatingLabelText="Alternative Email"
+            // errorText={!this.state.isEmailValid2}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, email2: input},
+                });
+              }}
             />
             <TextField
-              hintText="Address"
-              multiLine={true}
-              rows={2}
-              rowsMax={5}
               fullWidth={true}
-            />
-            <TextField
-              floatingLabelText="Phone Number"
-              fullWidth={true}
-              hintText="+62"
+              required={true}
+              value={this.state.dataTemp.sales_name}
+              floatingLabelFixed={true}
+              floatingLabelText="Helpdesk Name"
+            // errorText={!this.state.isEmailValid2}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, sales_name: input},
+                });
+              }}
             />
             <RaisedButton
               label="Submit Data"
