@@ -2,8 +2,17 @@ pipeline {
   agent any
   stages {
     stage('Deploy') {
-      steps {
-        withSonarQubeEnv 'Sonar'
+      parallel {
+        stage('Deploy') {
+          steps {
+            sh 'npm install'
+          }
+        }
+        stage('Build') {
+          steps {
+            sh 'npm run build'
+          }
+        }
       }
     }
   }
