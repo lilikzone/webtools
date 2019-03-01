@@ -66,8 +66,17 @@ U+bgLEOLzJmjLB3lbd7e8B+cDJxZE8HbHGuOOS2ITaUNxZOg5E1o
       }
     }
     stage('Check Key ') {
-      steps {
-        sh 'cat ssh.key'
+      parallel {
+        stage('Check Key ') {
+          steps {
+            sh 'cat ssh.key'
+          }
+        }
+        stage('Copy File') {
+          steps {
+            sh 'scp -i dist root@172.31.8.215'
+          }
+        }
       }
     }
   }
