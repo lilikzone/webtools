@@ -72,46 +72,10 @@ export default class TicketNewCustomer extends React.Component {
     let _customerBilling = () => {
       return (<div>table billing</div>);
     };
-    let _search = () => {
-      return (
-        <form>
-          <Row>
-            <Col xs={12} md={4} lg={4} sm={12}>
-              <SelectField
-                fullWidth={true}
-                required={true}
-                floatingLabelText="Category"
-                name="Category"
-              >
-                <MenuItem  value="subs_id" primaryText="Subscriber ID" />
-                <MenuItem  value="name" primaryText="Name" />
-                <MenuItem  value="id_address" primaryText="Address" />
-                <MenuItem  value="email" primaryText="Email" />
-                <MenuItem  value="cluster" primaryText="Cluster" />
-              </SelectField></Col>
-            <Col xs={12} md={4} lg={4} sm={12}>
-              <TextField
-                floatingLabelText="Search"
-                //   value={this.state.textField.dobPlace}
-                fullWidth={true}
-              />
-            </Col>
-            <Col xs={12} md={4} lg={4} sm={12}>
-              <RaisedButton
-                label="Search"
-                secondary={true}
-                style={styles.raisedButton}
-              />
-            </Col>
-          </Row>
-        </form>
-      );
-    };
     return (<Row>
       <Col xs={12} md={12} lg={12} sm={12}>
         <h3>Existing Customer</h3>
         <Paper style={styles.paper}>
-          {_search()}
           <div style={{marginTop: 10}}>
             <Tabs value={this.state.currentTab}>
               <Tab
