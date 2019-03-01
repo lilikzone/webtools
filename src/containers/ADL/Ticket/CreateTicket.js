@@ -43,64 +43,60 @@ export default class CreateTicket extends React.Component {
         <Col md={12} lg={12} sm={12} xs={12}>
           <Paper style={styles.paper}>
             <h3>Create Ticket</h3>
-            <Col md={8} lg={8} sm={12} xs={12}>
-              <TextField
-                floatingLabelText="Subs Id"
-                fullWidth={true}
-              />
-            </Col>
+            <TextField
+              floatingLabelText="Subs Id"
+              fullWidth={true}
+            />
             --- OR ---
-            <Col md={8} lg={8} sm={12} xs={12}>
-              <TextField
-                floatingLabelText="Name"
-                fullWidth={true}
-              />
-              <TextField
-                hintText="Address"
-                floatingLabelText="Full Address"
-                multiLine={true}
-                rows={2}
-                rowsMax={5}
-                fullWidth={true}
-              />
+            <TextField
+              floatingLabelText="Name"
+              fullWidth={true}
+            />
+            <TextField
+              hintText="Address"
+              floatingLabelText="Full Address"
+              multiLine={true}
+              rows={2}
+              rowsMax={5}
+              fullWidth={true}
+            />
+            <RaisedButton
+              label="Search"
+              secondary={true}
+              style={styles.raisedButton}
+              onTouchTap={() => this._handleTouchTap()}
+            />
+            <MaterialContainer
+              keys="id"
+              className="mdl-data-table"
+              columns={this.introSearch}
+              dataArray={this.state.dataIntroSearch}
+              draggable={false}
+              sortable={false}
+              sortBy={{prop: 'id', order: 'asc'}}
+              pageSizeOptions={[5]}
+            />
+            <Link to={'/admin/ticketNewCustomer'}>
               <RaisedButton
-                label="Search"
+                label="Create New Customer"
                 secondary={true}
                 style={styles.raisedButton}
-                onTouchTap={() => this._handleTouchTap()}
               />
-              <MaterialContainer
-                keys="id"
-                className="mdl-data-table"
-                columns={this.introSearch}
-                dataArray={this.state.dataIntroSearch}
-                draggable={false}
-                sortable={false}
-                sortBy={{prop: 'id', order: 'asc'}}
-                pageSizeOptions={[5]}
+            </Link>
+            <Link to={'/admin/ticketExistingCustomer'}>
+              <RaisedButton
+                label="Create Existing Customer"
+                secondary={true}
+                style={styles.raisedButton}
               />
-              <Link to={'/admin/ticketNewCustomer'}>
-                <RaisedButton
-                  label="Create New Customer"
-                  secondary={true}
-                  style={styles.raisedButton}
-                />
-              </Link>
-              <Link to={'/admin/ticketExistingCustomer'}>
-                <RaisedButton
-                  label="Create Existing Customer"
-                  secondary={true}
-                  style={styles.raisedButton}
-                />
-              </Link>
-              <Link to={'/admin/ticketSpamReport'}>
-                <RaisedButton
-                  label="Prank Caller"
-                  secondary={true}
-                  style={styles.raisedButton}
-                />
-              </Link>
-            </Col>
+            </Link>
+            <Link to={'/admin/ticketSpamReport'}>
+              <RaisedButton
+                label="Prank Caller"
+                secondary={true}
+                style={styles.raisedButton}
+              />
+            </Link>
           </Paper>
         </Col>
       </Row>
