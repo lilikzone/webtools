@@ -1,7 +1,6 @@
 #!/bin/bash
 echo " Open Directory"
 cd /var/www/fronted/SOURCE/
-
 echo "Install all dependece"
 echo " ++++++++++++++++++++++++++"
 npm install
@@ -11,9 +10,17 @@ echo "==================================="
 
 npm run build
 
+echo "copy CSS Design to Public Folder"
+rm -rf ../public
+mkdir ../public
+cp -avr ../dist/* ../public 
+
 echo "Move bundle to Public source"
-\cp -avr dist/* ../
-\cp -avr src/assets ../
+\cp -avr dist/* ../public
+\cp -avr src/assets ../public
+
+echo "List Directory Web server"
+ls -la ../public
 
 echo "Check Web Server running"
 echo "++++++++++++++++++++++++++++++"
