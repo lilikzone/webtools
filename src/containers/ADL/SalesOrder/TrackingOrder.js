@@ -25,7 +25,8 @@ export default class TrackingOrder extends React.Component {
     super(props);
 
     this.state = {
-      loaded: false,
+      load: false,
+      loadWO: false,
       currentTab: 0,
       isGenderValid: true,
       isEmailValid: true,
@@ -416,7 +417,7 @@ export default class TrackingOrder extends React.Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({workOrderData: respons.data, load: true});
+        this.setState({workOrderData: respons.data, loadWO: true});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -844,7 +845,7 @@ export default class TrackingOrder extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
-                  <MaterialContainer
+                  {this.state.loadWO ? <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
                     columns={this.WorkOrdersColumns}
@@ -853,7 +854,8 @@ export default class TrackingOrder extends React.Component {
                     sortable={false}
                     sortBy={{prop: 'id', order: 'desc'}}
                     pageSizeOptions={[5]}
-                  />
+                                       /> : ''}
+
                 </div>
               </div>
             </Col>
