@@ -5,12 +5,12 @@ pipeline {
       parallel {
         stage('Deploy') {
           steps {
-            sh 'node -v'
+            sh '/usr/local/n/versions/node/10.15.0/bin/npm install'
           }
         }
         stage('Build') {
           steps {
-            sh 'npm -v'
+            sh '/usr/local/n/versions/node/10.15.0/bin/npm build'
           }
         }
       }
