@@ -3,12 +3,12 @@ echo " Open Directory"
 cd /var/www/fronted/SOURCE/
 echo "Install all dependece"
 echo " ++++++++++++++++++++++++++"
-/usr/local/n/versions/node/10.15.0/npm install
+npm install
 
 echo "build source bundle for web server"
 echo "==================================="
 
-/usr/local/n/versions/node/10.15.0/npm run build
+npm run build
 
 echo "copy CSS Design to Public Folder"
 rm -rf ../public
