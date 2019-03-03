@@ -2,55 +2,20 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
-import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Checkbox from 'material-ui/Checkbox';
-import Snackbar from 'material-ui/Snackbar';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import Card from 'material-ui/Card';
+import {Row, Col} from 'react-flexbox-grid';
+import CircularProgress from 'material-ui/CircularProgress';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const EditBtn = (data) => (
-  <div className="text-center">
-    <button
-      className="mdl-button mdl-button--raised"
-      onClick={() =>
-          this.setState({
-            onEdit: true,
-            idTemp: data.id,
-            codeTemp: data.code,
-            nameTemp: data.name,
-          })
-        }
-    >
-        Edit
-      </button>
-  </div>
-  );
 
-const DeleteBtn = (data) => (
-  <div className="text-center">
-    <button
-      className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-      onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
-    >
-        Delete
-      </button>
-  </div>
-  );
 
 export default class WorkingOrder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       workOrderData: [],
+      cookies: '',
     };
     this.WorkOrdersColumns = [
       {
@@ -119,6 +84,14 @@ export default class WorkingOrder extends React.Component {
       },
       {
         id: 8,
+        title: 'Sales Name',
+        prop: 'sales_name',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -126,90 +99,55 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 10,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 10,
-        title: '',
-        render: EditBtn,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: '',
-        render: DeleteBtn,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
     ];
   }
-  _handleClose() {
-    this.setState({
-      onEdit: false,
+
+  componentWillMount() {
+    const cookiesData = cookies.get('ssid');
+    if (cookiesData !== undefined && cookiesData !== '') {
+      this.setState({cookies: cookiesData});
+    }
+  }
+
+  componentDidMount() {
+    this._getWOData();
+  }
+
+  _getWOData() {
+    const status = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response);
+      }
+      return Promise.reject(new Error(response.statusText));
+    };
+    const json = (response) => response.json();
+    fetch('https://ibase.adlsandbox.com:8081/api/workorder/all',
+      {
+        method: 'get',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.cookies}`,
+          'Content-Type': 'application/json',
+        },
+      }, )
+    .then(status)
+    .then(json)
+    .then((respons) => {
+      console.log(respons);
+      this.setState({workOrderData: respons.data, load: true});
+    }).catch((error) => {
+      console.log(`error: ${error}`);
     });
   }
+
   render() {
-    let _renderModalComponent = () => {
-      return (
-        <div>
-          <TextField
-            required={true}
-            value={this.state.idTemp}
-            hintText="ID"
-            floatingLabelText="ID"
-            fullWidth={true}
-            onChange={(e, input) => {
-              this.setState({
-                idTemp: input,
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            value={this.state.codeTemp}
-            hintText="Code"
-            floatingLabelText="Code"
-            onChange={(e, input) => {
-              this.setState({
-                codeTemp: input,
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="Name"
-            floatingLabelText="Name"
-            value={this.state.nameTemp}
-            onChange={(e, input) => {
-              this.setState({
-                nameTemp: input,
-              });
-            }}
-          />
-        </div>
-      );
-    };
-    let actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={() => this._handleClose()}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
-      />,
-    ];
     return (<div>
       <h3 style={styles.navigation}>Manage Work Order</h3>
       <Row>
@@ -218,25 +156,28 @@ export default class WorkingOrder extends React.Component {
             <div className="mdl-layout mdl-layout--no-drawer-button container">
               <div className="mdl-layout--fixed-drawer" id="asa">
                 <br />
-                <Dialog
-                  title="Edit Work Order"
-                  actions={actions}
-                  modal={false}
-                  open={this.state.onEdit}
-                  onRequestClose={() => this._handleClose()}
-                >
-                  {_renderModalComponent()}
-                </Dialog>
-                <MaterialContainer
-                  keys="id"
-                  className="mdl-data-table"
-                  columns={this.WorkOrdersColumns}
-                  dataArray={this.state.workOrderData}
-                  draggable={false}
-                  sortable={false}
-                  sortBy={{prop: 'id', order: 'desc'}}
-                  pageSizeOptions={[5]}
-                />
+                {this.state.load ?
+                  <MaterialContainer
+                    keys="id"
+                    className="mdl-data-table"
+                    columns={this.WorkOrdersColumns}
+                    dataArray={this.state.workOrderData}
+                    draggable={false}
+                    sortable={false}
+                    sortBy={{prop: 'id', order: 'desc'}}
+                    pageSizeOptions={[5]}
+                  /> :
+                  <Paper style={styles.paper}>
+                    <div style={{minWidth: 700}}>
+                      <div
+                        style={{margin: '0 auto',
+                          width: '20%',
+                          textAlign: 'center'}}
+                      >
+                        <CircularProgress />
+                      </div>
+                    </div>
+                  </Paper>}
               </div>
             </div>
           </Col>

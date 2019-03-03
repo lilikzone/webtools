@@ -209,7 +209,7 @@ export default class Installation extends React.Component {
 
     if (cookieData !== undefined && cookieData !== '') {
       this._getWoData();
-      if (role[1] === 'manageservice') {
+      if (AssignVendor.includes(role[1])) {
         fetch('https://ibase.adlsandbox.com:8081/api/vendor/all', {
           method: 'GET',
           type: 'cors',
