@@ -20,7 +20,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 const cookies = new Cookies();
 import '../../table/datatable.scss';
 
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/product/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/product/';
 const promoType = ['BANTEN', 'JAKARTA'];
 const dataType = require('json!../../table/data.json');
 const dataDummy = [
@@ -306,7 +306,7 @@ export default class ManageProduct extends React.Component {
     const promo = this.state.textField.promo;
 
 
-    console.log(`https://ibase.adlsandbox.com:8081/api/product/register?code=${
+    console.log(`https://source.adlsandbox.com/api/product/register?code=${
       code
     }&name=${name}&description=${description}&soc_id=${
       soc_id
@@ -319,7 +319,7 @@ export default class ManageProduct extends React.Component {
     }&promo=${promo}`);
 
     fetch(
-      `https://ibase.adlsandbox.com:8081/api/product/register?code=${
+      `https://source.adlsandbox.com/api/product/register?code=${
         code
       }&name=${name}&description=${description}&soc_id=${
         soc_id
@@ -365,7 +365,7 @@ export default class ManageProduct extends React.Component {
     const promo = this.state.textField.promo;
 
 
-    console.log(`https://ibase.adlsandbox.com:8081/api/product/${this.state.idUpdate}?code=${
+    console.log(`https://source.adlsandbox.com/api/product/${this.state.idUpdate}?code=${
       code
     }&name=${name}&description=${description}&soc_id=${
       soc_id
@@ -378,7 +378,7 @@ export default class ManageProduct extends React.Component {
     }&promo=${promo}`);
 
     fetch(
-      `https://ibase.adlsandbox.com:8081/api/product/${this.state.idUpdate}?code=${
+      `https://source.adlsandbox.com/api/product/${this.state.idUpdate}?code=${
         code
       }&name=${name}&description=${description}&soc_id=${
         soc_id
@@ -458,7 +458,7 @@ export default class ManageProduct extends React.Component {
 
   _getAPICity() {
     const json = (response) => response.json();
-    fetch('https://ibase.adlsandbox.com:8081/api/homespassed/sort', {
+    fetch('https://source.adlsandbox.com/api/homespassed/sort', {
       method: 'GET',
       type: 'cors',
       headers: {

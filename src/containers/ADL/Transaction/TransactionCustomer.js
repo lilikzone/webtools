@@ -13,7 +13,7 @@ import Cookies from 'universal-cookie';
 
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/customer/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/customer/';
 const columns = [
   // id','name','email','role','is_admin','created_at','updated_at
   // {id: 0, title: 'Action', render: CheckBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},

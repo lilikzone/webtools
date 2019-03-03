@@ -14,7 +14,7 @@ import Cookies from 'universal-cookie';
 import moment from  'moment';
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/ematerai/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/ematerai/';
 
 const EditBtn = (data) => (
   <div className="text-center">

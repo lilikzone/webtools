@@ -17,7 +17,7 @@ import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/va/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/va/';
 
 const paymentType = ['Open', 'Close'];
 const UserPic = (row) => (

@@ -128,7 +128,7 @@ export default class WorkingOrder extends React.Component {
       return Promise.reject(new Error(response.statusText));
     };
     const json = (response) => response.json();
-    fetch('https://ibase.adlsandbox.com:8081/api/workorder/all',
+    fetch('https://source.adlsandbox.com/api/workorder/all',
       {
         method: 'get',
         type: 'cors',

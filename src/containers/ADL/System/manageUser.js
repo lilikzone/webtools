@@ -298,7 +298,7 @@ export default class ManageUser extends React.PureComponent {
 
 
   componentDidMount() {
-    fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+    fetch('https://source.adlsandbox.com/api/admin/all', {
       method: 'GET',
       type: 'cors',
       headers: {
@@ -318,7 +318,7 @@ export default class ManageUser extends React.PureComponent {
     if (cookieData !== undefined && cookieData !== '') {
       this.setState({token: cookieData});
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/check?token=${cookieData}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookieData}`, {
         method: 'get',
         type: 'cors',
       })
@@ -334,7 +334,7 @@ export default class ManageUser extends React.PureComponent {
       });
 
 
-      fetch('https://ibase.adlsandbox.com:8081/api/vendor/all', {
+      fetch('https://source.adlsandbox.com/api/vendor/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -357,7 +357,7 @@ export default class ManageUser extends React.PureComponent {
         console.log(`error: ${error}`);
       });
 
-      fetch('https://ibase.adlsandbox.com:8081/api/agency/all', {
+      fetch('https://source.adlsandbox.com/api/agency/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -380,7 +380,7 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-      fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+      fetch('https://source.adlsandbox.com/api/admin/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -411,7 +411,7 @@ export default class ManageUser extends React.PureComponent {
     const json = (response) => response.json();
 
 
-    fetch(`https://ibase.adlsandbox.com:8081/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}&vendor=${vendor}&agency=${agency}`, {
+    fetch(`https://source.adlsandbox.com/api/admin/register?username=${username}&password=${password}&password_confirmation=${password}&name=${name}&email=${email}&role=${role}&vendor=${vendor}&agency=${agency}`, {
       method: 'POST',
       type: 'cors',
     })
@@ -429,7 +429,7 @@ export default class ManageUser extends React.PureComponent {
         console.log(`error: ${error}`);
       });
 
-    fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+    fetch('https://source.adlsandbox.com/api/admin/all', {
       method: 'GET',
       type: 'cors',
       headers: {
@@ -563,7 +563,7 @@ export default class ManageUser extends React.PureComponent {
       const email = this.state.emailTemp;
       const id = this.state.idTemp;
       const role = this.state.roleTemp;
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/edit/${id}?name=${name}&email=${email}&role=${role}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/edit/${id}?name=${name}&email=${email}&role=${role}`, {
         method: 'PUT',
         type: 'cors',
         headers: {
@@ -585,7 +585,7 @@ export default class ManageUser extends React.PureComponent {
   _handleDelete(id) {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/delete?ids=${id}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/delete?ids=${id}`, {
         method: 'DELETE',
         type: 'cors',
         headers: {

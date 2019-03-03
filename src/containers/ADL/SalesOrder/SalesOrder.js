@@ -519,10 +519,10 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const accessData = cookies.get('npaccess');
       const username = accessData.split('+');
-      console.log(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
+      console.log(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
+      fetch(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
         method: 'POST',
         type: 'cors',
         headers: {
@@ -543,7 +543,7 @@ export default class SalesOrder extends React.Component {
         console.log(`error: ${error}`);
       });
 
-      fetch('https://ibase.adlsandbox.com:8081/api/customer/all', {
+      fetch('https://source.adlsandbox.com/api/customer/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -673,7 +673,7 @@ export default class SalesOrder extends React.Component {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/homespassed/sort', {
+      fetch('https://source.adlsandbox.com/api/homespassed/sort', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -696,7 +696,7 @@ export default class SalesOrder extends React.Component {
         console.log(`error: ${error}`);
       });
 
-      fetch('https://ibase.adlsandbox.com:8081/api/product/all', {
+      fetch('https://source.adlsandbox.com/api/product/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -711,7 +711,7 @@ export default class SalesOrder extends React.Component {
         console.log(`error: ${error}`);
       });
 
-      fetch('https://ibase.adlsandbox.com:8081/api/customer/all', {
+      fetch('https://source.adlsandbox.com/api/customer/all', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -734,7 +734,7 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?city=${city}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?city=${city}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -766,7 +766,7 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?cluster=${cluster}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?cluster=${cluster}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -799,7 +799,7 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?street=${street}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?street=${street}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -831,7 +831,7 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?full_address=${address}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?full_address=${address}`, {
         method: 'GET',
         type: 'cors',
         headers: {

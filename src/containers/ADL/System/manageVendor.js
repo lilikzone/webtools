@@ -15,7 +15,7 @@ import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/vendor/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/vendor/';
 
 const UserPic = (row) => (
   <div className="text-center">

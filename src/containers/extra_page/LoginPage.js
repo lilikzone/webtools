@@ -148,7 +148,7 @@ class LoginPage extends Component {
         return Promise.reject(new Error(response.statusText));
       };
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${username}&password=${password}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/login?username=${username}&password=${password}`, {
         method: 'post',
         type: 'cors',
       }).then(status)

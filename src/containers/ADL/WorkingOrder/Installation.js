@@ -182,7 +182,7 @@ export default class Installation extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       this.setState({token: cookieData});
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/check?token=${cookieData}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookieData}`, {
         method: 'get',
         type: 'cors',
       })
@@ -210,7 +210,7 @@ export default class Installation extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       this._getWoData();
       if (AssignVendor.includes(role[1])) {
-        fetch('https://ibase.adlsandbox.com:8081/api/vendor/all', {
+        fetch('https://source.adlsandbox.com/api/vendor/all', {
           method: 'GET',
           type: 'cors',
           headers: {
@@ -232,7 +232,7 @@ export default class Installation extends React.Component {
           console.log(`error: ${error}`);
         });
       } else if (role[1] === 'dispatcher') {
-        fetch('https://ibase.adlsandbox.com:8081/api/admin/search?keyword=installer', {
+        fetch('https://source.adlsandbox.com/api/admin/search?keyword=installer', {
           method: 'GET',
           type: 'cors',
           headers: {
@@ -267,7 +267,7 @@ export default class Installation extends React.Component {
         return Promise.reject(new Error(response.statusText));
       };
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/workorder/all',
+      fetch('https://source.adlsandbox.com/api/workorder/all',
         {
           method: 'get',
           type: 'cors',
@@ -339,8 +339,8 @@ export default class Installation extends React.Component {
       }
 
       const json = (response) => response.json();
-      console.log(`https://ibase.adlsandbox.com:8081/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`);
-      fetch(`https://ibase.adlsandbox.com:8081/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`, {
+      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`);
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`, {
         method: 'PUT',
         type: 'cors',
         headers: {

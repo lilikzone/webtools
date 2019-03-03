@@ -74,7 +74,7 @@ export class MenuList extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       this.setState({token: cookieData});
       const json = (response) => response.json();
-      fetch(`https://ibase.adlsandbox.com:8081/api/admin/check?token=${cookieData}`, {
+      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookieData}`, {
         method: 'get',
         type: 'cors',
       })
@@ -95,7 +95,7 @@ export class MenuList extends React.Component {
         const cookieData = cookies.get('ssid');
         const accessData = cookies.get('npaccess');
         const userData = accessData.split('+');
-        const res = await  fetch(`https://ibase.adlsandbox.com:8081/api/admin/login?username=${userData[0]}&password=${userData[1]}`, {
+        const res = await  fetch(`https://source.adlsandbox.com/api/admin/login?username=${userData[0]}&password=${userData[1]}`, {
           method: 'post',
           type: 'cors',
         });
