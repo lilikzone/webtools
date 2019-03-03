@@ -105,13 +105,14 @@ export default class WorkingOrder extends React.Component {
         width: '20%',
       },
       {
+        id: 11,
         title: 'Edit Action',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 12,
         title: 'Delete Action',
         render: DeleteBtn,
         width: '2%',
