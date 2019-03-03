@@ -33,7 +33,7 @@ export default class CreateTicket extends React.Component {
       {id: 5, title: 'DOB', prop: 'dob', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 6, title: 'ID Type', prop: 'type_id', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 7, title: 'ID Number', prop: 'id_number', width: '5%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-      {id: 8, title: '', render: existCustBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 8, title: 'Customer Check', render: existCustBtn, width: '5%', headerClass: 'mdl-data-table__cell--non-numeric'},
       // {id: 4, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
     ];
   }
