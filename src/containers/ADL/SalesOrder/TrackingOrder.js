@@ -374,7 +374,7 @@ export default class TrackingOrder extends React.Component {
         return Promise.reject(new Error(response.statusText));
       };
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/order/all',
+      fetch('https://source.adlsandbox.com/api/order/all',
         {
           method: 'get',
           type: 'cors',
@@ -404,7 +404,7 @@ export default class TrackingOrder extends React.Component {
         return Promise.reject(new Error(response.statusText));
       };
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/workorder/all',
+      fetch('https://source.adlsandbox.com/api/workorder/all',
         {
           method: 'get',
           type: 'cors',
@@ -451,7 +451,7 @@ export default class TrackingOrder extends React.Component {
       const order_id = this.state.orderDataTemp.id;
       const note = this.state.note;
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/order/verification?status=${statusData}&id=${order_id}&note=${note}`,
+      fetch(`https://source.adlsandbox.com/api/order/verification?status=${statusData}&id=${order_id}&note=${note}`,
         {
           method: 'POST',
           type: 'cors',

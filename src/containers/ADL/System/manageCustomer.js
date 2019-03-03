@@ -22,7 +22,7 @@ import moment from  'moment';
 
 
 const cookies = new Cookies();
-const HOSTNAME = 'https://ibase.adlsandbox.com:8081/api/customer/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/customer/';
 const dataGender = ['Male', 'Female'];
 const dataRole = [
   'Admin',
@@ -339,7 +339,7 @@ export default class ManageCustomer extends React.Component {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
-      fetch('https://ibase.adlsandbox.com:8081/api/homespassed/sort', {
+      fetch('https://source.adlsandbox.com/api/homespassed/sort', {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -599,7 +599,7 @@ export default class ManageCustomer extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?city=${city}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?city=${city}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -631,7 +631,7 @@ export default class ManageCustomer extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?cluster=${cluster}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?cluster=${cluster}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -664,7 +664,7 @@ export default class ManageCustomer extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?street=${street}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?street=${street}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -696,7 +696,7 @@ export default class ManageCustomer extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const json = (response) => response.json();
 
-      fetch(`https://ibase.adlsandbox.com:8081/api/homespassed/sort?full_address=${address}`, {
+      fetch(`https://source.adlsandbox.com/api/homespassed/sort?full_address=${address}`, {
         method: 'GET',
         type: 'cors',
         headers: {
