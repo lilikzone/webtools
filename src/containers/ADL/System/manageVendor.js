@@ -17,18 +17,6 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 const HOSTNAME = 'https://source.adlsandbox.com/api/vendor/';
 
-const UserPic = (row) => (
-  <div className="text-center">
-    <img src={row.pic} />
-  </div>
-);
-
-const CheckBtn = () => (
-  <div style={styles.action}>
-    <Checkbox iconStyle={styles.checkbox} />
-  </div>
-);
-
 export default class ManageVendor extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +26,8 @@ export default class ManageVendor extends React.Component {
       loaded: false,
       cookies: '',
       currentTab: 0,
+      deleteAlert: false,
+      deleteId: '',
       isGenderValid: true,
       isEmailValid: true,
       isPhoneValid: true,
@@ -49,7 +39,10 @@ export default class ManageVendor extends React.Component {
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: [],
+      textField: {
+        vendor: '',
+        code: '',
+      },
       dataTable: this.data,
     };
     const EditBtn = (data) => (
@@ -72,7 +65,7 @@ export default class ManageVendor extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.Id)}
+          onClick={() => this._onDelete(data)}
         >
         Delete
         </button>
@@ -82,8 +75,8 @@ export default class ManageVendor extends React.Component {
       {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 2, title: 'Code', prop: 'code', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 3, title: 'Name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-      {id: 4, title: '', render: EditBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
-      {id: 5, title: '', render: DeleteBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: 'Edit Action', render: EditBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 5, title: 'Delete Action', render: DeleteBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
     ];
   }
 
@@ -153,15 +146,21 @@ export default class ManageVendor extends React.Component {
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'textField');
-        this.setState({
-          currentTab: 0,
-        });
+        // this.setState({
+        //   currentTab: 0,
+        // });
       }
 
       )
       .catch((error) => {
         console.error(error);
       });
+  }
+  _onDelete(data) {
+    this.setState({
+      deleteId: data.id,
+      deleteAlert: true,
+    });
   }
   _handleTouchTap() {
     this.data.push({
@@ -173,7 +172,10 @@ export default class ManageVendor extends React.Component {
     this.setState({
       dataTable: this.data,
       isRegistered: true,
-      textField: {},
+      textField: {
+        vendor: '',
+        code: '',
+      },
     });
   }
 
@@ -188,10 +190,21 @@ export default class ManageVendor extends React.Component {
       textField: {...this.state.textField, code: data},
     });
   }
-  _handleClose() {
-    this.setState({
-      onEdit: false,
-    });
+  _handleClose(param) {
+    if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }    else {
+      this.setState({
+        onEdit: false,
+      });
+    }
+  }
+  _onTouchDelete(data) {
+    this._deleteAPI(`${HOSTNAME}delete?`, data);
+    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._handleClose('delete');
   }
 
   render() {
@@ -204,6 +217,16 @@ export default class ManageVendor extends React.Component {
         keyboardFocused={true}
         onTouchTap={() => this._handleClose()}
           />,
+    ];
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
     ];
     let _renderCreateVendor = () => {
       return (
@@ -317,6 +340,19 @@ export default class ManageVendor extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
+                  <Dialog
+                    title="Delete Product"
+                    actions={actionsDeleteTable}
+                    modal={true}
+                    open={this.state.deleteAlert}
+                    onRequestClose={() =>
+                      this.setState({
+                        deleteAlert: false,
+                      })
+                  }
+                  >
+                  Are you sure want to delete this #{this.state.deleteId} product?
+            </Dialog>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"

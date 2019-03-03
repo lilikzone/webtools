@@ -340,7 +340,7 @@ export default class TrackingOrder extends React.Component {
       },
       {
         id: 20,
-        title: '',
+        title: 'Edit Action',
         render: EditBtnSO,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',

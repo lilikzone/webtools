@@ -17,19 +17,6 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 
-const UserPic = (row) => (
-  <div className="text-center">
-    <img src={row.pic} />
-  </div>
-);
-
-const CheckBtn = () => (
-  <div style={styles.action}>
-    <Checkbox iconStyle={styles.checkbox} />
-  </div>
-);
-
-
 export default class ManageAgency extends React.Component {
   constructor(props) {
     super(props);
@@ -37,6 +24,8 @@ export default class ManageAgency extends React.Component {
     this.state = {
       isAgencyValid: true,
       isRegistered: false,
+      deleteAlert: false,
+      deleteId: '',
       cookies: '',
       loaded: false,
       currentTab: 0,
@@ -44,8 +33,11 @@ export default class ManageAgency extends React.Component {
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: [],
-      dataTable: this.data,
+      textField: {
+        code: '',
+        agency: '',
+      },
+      // dataTable: this.data,
       redirect: false,
     };
     const EditBtn = (data) => (
@@ -68,7 +60,7 @@ export default class ManageAgency extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+          onClick={() => this._onDelete(data)}
         >
         Delete
         </button>
@@ -101,14 +93,14 @@ export default class ManageAgency extends React.Component {
       },
       {
         id: 4,
-        title: '',
+        title: 'Edit Action',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 5,
-        title: '',
+        title: 'Delete Action',
         render: DeleteBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -184,9 +176,9 @@ export default class ManageAgency extends React.Component {
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'textField');
-        this.setState({
-          currentTab: 0,
-        });
+        // this.setState({
+        //   currentTab: 0,
+        // });
       }
 
       )
@@ -222,6 +214,12 @@ export default class ManageAgency extends React.Component {
       });
   }
 
+  _onDelete(data) {
+    this.setState({
+      deleteId: data.id,
+      deleteAlert: true,
+    });
+  }
 
   _handleTouchTap() {
     this.data.push({
@@ -231,21 +229,36 @@ export default class ManageAgency extends React.Component {
     this._postAPI(`${HOSTNAME}register?`, 'test', this.state.textField.code, this.state.textField.agency);
     this._getAPI(`${HOSTNAME}all`, 'textField');
     this.setState({
-      dataTable: this.data,
-      currentTab: 1,
+      // dataTable: this.data,
+      // currentTab: 1,
       isRegistered: true,
-      textField: {},
+      textField: {
+        code: '',
+        agency: '',
+      },
     });
   }
   _handleUpdate() {
     this._putAPI(`${HOSTNAME}`);
   }
 
-  _handleClose() {
-    this.setState({
-      onEdit: false,
-    });
+  _handleClose(param) {
+    if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }    else {
+      this.setState({
+        onEdit: false,
+      });
+    }
   }
+  _onTouchDelete(data) {
+    this._deleteAPI(`${HOSTNAME}delete?`, data);
+    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._handleClose('delete');
+  }
+
 
   _handleValidationName(input, data) {
     this.setState({
@@ -269,6 +282,16 @@ export default class ManageAgency extends React.Component {
         keyboardFocused={true}
         onTouchTap={() => this._handleUpdate()}
           />,
+    ];
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
     ];
     let _renderModalComponent = () => {
       return (
@@ -385,6 +408,19 @@ export default class ManageAgency extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
+                  <Dialog
+                    title="Delete Product"
+                    actions={actionsDeleteTable}
+                    modal={true}
+                    open={this.state.deleteAlert}
+                    onRequestClose={() =>
+                      this.setState({
+                        deleteAlert: false,
+                      })
+                  }
+                  >
+                  Are you sure want to delete this #{this.state.deleteId} product?
+            </Dialog>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
