@@ -71,6 +71,8 @@ export default class ManageUser extends React.PureComponent {
       isVendorValid: true,
       isAgencyValid: true,
       isRegistered: false,
+      deleteAlert: false,
+      deleteId: '',
       onEdit: false,
       currentTab: 0,
       nameTemp: '',
@@ -122,7 +124,7 @@ export default class ManageUser extends React.PureComponent {
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
           onClick={() => {
-            this._handleDelete(data.id);
+            this._onDelete(data);
           }
          }
         >
@@ -189,14 +191,14 @@ export default class ManageUser extends React.PureComponent {
       },
       {
         id: 9,
-        title: 'Action',
+        title: 'Edit Action',
         render: EditBtn,
         width: '10%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 10,
-        title: 'Action',
+        title: 'Delete Action',
         render: DeleteBtn,
         width: '10%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -260,6 +262,12 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+  }
+  _onDelete(data) {
+    this.setState({
+      deleteId: data.id,
+      deleteAlert: true,
+    });
   }
 
   _dataRole(role) {
@@ -422,7 +430,17 @@ export default class ManageUser extends React.PureComponent {
           this.setState({
             currentTab: 1,
             isRegistered: true,
-            textField: {},
+            textField: {
+              name: '',
+              email: '',
+              username: '',
+              password: '',
+              // gender: '',
+              phoneNumber: '',
+              role: '',
+              vendor: '',
+              agency: '',
+            },
           });
         }
       }).catch((error) => {
@@ -445,10 +463,16 @@ export default class ManageUser extends React.PureComponent {
       });
   }
 
-  _handleClose() {
-    this.setState({
-      onEdit: false,
-    });
+  _handleClose(param) {
+    if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }    else {
+      this.setState({
+        onEdit: false,
+      });
+    }
   }
 
   _handleValidationName(input, data) {
@@ -604,6 +628,24 @@ export default class ManageUser extends React.PureComponent {
         });
     }
   }
+  _onTouchDelete(data) {
+    this._handleDelete(data);
+    fetch('https://ibase.adlsandbox.com:8081/api/admin/all', {
+      method: 'GET',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${cookieData}`,
+        'Content-Type': 'application/json',
+      },
+    }).then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allData: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    this._handleClose('delete');
+  }
 
   render() {
     let actions = [
@@ -615,6 +657,16 @@ export default class ManageUser extends React.PureComponent {
         keyboardFocused={true}
         onTouchTap={() => this._handleUpdate()}
           />,
+    ];
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
     ];
 
     let _renderCreateUser = () => {
@@ -805,6 +857,19 @@ export default class ManageUser extends React.PureComponent {
                   >
                     {_renderModalComponent()}
                   </Dialog>
+                  <Dialog
+                    title="Delete Product"
+                    actions={actionsDeleteTable}
+                    modal={true}
+                    open={this.state.deleteAlert}
+                    onRequestClose={() =>
+                      this.setState({
+                        deleteAlert: false,
+                      })
+                  }
+                  >
+                  Are you sure want to delete this #{this.state.deleteId} product?
+            </Dialog>
                   <MaterialContainer
                     keys="id"
                     className="mdl-data-table"

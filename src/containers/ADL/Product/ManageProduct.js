@@ -101,6 +101,7 @@ export default class ManageProduct extends React.Component {
       productAll: [],
       openWarning: false,
       openEdit: false,
+      updateAlert: false,
       createdName: '',
       createdCode: '',
       warningMessage: '',
@@ -122,7 +123,7 @@ export default class ManageProduct extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+          onClick={() => this._onDelete(data)}
         >
           Delete
         </button>
@@ -243,14 +244,14 @@ export default class ManageProduct extends React.Component {
       },
       {
         id: 15,
-        title: '',
+        title: 'Edit Action',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 16,
-        title: '',
+        title: 'Delete Action',
         render: DeleteBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -267,6 +268,25 @@ export default class ManageProduct extends React.Component {
   componentDidMount() {
     this._getAPI(`${HOSTNAME}all`);
     this._getAPICity();
+  }
+
+  _onDelete(data) {
+    this.setState({
+      deleteId: data.id,
+      deleteAlert: true,
+    });
+  }
+
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
+  _handleDelete(data) {
+    this._deleteAPI(`${HOSTNAME}delete?`, data);
+    this._getAPI(`${HOSTNAME}all?`);
+    this.handleClose('delete');
   }
 
   _getAPI(apiUrl) {
@@ -400,7 +420,23 @@ export default class ManageProduct extends React.Component {
       .then((responseJson) => {
         console.log(responseJson);
         this.setState({
-          textField: [],
+          textField: {
+            promo: 0,
+            code: '',
+            name: '',
+            promo_percentage: '',
+            promo_area: '',
+            promo_type: '',
+            price: '',
+            charging_name: '',
+            promo_value: '',
+            promo_price: '',
+            soc_label: '',
+            soc_id: '',
+            description: '',
+            promo_end: '',
+            promo_start: '',
+          },
           loaded: false,
         });
         this._getAPI(`${HOSTNAME}all?`);
@@ -434,8 +470,24 @@ export default class ManageProduct extends React.Component {
     this._postAPI();
     this._getAPI(`${HOSTNAME}all?`);
     this.setState({
-      dataTable: this.data,
-      textField: {},
+      // dataTable: this.data,
+      textField: {
+        promo: 0,
+        code: '',
+        name: '',
+        promo_percentage: '',
+        promo_area: '',
+        promo_type: '',
+        price: '',
+        charging_name: '',
+        promo_value: '',
+        promo_price: '',
+        soc_label: '',
+        soc_id: '',
+        description: '',
+        promo_end: '',
+        promo_start: '',
+      },
     });
   }
 
@@ -514,12 +566,26 @@ export default class ManageProduct extends React.Component {
       });
   }
 
-  handleClose = () => {
-    this.setState({openWarning: false, openEdit: false});
+  handleClose = (param) => {
+    if (param == 'update') {
+      this.setState({
+        updateAlert: false,
+      });
+    }      else if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }     else {
+      this.setState({openWarning: false, openEdit: false});
+    }
   };
 
   _handleUpdate = () => {
     this._putAPI();
+    this.setState({
+      updateAlert: true,
+      openEdit: false,
+    });
   }
 
   render() {
@@ -770,6 +836,7 @@ export default class ManageProduct extends React.Component {
                   className="mdl-data-table"
                   columns={this.columns}
                   dataArray={this.state.productAll}
+                  // dataArray={dataDummy}
                   draggable={true}
                   sortable={true}
                   sortBy={{prop: 'id', order: 'desc'}}
@@ -797,10 +864,10 @@ export default class ManageProduct extends React.Component {
       );
     };
 
-    let actions = [
+    let actions = (val) => [
       <RaisedButton
         label="OK" primary={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={() => this.handleClose(val)}
       />,
     ];
     let actionsModalTable = [
@@ -811,6 +878,16 @@ export default class ManageProduct extends React.Component {
       <RaisedButton
         label="Update" primary={true}
         onTouchTap={this._handleUpdate}
+      />,
+    ];
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this.handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._handleDelete(this.state.deleteId)}
       />,
     ];
     let _renderModalComponent = () => {
@@ -1010,8 +1087,8 @@ export default class ManageProduct extends React.Component {
           <Col xs={12} md={12} lg={12}>
             <Dialog
               title="Success"
-              actions={actions}
-              modal={false}
+              actions={actions()}
+              modal={true}
               open={this.state.openWarning}
               onRequestClose={this.handleClose}
             >
@@ -1020,14 +1097,34 @@ export default class ManageProduct extends React.Component {
               {`${this.state.createdName} ${this.state.createdCode}`}
             </Dialog>
             <Dialog
+              title="Product Updated"
+              actions={actions('update')}
+              modal={true}
+              open={this.state.updateAlert}
+              onRequestClose={() => this._onUpdate()}
+            />
+            <Dialog
               title="Edit Product"
               actions={actionsModalTable}
-              modal={false}
+              modal={true}
               open={this.state.openEdit}
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
             >
               {_renderModalComponent()}
+            </Dialog>
+            <Dialog
+              title="Delete Product"
+              actions={actionsDeleteTable}
+              modal={true}
+              open={this.state.deleteAlert}
+              onRequestClose={() =>
+                this.setState({
+                  deleteAlert: false,
+                })
+            }
+            >
+            Are you sure want to delete this #{this.state.deleteId} product?
             </Dialog>
             <Tabs value={this.state.currentTab}>
               <Tab

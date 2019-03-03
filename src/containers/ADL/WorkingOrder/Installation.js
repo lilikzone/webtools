@@ -161,7 +161,7 @@ export default class Installation extends React.Component {
       },
       {
         id: 11,
-        title: '',
+        title: 'Edit Action',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',

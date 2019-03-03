@@ -79,6 +79,8 @@ export default class ManageCustomer extends React.Component {
       nameTemp: '',
       emailTemp: '',
       phoneNumberTemp: '',
+      deleteAlert: false,
+      deleteId: '',
       isGenderValid: true,
       isEmailValid1: true,
       isEmailValid2: true,
@@ -143,7 +145,7 @@ export default class ManageCustomer extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+          onClick={() => this._onDelete(data)}
         >
           Delete
         </button>
@@ -312,14 +314,14 @@ export default class ManageCustomer extends React.Component {
       },
       {
         id: 20,
-        title: 'Action',
+        title: 'Edit Action',
         render: EditBtn,
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 21,
-        title: 'Action',
+        title: 'Delete Action',
         render: DeleteBtn,
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -488,18 +490,36 @@ export default class ManageCustomer extends React.Component {
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'textField');
-        this.setState({
-          currentTab: 0,
-        });
+        // this.setState({
+        //   currentTab: 0,
+        // });
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  _handleClose() {
+  _handleClose(param) {
+    if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }    else {
+      this.setState({
+        onEdit: false,
+      });
+    }
+  }
+  _onTouchDelete(data) {
+    this._deleteAPI(`${HOSTNAME}delete?`, data);
+    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._handleClose('delete');
+  }
+
+  _onDelete(data) {
     this.setState({
-      onEdit: false,
+      deleteId: data.id,
+      deleteAlert: true,
     });
   }
 
@@ -508,6 +528,34 @@ export default class ManageCustomer extends React.Component {
       `${HOSTNAME}register?`
     );
     this._getAPI(`${HOSTNAME}all`, 'textField');
+    this.setState({
+      textField: {
+        name: '',
+        customerName: '',
+        subscriberId: '',
+        dobPlace: '',
+        dob: '',
+        typeId: '',
+        idNumber: '',
+        idAddress: '',
+        phone1: '',
+        phone2: '',
+        phone3: '',
+        email1: '',
+        email2: '',
+        olt: '',
+        city: '',
+        region: '',
+        fdt: '',
+        cluster: '',
+        street: '',
+        fullAddress: '',
+        homepassedId: '',
+        birth_place: '',
+        identification_number: '',
+        identification_address: '',
+      },
+    });
   }
 
   _handleValidationName(input, data) {
@@ -798,6 +846,16 @@ export default class ManageCustomer extends React.Component {
         primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleSubmit()}
+      />,
+    ];
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
       />,
     ];
     let _renderModalComponent = () => {
@@ -1334,6 +1392,20 @@ export default class ManageCustomer extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
+
+                  <Dialog
+                    title="Delete Product"
+                    actions={actionsDeleteTable}
+                    modal={true}
+                    open={this.state.deleteAlert}
+                    onRequestClose={() =>
+                      this.setState({
+                        deleteAlert: false,
+                      })
+                  }
+                  >
+                  Are you sure want to delete this #{this.state.deleteId} product?
+            </Dialog>
 
                   <MaterialContainer
                     keys="name"
