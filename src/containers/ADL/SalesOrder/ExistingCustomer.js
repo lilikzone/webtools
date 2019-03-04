@@ -67,6 +67,9 @@ export default class ExistingCustomer extends Component {
       isFullAddressValid: true,
       isCityValid: true,
       loadSelectedCustomer: false,
+      CustomerLoaded: false,
+      isGetProduct: false,
+      loadChooseCustomer: false,
     };
 
     const ChooseCustBtn = (data) => (
@@ -74,11 +77,34 @@ export default class ExistingCustomer extends Component {
         <button
           className="mdl-button mdl-button--raised"
           onClick={() => {
+            console.log(data);
             const custChosen = [];
             custChosen.push(data);
             this.setState({
               selectedCustomer: custChosen,
               loadSelectedCustomer: true,
+              loadChooseCustomer: false,
+              textField: data,
+            });
+          }
+          }
+        >
+          Choose</button>
+      </div>
+      );
+
+    const ChooseBtn = (data) => (
+      <div className="text-center">
+        <button
+          className="mdl-button mdl-button--raised"
+          onClick={() => {
+            const dataArray = [];
+            dataArray.push(data);
+            this.setState({
+              dataSelectedProduct: dataArray,
+              isGetProduct: false,
+              selectedProduct: true,
+              productId: data.id,
             });
           }
           }
@@ -105,7 +131,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 2,
+        id: 3,
         title: 'Customer Name',
         prop: 'customer_name',
         width: '5%',
@@ -113,7 +139,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 3,
+        id: 4,
         title: 'DOB',
         prop: 'dob',
         width: '5.5%',
@@ -121,7 +147,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 5,
         title: 'DOB Place',
         prop: 'birth_place',
         width: '5%',
@@ -129,7 +155,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 5,
+        id: 6,
         title: 'Gender',
         prop: 'gender',
         width: '5%',
@@ -137,7 +163,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 6,
+        id: 7,
         title: 'Group',
         prop: 'group',
         width: '5%',
@@ -145,7 +171,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 8,
         title: 'ID Type',
         prop: 'type_id',
         width: '5%',
@@ -153,7 +179,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
+        id: 9,
         title: 'ID Number',
         prop: 'id_number',
         width: '5%',
@@ -161,7 +187,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 10,
         title: 'ID Address',
         prop: 'id_address',
         width: '5%',
@@ -169,7 +195,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 11,
         title: 'Primary Phone',
         prop: 'phone1',
         width: '5%',
@@ -177,7 +203,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 12,
         title: 'Alternative Phone 1',
         prop: 'phone2',
         width: '5%',
@@ -185,7 +211,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 12,
+        id: 13,
         title: 'Alternative Phone 2',
         prop: 'phone3',
         width: '5%',
@@ -193,7 +219,7 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 13,
+        id: 14,
         title: 'Email',
         prop: 'email1',
         width: '5%',
@@ -201,36 +227,29 @@ export default class ExistingCustomer extends Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 14,
+        id: 15,
         title: 'Alternative Email',
         prop: 'email2',
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 15,
-        title: 'Created At',
-        prop: 'created_at',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 16,
-        title: 'updated At',
-        prop: 'updated_at',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-        // {
-        //   id: 17,
-        //   title: 'Action',
-        //   render: EditBtn,
-        //   width: '5%',
-        //   headerClass: 'mdl-data-table__cell--non-numeric',
-        // },
+      // {
+      //   id: 16,
+      //   title: 'Created At',
+      //   prop: 'created_at',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 17,
+      //   title: 'updated At',
+      //   prop: 'updated_at',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
       {
         id: 18,
         title: 'Action',
@@ -238,6 +257,19 @@ export default class ExistingCustomer extends Component {
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
+    ];
+    this.Productcolumns = [
+      {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 3, title: 'promo type', prop: 'promo_type', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: 'price', prop: 'price', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 5, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+    ];
+    this.SelectedProductcolumns = [
+      {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 3, title: 'promo type', prop: 'promo_type', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+      {id: 4, title: 'price', prop: 'price', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
     ];
   }
 
@@ -304,7 +336,10 @@ export default class ExistingCustomer extends Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({dataCustomer: respons.data, loaded: true});
+        this.setState({
+          dataCustomer: respons.data,
+          CustomerLoaded: true,
+          loadChooseCustomer: true});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -502,32 +537,57 @@ export default class ExistingCustomer extends Component {
     }
   }
 
+  _reselectCustomer = () => {
+    this.setState({
+      loadChooseCustomer: true,
+      loadSelectedCustomer: false,
+    });
+  }
+
+  _reselectProduct = () => {
+    this.setState({selectedProduct: false, isGetProduct: true});
+  }
+
   render() {
-    let _renderCustomerTable = () => {
-      return (
-        <Row>
-          <Card style={style.card}>
-            <Col md={12} lg={12} xs={12} sm={12} >
-              <MaterialContainer
-                keys="id"
-                className="mdl-data-table"
-                columns={this.columns}
-                dataArray={this.state.dataCustomer}
-                draggable={false}
-                sortable={false}
-                sortBy={{prop: 'id', order: 'desc'}}
-                pageSizeOptions={[10]}
-              />
-            </Col>
-          </Card>
-        </Row>);
+    let _renderCustomerTable = (loadChooseCustomer) => {
+      if (loadChooseCustomer) {
+        const CustomerLoaded  = this.state.CustomerLoaded;
+        return (
+          <Row>
+            <Card style={style.card}>
+              <Col md={12} lg={12} xs={12} sm={12} >
+                {CustomerLoaded ?
+                  <MaterialContainer
+                    keys="id"
+                    className="mdl-data-table"
+                    columns={this.columns}
+                    dataArray={this.state.dataCustomer}
+                    draggable={false}
+                    sortable={false}
+                    sortBy={{prop: 'id', order: 'desc'}}
+                    pageSizeOptions={[10]}
+                  /> : ''}
+
+              </Col>
+            </Card>
+          </Row>);
+      }
     };
     let _renderSelectedCustomerTable = (loadSelectedCustomer) => {
       if (loadSelectedCustomer) {
         return (
           <Row>
             <Card style={style.card}>
+              <RaisedButton
+                backgroundColor={teal300}
+                style={{marginTop: 10}}
+                labelColor={grey50}
+                containerElement="label"
+                label="Change Customer"
+                onClick={this._reselectCustomer}
+              />
               <Col md={12} lg={12} xs={12} sm={12} >
+
                 <MaterialContainer
                   keys="id"
                   className="mdl-data-table"
@@ -545,129 +605,403 @@ export default class ExistingCustomer extends Component {
     };
     let _renderCustomerAddressForm = () => {
       return (
-        <Row>
+        <Row style={{marginTop: 30}}>
+          {/* <Card style={style.card}> */}
+          <form>
+            <h2>Customer Address</h2>
+            <Col xs={12} md={6} lg={6}>
+              <AutoComplete
+                fullWidth={true}
+                required={true}
+                floatingLabelText="City"
+                hintText="City"
+                searchText={this.state.textField.city}
+                filter={AutoComplete.caseInsensitiveFilter}
+                openOnFocus={true}
+                dataSource={this.state.dataCity}
+                onUpdateInput={(input, dataSource) => {
+                  this._handleValidationCity(input, dataSource);
+                }}
+                errorText={!this.state.isCityValid}
+              />
+
+              <AutoComplete
+                fullWidth={true}
+                required={true}
+                floatingLabelText="Cluster"
+                hintText="Cluster"
+                searchText={this.state.textField.cluster}
+                filter={AutoComplete.caseInsensitiveFilter}
+                openOnFocus={true}
+                dataSource={this.state.dataCluster}
+                onUpdateInput={(input, dataSource) => {
+                  this._handleValidationCluster(input, dataSource);
+                }}
+                errorText={!this.state.isClusterValid}
+              />
+
+              <AutoComplete
+                fullWidth={true}
+                required={true}
+                floatingLabelText="Street"
+                hintText="Street"
+                searchText={this.state.textField.street}
+                filter={AutoComplete.caseInsensitiveFilter}
+                openOnFocus={true}
+                dataSource={this.state.dataStreet}
+                onUpdateInput={(input, dataSource) => {
+                  this._handleValidationStreet(input, dataSource);
+                }}
+                errorText={!this.state.isStreetValid}
+              />
+
+              <AutoComplete
+                fullWidth={true}
+                required={true}
+                floatingLabelText="Full Address"
+                hintText="Full Address"
+                searchText={this.state.textField.fullAddress}
+                filter={AutoComplete.caseInsensitiveFilter}
+                openOnFocus={true}
+                dataSource={this.state.dataFullAddress}
+                onUpdateInput={(input, dataSource) => {
+                  this._handleValidationFullAddress(input, dataSource);
+                }}
+                errorText={!this.state.isFullAddressValid}
+              />
+            </Col>
+            <Col xs={12} md={12} lg={12}>
+              <TextField
+                disabled={true}
+                value={this.state.textField.olt}
+                style={{marginRight: 20}}
+                hintText="OLT"
+                floatingLabelText="OLT"
+                fullWidth={false}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {...this.state.textField, olt: input},
+                  });
+                }}
+              />
+              <TextField
+                disabled={true}
+                value={this.state.textField.region}
+                hintText="Region"
+                floatingLabelText="Region"
+                fullWidth={false}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {...this.state.textField, region: input},
+                  });
+                }}
+              />
+            </Col>
+            <TextField
+              disabled={true}
+              value={this.state.textField.fdt}
+              hintText="FDT"
+              floatingLabelText="FDT"
+              fullWidth={false}
+              style={{marginRight: 20}}
+            />
+            <RaisedButton
+              label="Get Product"
+              secondary={true}
+              style={style.button}
+              icon={<FontIcon className="material-icons">attachment</FontIcon>}
+              onTouchTap={() => {
+                this.setState({
+                  isGetProduct: true,
+                });
+              }}
+              disabled={!this.state.productLoaded}
+            />
+          </form>
+          {/* </Card> */}
+        </Row>
+      );
+    };
+    let _renderProduct = (data) => {
+      if (data) {
+        return (
+          <div>
+            <h1 style={{marginTop: 30, textAlign: 'center'}}>Product</h1>
+            <Card style={style.card}>
+              <MaterialContainer
+                keys="id"
+                className="mdl-data-table"
+                columns={this.Productcolumns}
+                dataArray={this.state.dataProduct}
+                draggable={false}
+                sortable={false}
+                sortBy={{prop: 'id', order: 'desc'}}
+                pageSizeOptions={[10]}
+              />
+            </Card>
+          </div>
+        );
+      }
+    };
+    let _renderSelectedProduct = (selectedProduct) => {
+      if (selectedProduct) {
+        return (<div>
+          <h1 style={{marginTop: 30, textAlign: 'center'}}>Product</h1>
+          <Card style={style.card}>
+            <RaisedButton
+              backgroundColor={teal300}
+              style={{marginTop: 10}}
+              labelColor={grey50}
+              containerElement="label"
+              label="Change Product"
+              onClick={this._reselectProduct}
+            />
+            <MaterialContainer
+              keys="id"
+              className="mdl-data-table"
+              columns={this.SelectedProductcolumns}
+              dataArray={this.state.dataSelectedProduct}
+              draggable={false}
+              sortable={false}
+              sortBy={{prop: 'id', order: 'desc'}}
+              pageSizeOptions={[10]}
+            />
+          </Card>
+        </div>);
+      }
+    };
+    let _renderCustomerData = () => {
+      return (
+        <div>
+          <h1 style={{marginTop: 15, textAlign: 'center'}}>Customer Data</h1>
+
           <Card style={style.card}>
             <form>
               <Col xs={12} md={6} lg={6}>
-                <AutoComplete
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="City"
-                  hintText="City"
-                  searchText={this.state.textField.city}
-                  filter={AutoComplete.caseInsensitiveFilter}
-                  openOnFocus={true}
-                  dataSource={this.state.dataCity}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationCity(input, dataSource);
-                  }}
-                  errorText={!this.state.isCityValid}
-                />
-
-                <AutoComplete
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Cluster"
-                  hintText="Cluster"
-                  searchText={this.state.textField.cluster}
-                  filter={AutoComplete.caseInsensitiveFilter}
-                  openOnFocus={true}
-                  dataSource={this.state.dataCluster}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationCluster(input, dataSource);
-                  }}
-                  errorText={!this.state.isClusterValid}
-                />
-
-                <AutoComplete
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Street"
-                  hintText="Street"
-                  searchText={this.state.textField.street}
-                  filter={AutoComplete.caseInsensitiveFilter}
-                  openOnFocus={true}
-                  dataSource={this.state.dataStreet}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationStreet(input, dataSource);
-                  }}
-                  errorText={!this.state.isStreetValid}
-                />
-
-                <AutoComplete
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Full Address"
-                  hintText="Full Address"
-                  searchText={this.state.textField.fullAddress}
-                  filter={AutoComplete.caseInsensitiveFilter}
-                  openOnFocus={true}
-                  dataSource={this.state.dataFullAddress}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationFullAddress(input, dataSource);
-                  }}
-                  errorText={!this.state.isFullAddressValid}
-                />
-              </Col>
-              <Col xs={12} md={12} lg={12}>
                 <TextField
                   disabled={true}
-                  value={this.state.textField.olt}
-                  style={{marginRight: 20}}
-                  hintText="OLT"
-                  floatingLabelText="OLT"
-                  fullWidth={false}
+                  value={this.state.textField.homepassedId}
+                  hintText="Homepassed ID"
+                  floatingLabelText="Homepassed ID"
+                  fullWidth={true}
+                />
+                <SelectField
+                  fullWidth={true}
+                  required={true}
+                  floatingLabelText="Type Payment"
+                  name="type_payment"
+                  value={this.state.textField.typePayment}
+                  onChange={(input, index, dataSource) => {
+                    this._handleValidationTypePayment(input, index, dataSource);
+                  }}
+                >
+                  <MenuItem  value="pbi" primaryText="Regular" />
+                  <MenuItem  value="pai" primaryText="Pay after Installation" />
+                </SelectField>
+                <TextField
+                  value={this.state.textField.name}
+                  hintText="Name"
+                  floatingLabelText="Name"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this._handleValidationName(e, input);
+                  }}
+                />
+                <DatePicker
+                  hintText="Date of Birth"
+                  floatingLabelText="Date of Birth"
+                  fullWidth={true}
+                  value={this.state.textField.dob}
                   onChange={(e, input) => {
                     this.setState({
-                      textField: {...this.state.textField, olt: input},
+                      textField: {
+                        ...this.state.textField,
+                        dob: input,
+                      },
                     });
                   }}
                 />
                 <TextField
-                  disabled={true}
-                  value={this.state.textField.region}
-                  hintText="Region"
-                  floatingLabelText="Region"
-                  fullWidth={false}
-                  onChange={(e, input) => {
+                  floatingLabelText="DoB Place"
+                  value={this.state.textField.dobPlace}
+                  fullWidth={true}
+                  onChange={(e, value) => {
                     this.setState({
-                      textField: {...this.state.textField, region: input},
+                      textField: {
+                        ...this.state.textField,
+                        dobPlace: value,
+                      },
                     });
                   }}
                 />
+                <SelectField
+                  fullWidth={true}
+                  required={true}
+                  floatingLabelText="Gender"
+                  name="gender"
+                  value={this.state.textField.gender}
+                  onChange={(input, index, dataSource) => {
+                    this._handleValidationGender(input, index, dataSource);
+                  }}
+                >
+                  <MenuItem  value="male" primaryText="Male" />
+                  <MenuItem  value="female" primaryText="Female" />
+                </SelectField>
+                <SelectField
+                  floatingLabelText="ID Type"
+                  fullWidth={true}
+                  value={this.state.textField.idType}
+                  onChange={(e, index, value) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        idType: value,
+                      },
+                    });
+                  }}
+                >
+                  <MenuItem  value="KTP" primaryText="KTP" />
+                  <MenuItem  value="KITAS" primaryText="KITAS" />
+                  <MenuItem  value="SIM" primaryText="SIM" />
+                  <MenuItem  value="Passport" primaryText="Passport" />
+                </SelectField>
+                <TextField
+                  required={true}
+                  value={this.state.textField.idNumber}
+                  hintText="ID Number"
+                  floatingLabelText="ID Number"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        idNumber: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  hintText="Address"
+                  floatingLabelText="Address"
+                  value={this.state.textField.address}
+                  multiLine={true}
+                  rows={2}
+                  rowsMax={4}
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        address: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  required={true}
+                  value={this.state.textField.phone1}
+                  hintText="+62"
+                  floatingLabelText="Phone 1"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        phone1: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  required={true}
+                  value={this.state.textField.phone2}
+                  hintText="+62"
+                  floatingLabelText="Phone 2"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        phone2: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  required={true}
+                  value={this.state.textField.phone3}
+                  hintText="+62"
+                  floatingLabelText="Phone 3"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        phone3: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  required={true}
+                  value={this.state.textField.email1}
+                  hintText="Email"
+                  floatingLabelText="Email 1"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        email1: input,
+                      },
+                    });
+                  }}
+                />
+                <TextField
+                  required={true}
+                  value={this.state.textField.email2}
+                  hintText="Email"
+                  floatingLabelText="Email 2"
+                  fullWidth={true}
+                  onChange={(e, input) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        email2: input,
+                      },
+                    });
+                  }}
+                />
+
               </Col>
-              <TextField
-                disabled={true}
-                value={this.state.textField.fdt}
-                hintText="FDT"
-                floatingLabelText="FDT"
-                fullWidth={false}
-                style={{marginRight: 20}}
-              />
-              <RaisedButton
-                label="Get Product"
-                secondary={true}
-                style={style.button}
-                icon={<FontIcon className="material-icons">attachment</FontIcon>}
-                onTouchTap={() => {
-                  this.setState({
-                    isGetProduct: true,
-                  });
-                }}
-                disabled={!this.state.productLoaded}
-              />
             </form>
           </Card>
-        </Row>
+        </div>
+      );
+    };
+    let _renderButton = (isCoverage) => {
+      return (
+        <RaisedButton
+          label="Create Sales Order"
+          secondary={true}
+          style={styles.raisedButton}
+          onTouchTap={() => this._handleTouchTap()}
+          disabled={isCoverage !== ''}
+        />
       );
     };
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
+          <h2>Choose customer</h2>
           <Col xs={12} md={12} lg={12} >
-            {_renderCustomerTable()}
+            {_renderCustomerTable(this.state.loadChooseCustomer)}
             {_renderSelectedCustomerTable(this.state.loadSelectedCustomer)}
             {_renderCustomerAddressForm()}
+            {_renderProduct(this.state.isGetProduct)}
+            {_renderSelectedProduct(this.state.selectedProduct)}
+            {_renderCustomerData()}
+            {_renderButton(this.state.textField.homepassedId)}
           </Col>
         </Paper>
       </Row>
