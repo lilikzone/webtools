@@ -11,6 +11,7 @@ import ManageAgency from './containers/ADL/System/manageAgency';
 import ManageCustomer from './containers/ADL/System/manageCustomer';
 import ManageActivity from './containers/ADL/System/manageActivity';
 import ManageVA from './containers/ADL/System/manageVA';
+import ChangePassword from './containers/ADL/System/ChangePassword';
 // Homespassed
 import HomesPassed from './containers/ADL/Homespassed/Homespassed';
 // Sales Management
@@ -121,6 +122,7 @@ export default (
       <Route path="ticketSpamReport" component={ReportSpam} />
       <Route path="salesInvoice" component={SalesInvoice} />
       <Route path="installation" component={Installation} />
+      <Route path="changePassword" component={ChangePassword} />
       {/* custom page end here */}
 
       <Route path="button" component={Button} />

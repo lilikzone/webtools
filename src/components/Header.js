@@ -234,7 +234,7 @@ class Header extends React.Component {
                 vertical: 'bottom',
               }}
             >
-              <MenuItem key={1} primaryText="Change Password" leftIcon={<FontIcon color="#212121" className="material-icons">edit</FontIcon>} />
+              <MenuItem key={1} primaryText="Change Password" leftIcon={<FontIcon color="#212121" className="material-icons">edit</FontIcon>} containerElement={<Link to={'/admin/changePassword'} />} />
               <MenuItem key={2} primaryText="Logout" leftIcon={<FontIcon color="#212121" className="material-icons">power_settings_new</FontIcon>} containerElement={<Link to={'/logout'} />} />
               {/* <MenuItem key={3} primaryText="Price List" /> */}
             </IconMenu>

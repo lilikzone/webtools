@@ -330,7 +330,7 @@ export default class SalesOrder extends React.Component {
   }
 
   _reselectProduct = () => {
-    this.setState({selectedProduct: false, isGetProduct: true, isGetSelectedAllProduct: false, isGetAllProduct: true});
+    this.setState({selectedProduct: false, isGetProduct: true});
   }
 
   componentDidMount() {
