@@ -74,6 +74,7 @@ export default class ManageCustomer extends React.Component {
     super(props);
     this.state = {
       loaded: false,
+      updateAlert: false,
       cookies: '',
       onEdit: false,
       nameTemp: '',
@@ -372,6 +373,12 @@ export default class ManageCustomer extends React.Component {
     this._getAPICity();
   }
 
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
   _putAPI(
     apiUrl,
     id) {
@@ -500,7 +507,11 @@ export default class ManageCustomer extends React.Component {
   }
 
   _handleClose(param) {
-    if (param == 'delete') {
+    if (param == 'update') {
+      this.setState({
+        updateAlert: false,
+      });
+    }    else if (param == 'delete') {
       this.setState({
         deleteAlert: false,
       });
@@ -636,8 +647,13 @@ export default class ManageCustomer extends React.Component {
     // this.data.push({'email': this.state.textField.email});
   }
   _handleSubmit() {
+    this.setState({
+      loaded: false,
+      updateAlert: true,
+    });
     this._putAPI(HOSTNAME,
     this.state.editedId);
+    this._handleClose();
   }
   _onRequestClose=(data) => {
     this.setState({isRegistered: false});
@@ -846,6 +862,12 @@ export default class ManageCustomer extends React.Component {
         primary={true}
         keyboardFocused={true}
         onTouchTap={() => this._handleSubmit()}
+      />,
+    ];
+    let actionsUpdate = (val) => [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={() => this._handleClose(val)}
       />,
     ];
     let actionsDeleteTable = [
@@ -1382,6 +1404,13 @@ export default class ManageCustomer extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Customer Updated"
+                    actions={actionsUpdate('update')}
+                    modal={true}
+                    open={this.state.updateAlert}
+                    onRequestClose={() => this._onUpdate()}
+                  />
                   <Dialog
                     title="Edit User"
                     actions={actions}

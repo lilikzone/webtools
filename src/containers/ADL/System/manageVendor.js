@@ -20,7 +20,6 @@ const HOSTNAME = 'https://source.adlsandbox.com/api/vendor/';
 export default class ManageVendor extends React.Component {
   constructor(props) {
     super(props);
-    this.bearier = 'Bearier eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMy4yMjkuMTQ5LjIyODo4MDgxXC9hcGlcL2FkbWluXC9sb2dpbiIsImlhdCI6MTU1MDYwNTk1MCwiZXhwIjoxNTUwNjA5NTUwLCJuYmYiOjE1NTA2MDU5NTAsImp0aSI6InBGMFdBSU1Ld09vdFpxMkoiLCJzdWIiOjE0LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.jWdkPFWvlVoNQTegNzJPv3sAVQSVRVSiTNB48cXz3cY';
     this.data = [];
     this.state = {
       loaded: false,
@@ -29,6 +28,8 @@ export default class ManageVendor extends React.Component {
       deleteAlert: false,
       deleteId: '',
       isGenderValid: true,
+      updateAlert: false,
+      redirect: false,
       isEmailValid: true,
       isPhoneValid: true,
       isRoleValid: true,
@@ -39,6 +40,7 @@ export default class ManageVendor extends React.Component {
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
+      vendorData: [],
       textField: {
         vendor: '',
         code: '',
@@ -89,7 +91,7 @@ export default class ManageVendor extends React.Component {
   }
 
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'vendorData');
   }
 
   _getAPI(apiUrl, stateName) {
@@ -105,7 +107,7 @@ export default class ManageVendor extends React.Component {
     .then((responseJson) => {
       if (responseJson) {
         this.setState({
-          [stateName]: responseJson,
+          [stateName]: responseJson.data,
           loaded: true,
         });
       }
@@ -127,7 +129,7 @@ export default class ManageVendor extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('res', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'vendorData');
       })
       .catch((error) => {
         console.error(error);
@@ -145,10 +147,10 @@ export default class ManageVendor extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
-        // this.setState({
-        //   currentTab: 0,
-        // });
+        this._getAPI(`${HOSTNAME}all`, 'vendorData');
+        this.setState({
+          redirect: true,
+        });
       }
 
       )
@@ -168,7 +170,7 @@ export default class ManageVendor extends React.Component {
       'vendor': this.state.textField.vendor,
     });
     this._postAPI(`${HOSTNAME}register?`, 'test', this.state.textField.code, this.state.textField.vendor);
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'vendorData');
     this.setState({
       dataTable: this.data,
       isRegistered: true,
@@ -191,7 +193,12 @@ export default class ManageVendor extends React.Component {
     });
   }
   _handleClose(param) {
-    if (param == 'delete') {
+    if (param == 'update') {
+      this.setState({
+        updateAlert: false,
+        redirect: true,
+      });
+    }    else if (param == 'delete') {
       this.setState({
         deleteAlert: false,
       });
@@ -203,8 +210,38 @@ export default class ManageVendor extends React.Component {
   }
   _onTouchDelete(data) {
     this._deleteAPI(`${HOSTNAME}delete?`, data);
-    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._getAPI(`${HOSTNAME}all`, 'vendorData');
     this._handleClose('delete');
+  }
+
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
+  _handleUpdate() {
+    this.setState({
+      updateAlert: true,
+    });
+    this._handleClose();
+    const name = this.state.nameTemp;
+    const code = this.state.codeTemp;
+    const id = this.state.idTemp;
+    fetch(`https://source.adlsandbox.com/api/vendor/${id}?code=${code}&name=${name}`, {
+      method: 'PUT',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+        .then((response) => response.json())
+        .then((respons) => {
+          console.log(respons);
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
   }
 
   render() {
@@ -215,7 +252,7 @@ export default class ManageVendor extends React.Component {
       />, <FlatButton
         label="Submit" primary={true}
         keyboardFocused={true}
-        onTouchTap={() => this._handleClose()}
+        onTouchTap={() => this._handleUpdate()}
           />,
     ];
     let actionsDeleteTable = [
@@ -226,6 +263,12 @@ export default class ManageVendor extends React.Component {
       <RaisedButton
         label="Delete" primary={true}
         onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
+    ];
+    let actionsUpdate = (val) => [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={() => this._handleClose(val)}
       />,
     ];
     let _renderCreateVendor = () => {
@@ -332,6 +375,13 @@ export default class ManageVendor extends React.Component {
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
                   <Dialog
+                    title="Vendor Updated"
+                    actions={actionsUpdate('update')}
+                    modal={true}
+                    open={this.state.updateAlert}
+                    onRequestClose={() => this._onUpdate()}
+                  />
+                  <Dialog
                     title="Edit User"
                     actions={actions}
                     modal={false}
@@ -359,7 +409,7 @@ export default class ManageVendor extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.state.textField}
+                    dataArray={this.state.vendorData}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
@@ -374,6 +424,7 @@ export default class ManageVendor extends React.Component {
     };
     return (
       <Row className="m-b-15">
+        {this.state.redirect ? <React.Fragment>{window.location.reload()}</React.Fragment> : '' }
         <Grid item={true} xs={10} md={12} lg={12}>
           <Paper style={styles.paper}>
             <Col xs={12} md={12} lg={12}>
