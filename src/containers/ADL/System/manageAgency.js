@@ -134,7 +134,7 @@ export default class ManageAgency extends React.Component {
     .then((responseJson) => {
       if (responseJson) {
         this.setState({
-          [stateName]: responseJson,
+          [stateName]: responseJson.data,
           loaded: true,
         });
       }
