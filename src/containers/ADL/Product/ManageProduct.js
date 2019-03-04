@@ -784,9 +784,9 @@ export default class ManageProduct extends React.Component {
                           fullWidth={true}
                           hintText="Promo area"
                           floatingLabelText="Promo Area"
-                          filter={AutoComplete.noFilter}
+                          filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.dataPromoArea}
-                          openOnFocus={true}
+                          openOnFocus={false}
                           onUpdateInput={(input, dataSource) => {
                             this._handleValidationPromoArea(input, dataSource);
                           }}

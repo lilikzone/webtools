@@ -306,29 +306,37 @@ export default class ManageUser extends React.PureComponent {
 
 
   componentDidMount() {
+    console.log('apa ini', this.state.token);
+    const json = (response) => response.json();
     fetch('https://source.adlsandbox.com/api/admin/all', {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({allData: respons, loaded: true});
+        this.setState({allData: respons.data, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
   }
   componentWillMount() {
-    const cookieData = cookies.get('ssid');
-    if (cookieData !== undefined && cookieData !== '') {
-      this.setState({token: cookieData});
+    const cookiesData = cookies.get('ssid');
+    if (cookiesData !== undefined && cookiesData !== '') {
+      this.setState({token: cookiesData});
+
       const json = (response) => response.json();
-      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookieData}`, {
-        method: 'get',
+      console.log('apa zzzzzini', cookiesData);
+      fetch('https://source.adlsandbox.com/api/admin/check', {
+        method: 'GET',
         type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookiesData}`,
+          'Content-Type': 'application/json',
+        },
       })
       .then(json)
       .then((respons) => {
@@ -346,7 +354,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       })
@@ -358,7 +366,7 @@ export default class ManageUser extends React.PureComponent {
         const dataVendor = [];
         let i;
         for (i = 0;i < dataVendorObject.length;i++) {
-          dataVendor.push(dataVendorObject[i].name);
+          dataVendor.push(dataVendorObject[i].code);
         }
         this.setState({dataVendor: dataVendor});
       }).catch((error) => {
@@ -369,7 +377,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       })
@@ -392,7 +400,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       }).then(json)
@@ -451,7 +459,7 @@ export default class ManageUser extends React.PureComponent {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)
@@ -591,7 +599,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'PUT',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${this.state.token}`,
           'Content-Type': 'application/json',
         },
       })
@@ -613,7 +621,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'DELETE',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${this.state.token}`,
           'Content-Type': 'application/json',
         },
       })
@@ -634,7 +642,7 @@ export default class ManageUser extends React.PureComponent {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)

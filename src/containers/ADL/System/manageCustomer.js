@@ -422,7 +422,7 @@ export default class ManageCustomer extends React.Component {
       .then((responseJson) => {
         console.log(responseJson);
         this.setState({
-          allCustomer: responseJson,
+          allCustomer: responseJson.data,
           loaded: true,
         });
       })
