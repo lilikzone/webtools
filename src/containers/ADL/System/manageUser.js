@@ -28,6 +28,11 @@ const agentShowRole = ['operation', 'admin', 'internalsales'];
 const enableAgency = ['sales', 'salesadmin'];
 const enableVendor = ['dispatcher', 'installer'];
 
+const dataSourceConfig = {
+  text: 'textKey',
+  value: 'valueKey',
+};
+
 // const dataVendor = ['Vendor1', 'Vendor2', 'Vendor3'];
 // const dataAgency = ['Agency1', 'Agency2'];
 const style = {
@@ -142,7 +147,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 2,
         title: 'Role',
         prop: 'role',
         width: '10%',
@@ -150,7 +155,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 2,
+        id: 3,
         title: 'Name',
         prop: 'name',
         width: '10%',
@@ -158,7 +163,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 0,
+        id: 4,
         title: 'Gender',
         prop: 'gender',
         width: '10%',
@@ -166,7 +171,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 3,
+        id: 5,
         title: 'Email',
         prop: 'email',
         width: '10%',
@@ -174,7 +179,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 6,
         title: 'Vendor',
         prop: 'vendor',
         width: '10%',
@@ -182,7 +187,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 7,
         title: 'Agency',
         prop: 'agency',
         width: '10%',
@@ -190,14 +195,14 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 8,
         title: 'Edit Action',
         render: EditBtn,
         width: '10%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 9,
         title: 'Delete Action',
         render: DeleteBtn,
         width: '10%',
@@ -214,7 +219,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 2,
         title: 'Role',
         prop: 'role',
         width: '10%',
@@ -222,7 +227,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 2,
+        id: 3,
         title: 'Name',
         prop: 'name',
         width: '10%',
@@ -230,7 +235,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 0,
+        id: 4,
         title: 'Gender',
         prop: 'gender',
         width: '10%',
@@ -238,7 +243,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 3,
+        id: 5,
         title: 'Email',
         prop: 'email',
         width: '10%',
@@ -246,7 +251,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 6,
         title: 'Vendor',
         prop: 'vendor',
         width: '10%',
@@ -254,7 +259,7 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 7,
         title: 'Agency',
         prop: 'agency',
         width: '10%',
@@ -306,29 +311,37 @@ export default class ManageUser extends React.PureComponent {
 
 
   componentDidMount() {
+    console.log('apa ini', this.state.token);
+    const json = (response) => response.json();
     fetch('https://source.adlsandbox.com/api/admin/all', {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({allData: respons, loaded: true});
+        this.setState({allData: respons.data, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
   }
   componentWillMount() {
-    const cookieData = cookies.get('ssid');
-    if (cookieData !== undefined && cookieData !== '') {
-      this.setState({token: cookieData});
+    const cookiesData = cookies.get('ssid');
+    if (cookiesData !== undefined && cookiesData !== '') {
+      this.setState({token: cookiesData});
+
       const json = (response) => response.json();
-      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookieData}`, {
-        method: 'get',
+      console.log('apa zzzzzini', cookiesData);
+      fetch('https://source.adlsandbox.com/api/admin/check', {
+        method: 'GET',
         type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookiesData}`,
+          'Content-Type': 'application/json',
+        },
       })
       .then(json)
       .then((respons) => {
@@ -346,7 +359,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       })
@@ -354,13 +367,14 @@ export default class ManageUser extends React.PureComponent {
       .then((respons) => {
         // console.log(respons);
 
-        const dataVendorObject = respons;
+        const dataVendorObject = respons.data;
         const dataVendor = [];
         let i;
         for (i = 0;i < dataVendorObject.length;i++) {
-          dataVendor.push(dataVendorObject[i].name);
+          dataVendor.push({textKey: dataVendorObject[i].name, valueKey: dataVendorObject[i].code});
         }
         this.setState({dataVendor: dataVendor});
+        console.log(this.state.dataVendor);
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -369,7 +383,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       })
@@ -377,7 +391,7 @@ export default class ManageUser extends React.PureComponent {
       .then((respons) => {
         // console.log(respons);
 
-        const dataAgencyObject = respons;
+        const dataAgencyObject = respons.data;
         const dataAgency = [];
         let i;
         for (i = 0;i < dataAgencyObject.length;i++) {
@@ -392,13 +406,13 @@ export default class ManageUser extends React.PureComponent {
         method: 'GET',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${cookiesData}`,
           'Content-Type': 'application/json',
         },
       }).then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({allData: respons, loaded: true});
+        this.setState({allData: respons.data, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
@@ -413,7 +427,7 @@ export default class ManageUser extends React.PureComponent {
     const email = this.state.textField.email;
     // const phone = this.state.textField.phoneNumber;
     const role = this.state.textField.role;
-    const vendor = this.state.textField.vendor;
+    const vendor = this.state.textField.vendorValue;
     const agency = this.state.textField.agency;
 
     const json = (response) => response.json();
@@ -451,7 +465,7 @@ export default class ManageUser extends React.PureComponent {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)
@@ -527,17 +541,24 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _handleValidationVendor(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataInputDua = dataInput.charAt(0).toUpperCase() + dataInput.slice(1);
-    let dataVendor = data.map((val) => val.toLowerCase());
-    this.setState({
-      isVendorValid: dataVendor.includes(dataInput),
+    let dataInput = input;
+    console.log(data);
+    const found = data.find((element) => {
+      if (element.textKey == input) {
+        return (element);
+      } else {
+        return null;
+      }
     });
-    if (dataVendor.includes(dataInput)) {
+    console.log(found);
+    if (found === undefined) {
+      this.setState({isVendorValid: false});
+    } else {
       this.setState({
-        textField: {...this.state.textField, vendor: dataInputDua},
+        textField: {...this.state.textField, vendor: dataInput, vendorValue: found.valueKey},
       });
     }
+    // }
   }
   _handleValidationGender(input, data) {
     let dataInput = input.toLowerCase();
@@ -591,7 +612,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'PUT',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${this.state.token}`,
           'Content-Type': 'application/json',
         },
       })
@@ -613,7 +634,7 @@ export default class ManageUser extends React.PureComponent {
         method: 'DELETE',
         type: 'cors',
         headers: {
-          'Authorization': `Bearer ${cookieData}`,
+          'Authorization': `Bearer ${this.state.token}`,
           'Content-Type': 'application/json',
         },
       })
@@ -634,7 +655,7 @@ export default class ManageUser extends React.PureComponent {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${cookieData}`,
+        'Authorization': `Bearer ${this.state.token}`,
         'Content-Type': 'application/json',
       },
     }).then(json)
@@ -763,6 +784,7 @@ export default class ManageUser extends React.PureComponent {
                     disabled={this.state.disableVendorButton}
                     openOnFocus={true}
                     dataSource={this.state.dataVendor}
+                    dataSourceConfig={dataSourceConfig}
                     searchText={this.state.textField.vendor}
                     onUpdateInput={(input, dataSource) => {
                       this._handleValidationVendor(input, dataSource);
