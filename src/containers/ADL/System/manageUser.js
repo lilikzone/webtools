@@ -471,7 +471,7 @@ export default class ManageUser extends React.PureComponent {
     }).then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({allData: respons, loaded: true});
+        this.setState({allData: respons.data, loaded: true});
       }).catch((error) => {
         console.log(error);
       });

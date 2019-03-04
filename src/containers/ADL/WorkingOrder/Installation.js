@@ -25,6 +25,10 @@ const cookies = new Cookies();
 // const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
 const AssignVendor = ['admin', 'operation', 'manageservice'];
 const AssignInstaller = ['admin', 'operation', 'dispatcher'];
+const dataSourceConfig = {
+  text: 'textKey',
+  value: 'valueKey',
+};
 
 
 export default class Installation extends React.Component {
@@ -43,6 +47,7 @@ export default class Installation extends React.Component {
       disableEditInstaller: false,
       isVendorValid: true,
       isInstallerValid: true,
+      status: 'Dispatch to dispatcher',
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -221,17 +226,19 @@ export default class Installation extends React.Component {
         .then(json)
         .then((respons) => {
           console.log(respons);
-          const dataVendorObject = respons;
+          const dataVendorObject = respons.data;
           const dataVendor = [];
           let i;
           for (i = 0;i < dataVendorObject.length;i++) {
-            dataVendor.push(dataVendorObject[i].name);
+            dataVendor.push({textKey: dataVendorObject[i].name, valueKey: dataVendorObject[i].code});
           }
           this.setState({dataVendor: dataVendor});
         }).catch((error) => {
           console.log(`error: ${error}`);
         });
       } else if (role[1] === 'dispatcher') {
+        this.setState({status: 'Dispatch to installer'});
+
         fetch('https://source.adlsandbox.com/api/admin/search?keyword=installer', {
           method: 'GET',
           type: 'cors',
@@ -300,18 +307,25 @@ export default class Installation extends React.Component {
     });
   }
 
+
   _handleValidationVendor(input, data) {
-    let dataInput = input.toLowerCase();
-    let dataInputDua = dataInput.charAt(0).toUpperCase() + dataInput.slice(1);
-    let dataVendor = data.map((val) => val.toLowerCase());
-    this.setState({
-      isVendorValid: dataVendor.includes(dataInput),
+    let dataInput = input;
+    console.log(dataInput);
+    const found = data.find((element) => {
+      if (element.textKey == input) {
+        return (element);
+      } else {
+        return null;
+      }
     });
-    if (dataVendor.includes(dataInput)) {
+    if (found === undefined) {
+      this.setState({isVendorValid: false});
+    } else {
       this.setState({
-        dataTemp: {...this.state.dataTemp, vendor: dataInputDua},
+        dataTemp: {...this.state.dataTemp, vendor: dataInput, vendorValue: found.valueKey},
       });
     }
+    // }
   }
 
   _handleValidationInstaller(input, data) {
@@ -331,16 +345,15 @@ export default class Installation extends React.Component {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const id = this.state.dataTemp.id;
-      const vendor = this.state.dataTemp.vendor;
+      const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
       const installer = this.state.dataTemp.installer;
-      const status = 'Dispatch to dispatcher';
-      if (installer !== '' && installer !== undefined) {
-        const status = 'Dispatch to installer';
-      }
 
+      console.log(installer);
+      const status = this.state.status;
+      console.log(status);
       const json = (response) => response.json();
-      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`);
-      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer}`, {
+      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`, {
         method: 'PUT',
         type: 'cors',
         headers: {
@@ -426,6 +439,7 @@ export default class Installation extends React.Component {
             openOnFocus={true}
             dataSource={this.state.dataVendor}
             searchText={this.state.dataTemp.vendor}
+            dataSourceConfig={dataSourceConfig}
             onUpdateInput={(input, dataSource) => {
               this._handleValidationVendor(input, dataSource);
             }}
