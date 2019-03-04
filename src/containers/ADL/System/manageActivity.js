@@ -100,8 +100,11 @@ export default class ManageActivity extends React.Component {
     this.setState({
       dataTable: this.data,
       isRegistered: true,
-      textField: {},
-      currentTab: 1,
+      textField: {
+        code: '',
+        vendor: '',
+      },
+      // currentTab: 1,
     });
   }
 

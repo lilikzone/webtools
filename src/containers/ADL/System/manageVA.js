@@ -20,24 +20,6 @@ const cookies = new Cookies();
 const HOSTNAME = 'https://source.adlsandbox.com/api/va/';
 
 const paymentType = ['Open', 'Close'];
-const UserPic = (row) => (
-  <div className="text-center">
-    <img src={row.pic} />
-  </div>
-);
-
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
-
-const CheckBtn = () => (
-  <div style={styles.action}>
-    <Checkbox iconStyle={styles.checkbox} />
-  </div>
-);
-
 export default class ManageVA extends React.Component {
   constructor(props) {
     super(props);
@@ -53,10 +35,20 @@ export default class ManageVA extends React.Component {
       isAgencyValid: true,
       isRegistered: false,
       onEdit: false,
+      deleteAlert: false,
+      deleteId: '',
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
-      textField: [],
+      textField: {
+        va_number: '',
+        issuer: '',
+        partner: '',
+        partnerType: '',
+        cred1: '',
+        cred2: '',
+        cred3: '',
+      },
       dataTable: this.data,
       allData: [],
       cookies: '',
@@ -82,7 +74,7 @@ export default class ManageVA extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-          onClick={() => this._deleteAPI(`${HOSTNAME}delete?`, data.id)}
+          onClick={() => this._onDelete(data)}
         >
           Delete
         </button>
@@ -171,14 +163,14 @@ export default class ManageVA extends React.Component {
       },
       {
         id: 10,
-        title: '',
+        title: 'Edit Action',
         render: EditBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 11,
-        title: '',
+        title: 'Delete Action',
         render: DeleteBtn,
         width: '2%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -250,13 +242,17 @@ export default class ManageVA extends React.Component {
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'allData');
-        this.setState({
-          currentTab: 0,
-        });
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  _onDelete(data) {
+    this.setState({
+      deleteId: data.id,
+      deleteAlert: true,
+    });
   }
 
   _handleTouchTap() {
@@ -277,7 +273,15 @@ export default class ManageVA extends React.Component {
     this.setState({
       dataTable: this.data,
       isRegistered: true,
-      textField: {},
+      textField: {
+        va_number: '',
+        issuer: '',
+        partner: '',
+        partnerType: '',
+        cred1: '',
+        cred2: '',
+        cred3: '',
+      },
     });
   }
 
@@ -292,10 +296,22 @@ export default class ManageVA extends React.Component {
       textField: {...this.state.textField, code: data},
     });
   }
-  _handleClose() {
-    this.setState({
-      onEdit: false,
-    });
+  _handleClose(param) {
+    if (param == 'delete') {
+      this.setState({
+        deleteAlert: false,
+      });
+    }    else {
+      this.setState({
+        onEdit: false,
+      });
+    }
+  }
+
+  _onTouchDelete(data) {
+    this._deleteAPI(`${HOSTNAME}delete?`, data);
+    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._handleClose('delete');
   }
 
   render() {
@@ -480,6 +496,16 @@ export default class ManageVA extends React.Component {
         </div>
       );
     };
+    let actionsDeleteTable = [
+      <RaisedButton
+        label="Cancel" primary={true}
+        onTouchTap={() => this._handleClose('delete')}
+      />,
+      <RaisedButton
+        label="Delete" primary={true}
+        onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
+    ];
     let _renderManageVA = () => {
       return (
         <div>
@@ -498,6 +524,19 @@ export default class ManageVA extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
+                  <Dialog
+                    title="Delete Product"
+                    actions={actionsDeleteTable}
+                    modal={true}
+                    open={this.state.deleteAlert}
+                    onRequestClose={() =>
+                      this.setState({
+                        deleteAlert: false,
+                      })
+                  }
+                  >
+                  Are you sure want to delete this #{this.state.deleteId} product?
+            </Dialog>
                   <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
@@ -529,7 +568,7 @@ export default class ManageVA extends React.Component {
                   onActive={(val) => {
                     this.setState({
                       currentTab: val.props.index,
-                      isRegistered: false,
+                      // isRegistered: false,
                     });
                   }}
                 >
@@ -544,7 +583,7 @@ export default class ManageVA extends React.Component {
                     });
                   }}
                 >
-                  {this.state.loaded && this.state.currentTab == 1 && _renderManageVA()}
+                  {this.state.loaded && _renderManageVA()}
                 </Tab>
               </Tabs>
             </Col>

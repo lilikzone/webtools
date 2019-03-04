@@ -33,7 +33,7 @@ const customerColumn = [
     {id: 3, title: 'Type', prop: 'type', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
     {id: 4, title: 'Reason', prop: 'reason', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
     {id: 5, title: 'Status', prop: 'ticket_status', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 6, title: '', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 6, title: 'Choose Action', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
 ];
 export default class TicketNewCustomer extends React.Component {
   constructor(props) {
