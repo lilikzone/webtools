@@ -43,6 +43,7 @@ export default class Installation extends React.Component {
       load: false,
       onEdit: false,
       onEditCheck: false,
+      onEditRemark: false,
       disableEditVendor: false,
       disableEditInstaller: false,
       isVendorValid: true,
@@ -297,6 +298,7 @@ export default class Installation extends React.Component {
     this.setState({
       onEdit: false,
       onEditCheck: false,
+      onEditRemark: false,
     });
   }
 
@@ -304,6 +306,13 @@ export default class Installation extends React.Component {
     this.setState({
       onEdit: false,
       onEditCheck: true,
+    });
+  }
+  _handleOpenRemark() {
+    this.setState({
+      onEdit: false,
+      onEditCheck: false,
+      onEditRemark: true,
     });
   }
 
@@ -365,6 +374,74 @@ export default class Installation extends React.Component {
         .then((respons) => {
           console.log(respons);
           this.setState({load: false});
+          this._getWoData();
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+  _updateReturnWO() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const id = this.state.dataTemp.id;
+      const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
+      const installer = this.state.dataTemp.installer;
+      const status = this.state.dataTemp.status;
+      const notes = this.state.dataTemp.notes;
+
+      const json = (response) => response.json();
+
+      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`);
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`, {
+        method: 'PUT',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+          this.setState({load: false,
+            onEdit: false,
+            onEditCheck: false,
+            onEditRemark: false});
+
+          this._getWoData();
+        }).catch((error) => {
+          console.log(`error: ${error}`);
+        });
+    }
+  }
+  _updateFinishWO() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const id = this.state.dataTemp.id;
+      const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
+      const installer = this.state.dataTemp.installer;
+      const status = 'Finish installation';
+      const notes = '';
+
+      const json = (response) => response.json();
+
+      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`);
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`, {
+        method: 'PUT',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${cookieData}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(json)
+        .then((respons) => {
+          console.log(respons);
+          this.setState({load: false,
+            onEdit: false,
+            onEditCheck: false,
+            onEditRemark: false});
+
           this._getWoData();
         }).catch((error) => {
           console.log(`error: ${error}`);
@@ -574,19 +651,12 @@ export default class Installation extends React.Component {
             onTouchTap={() => this._handleOpenCheck()}
           />,
           <FlatButton
-            label="Reschedule"
+            label="Update"
             primary={true}
             keyboardFocused={true}
             backgroundColor={blue400}
             style={{color: '#fff', marginLeft: 5}}
-            onTouchTap={() => this._handleClose()}
-          />,
-          <FlatButton
-            label="Return"
-            keyboardFocused={true}
-            backgroundColor={red400}
-            style={{color: '#fff', marginLeft: 5}}
-            onTouchTap={() => this._handleClose()}
+            onTouchTap={() => this._handleOpenRemark()}
           />,
         ]);
       }
@@ -602,7 +672,21 @@ export default class Installation extends React.Component {
         label="Submit"
         primary={true}
         keyboardFocused={true}
+        onTouchTap={() => this._updateFinishWO()}
+      />,
+    ];
+
+    let actionsInstallerRemark = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
         onTouchTap={() => this._handleClose()}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => this._updateReturnWO()}
       />,
     ];
 
@@ -649,6 +733,27 @@ export default class Installation extends React.Component {
                   onRequestClose={() => this._handleClose()}
                 >
                   {_renderModalComponentInstaller()}
+                </Dialog>
+                <Dialog
+                  title="Remark"
+                  actions={actionsInstallerRemark}
+                  modal={false}
+                  open={this.state.onEditRemark}
+                  autoScrollBodyContent={true}
+                  onRequestClose={() => this._handleClose()}
+                >
+                  <TextField
+                    multiLine={true}
+                    floatingLabelText="Notes"
+                    value={this.state.dataTemp.notes}
+                    onChange={(input, data) => {
+                      this.setState({
+                        dataTemp: {...this.state.dataTemp, notes: data},
+                      });
+                    }}
+                    rows={2}
+                    rowsMax={4}
+                  />
                 </Dialog>
                 {this.state.load ? _setVendor(workOrder) : ''}
               </div>
