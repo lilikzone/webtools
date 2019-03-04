@@ -79,6 +79,7 @@ export default class ManageUser extends React.PureComponent {
       deleteAlert: false,
       deleteId: '',
       onEdit: false,
+      updateAlert: false,
       currentTab: 0,
       nameTemp: '',
       emailTemp: '',
@@ -311,7 +312,6 @@ export default class ManageUser extends React.PureComponent {
 
 
   componentDidMount() {
-    console.log('apa ini', this.state.token);
     const json = (response) => response.json();
     fetch('https://source.adlsandbox.com/api/admin/all', {
       method: 'GET',
@@ -478,7 +478,11 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _handleClose(param) {
-    if (param == 'delete') {
+    if (param == 'update') {
+      this.setState({
+        updateAlert: false,
+      });
+    }    else if (param == 'delete') {
       this.setState({
         deleteAlert: false,
       });
@@ -601,7 +605,17 @@ export default class ManageUser extends React.PureComponent {
     });
   }
 
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
   _handleUpdate() {
+    this.setState({
+      updateAlert: true,
+    });
+    this._handleClose();
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const name = this.state.nameTemp;
@@ -678,6 +692,12 @@ export default class ManageUser extends React.PureComponent {
         keyboardFocused={true}
         onTouchTap={() => this._handleUpdate()}
           />,
+    ];
+    let actionsUpdate = (val) => [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={() => this._handleClose(val)}
+      />,
     ];
     let actionsDeleteTable = [
       <RaisedButton
@@ -870,6 +890,13 @@ export default class ManageUser extends React.PureComponent {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="User Updated"
+                    actions={actionsUpdate('update')}
+                    modal={true}
+                    open={this.state.updateAlert}
+                    onRequestClose={() => this._onUpdate()}
+                  />
                   <Dialog
                     title="Edit User"
                     actions={actions}

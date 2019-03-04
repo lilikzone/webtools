@@ -1405,7 +1405,7 @@ export default class ManageCustomer extends React.Component {
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
                   <Dialog
-                    title="Product Updated"
+                    title="Customer Updated"
                     actions={actionsUpdate('update')}
                     modal={true}
                     open={this.state.updateAlert}

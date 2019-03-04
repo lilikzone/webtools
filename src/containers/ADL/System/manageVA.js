@@ -516,7 +516,7 @@ export default class ManageVA extends React.Component {
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
                   <Dialog
-                    title="Edit User"
+                    title="Edit VA"
                     actions={actions}
                     modal={false}
                     open={this.state.onEdit}
