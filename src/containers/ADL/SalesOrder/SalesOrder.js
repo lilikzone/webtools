@@ -19,6 +19,8 @@ import FontIcon from 'material-ui/FontIcon';
 import {grey50, teal300, red400} from 'material-ui/styles/colors';
 import Cookies from 'universal-cookie';
 import moment from  'moment';
+import Dialog from 'material-ui/Dialog';
+import ExistingCustomer from './ExistingCustomer';
 
 
 const cookies = new Cookies();
@@ -46,160 +48,6 @@ const style = {
     },
   },
 };
-
-
-const EditBtn = () => (
-  <div className="text-center">
-    <button className="mdl-button mdl-button--raised">Edit</button>
-  </div>
-);
-
-
-const CheckBtn = () => (
-  <div style={styles.action}>
-    <Checkbox iconStyle={styles.checkbox} />
-  </div>
-);
-
-const idType = ['KTP', 'KITAS', 'SIM'];
-const columnsSelected = [
-  {
-    id: 1,
-    title: 'id',
-    prop: 'id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 2,
-    title: 'Subscriber ID',
-    prop: 'subs_id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 3,
-    title: 'Customer Name',
-    prop: 'customer_name',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 4,
-    title: 'DOB',
-    prop: 'dob',
-    width: '5.5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 5,
-    title: 'DOB Place',
-    prop: 'birth_place',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 6,
-    title: 'Gender',
-    prop: 'gender',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 7,
-    title: 'Group',
-    prop: 'group',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 8,
-    title: 'ID Type',
-    prop: 'type_id',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 9,
-    title: 'ID Number',
-    prop: 'id_number',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 10,
-    title: 'ID Address',
-    prop: 'id_address',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 11,
-    title: 'Primary Phone',
-    prop: 'phone1',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 12,
-    title: 'Alternative Phone 1',
-    prop: 'phone2',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 13,
-    title: 'Alternative Phone 2',
-    prop: 'phone3',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 14,
-    title: 'Email',
-    prop: 'email1',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 15,
-    title: 'Alternative Email',
-    prop: 'email2',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 16,
-    title: 'Created At',
-    prop: 'created_at',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-  {
-    id: 17,
-    title: 'updated At',
-    prop: 'updated_at',
-    width: '5%',
-    headerClass: 'mdl-data-table__cell--non-numeric',
-    cellClass: 'mdl-data-table__cell--non-numeric',
-  },
-];
 
 
 export default class SalesOrder extends React.Component {
@@ -258,25 +106,12 @@ export default class SalesOrder extends React.Component {
       dataCustomer: {},
       selectedCustomer: false,
       notifMessage: '',
+      productLoaded: false,
+      TitleMessage: '',
+      warningMessage: '',
+      openWarning: false,
     };
-    const ChooseCustBtn = (data) => (
-      <div className="text-center">
-        <button
-          className="mdl-button mdl-button--raised"
-          onClick={() => {
-            const custChosen = [];
-            custChosen.push(data);
-            this.setState({
-              custChosen: custChosen,
-              selectedCustomer: true,
-            });
-          }
-        }
 
-        >
-        Choose</button>
-      </div>
-    );
     const ChooseBtn = (data) => (
       <div className="text-center">
         <button
@@ -300,178 +135,7 @@ export default class SalesOrder extends React.Component {
       </div>
     );
 
-    const ChooseBtnExist = (data) => (
-      <div className="text-center">
-        <button
-          className="mdl-button mdl-button--raised"
-          onClick={() => {
-            const dataArray = [];
-            dataArray.push(data);
-            this.setState({
-              dataSelectedProduct: dataArray,
-              isGetAllProduct: false,
-              isGetSelectedAllProduct: true,
-              productId: data.id,
-            });
-          }
-        }
 
-        >
-        Choose</button>
-      </div>
-    );
-    this.columns = [
-      {
-        id: 1,
-        title: 'id',
-        prop: 'id',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 2,
-        title: 'Subscriber ID',
-        prop: 'subs_id',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 2,
-        title: 'Customer Name',
-        prop: 'customer_name',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 3,
-        title: 'DOB',
-        prop: 'dob',
-        width: '5.5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 4,
-        title: 'DOB Place',
-        prop: 'birth_place',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 5,
-        title: 'Gender',
-        prop: 'gender',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 6,
-        title: 'Group',
-        prop: 'group',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 7,
-        title: 'ID Type',
-        prop: 'type_id',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 8,
-        title: 'ID Number',
-        prop: 'id_number',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 9,
-        title: 'ID Address',
-        prop: 'id_address',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 10,
-        title: 'Primary Phone',
-        prop: 'phone1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: 'Alternative Phone 1',
-        prop: 'phone2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Alternative Phone 2',
-        prop: 'phone3',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 13,
-        title: 'Email',
-        prop: 'email1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 14,
-        title: 'Alternative Email',
-        prop: 'email2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 15,
-        title: 'Created At',
-        prop: 'created_at',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 16,
-        title: 'updated At',
-        prop: 'updated_at',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      // {
-      //   id: 17,
-      //   title: 'Action',
-      //   render: EditBtn,
-      //   width: '5%',
-      //   headerClass: 'mdl-data-table__cell--non-numeric',
-      // },
-      {
-        id: 18,
-        title: 'Action',
-        render: ChooseCustBtn,
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
-    ];
     this.Productcolumns = [
       {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
       {id: 2, title: 'name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -490,13 +154,6 @@ export default class SalesOrder extends React.Component {
 
   _handleTouchTap() {
     const name = this.state.textField.name;
-    const olt = this.state.textField.olt;
-    const city = this.state.textField.city;
-    const region = this.state.textField.region;
-    const fdt = this.state.textField.fdt;
-    const cluster = this.state.textField.cluster;
-    const street = this.state.textField.street;
-    const fullAddress = this.state.textField.fullAddress;
     const homepassedId = this.state.textField.homepassedId;
     const typePayment = this.state.textField.typePayment;
     const idType = this.state.textField.idType;
@@ -536,28 +193,35 @@ export default class SalesOrder extends React.Component {
         if (respons.status === 200) {
           this.setState({
             isRegistered: true,
-            notifMessage: respons.message,
+            openWarning: true,
+            warningMessage: respons.message,
+            TitleMessage: 'Success',
           });
         }
       }).catch((error) => {
+        this.setState({
+          openWarning: true,
+          warningMessage: `${error}`,
+          TitleMessage: 'Error',
+        });
         console.log(`error: ${error}`);
       });
 
-      fetch('https://source.adlsandbox.com/api/customer/all', {
-        method: 'GET',
-        type: 'cors',
-        headers: {
-          'Authorization': `Bearer ${cookieData}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(json)
-      .then((respons) => {
-        console.log(respons);
-        this.setState({dataCustomer: respons});
-      }).catch((error) => {
-        console.log(`error: ${error}`);
-      });
+      // fetch('https://source.adlsandbox.com/api/customer/all', {
+      //   method: 'GET',
+      //   type: 'cors',
+      //   headers: {
+      //     'Authorization': `Bearer ${cookieData}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      // .then(json)
+      // .then((respons) => {
+      //   console.log(respons);
+      //   this.setState({dataCustomer: respons});
+      // }).catch((error) => {
+      //   console.log(`error: ${error}`);
+      // });
     }
   }
 
@@ -590,7 +254,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataCity.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, city: dataInput, homepassedId: ''}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, city: dataInput.toUpperCase(), homepassedId: ''}, // homepassedID just for SAMPLE
       });
       this._getClusterDataAPI(dataInput);
     } else {
@@ -607,7 +271,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataCluster.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, cluster: dataInput}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, cluster: dataInput.toUpperCase()}, // homepassedID just for SAMPLE
       });
       this._getStreetDataAPI(dataInput);
     } else {
@@ -624,7 +288,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataStreet.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, street: dataInput, homepassedId: ''}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, street: dataInput.toUpperCase(), homepassedId: ''}, // homepassedID just for SAMPLE
       });
       this._getFullAddressDataAPI(dataInput);
     } else {
@@ -706,26 +370,29 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
-        this.setState({dataProduct: respons});
+        this.setState({
+          dataProduct: respons.data,
+          productLoaded: true,
+        });
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
 
-      fetch('https://source.adlsandbox.com/api/customer/all', {
-        method: 'GET',
-        type: 'cors',
-        headers: {
-          'Authorization': `Bearer ${cookieData}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(json)
-      .then((respons) => {
-        console.log(respons);
-        this.setState({dataCustomer: respons, loaded: true});
-      }).catch((error) => {
-        console.log(`error: ${error}`);
-      });
+      // fetch('https://source.adlsandbox.com/api/customer/all', {
+      //   method: 'GET',
+      //   type: 'cors',
+      //   headers: {
+      //     'Authorization': `Bearer ${cookieData}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      // .then(json)
+      // .then((respons) => {
+      //   console.log(respons);
+      //   this.setState({dataCustomer: respons, loaded: true});
+      // }).catch((error) => {
+      //   console.log(`error: ${error}`);
+      // });
     }
   }
 
@@ -849,6 +516,10 @@ export default class SalesOrder extends React.Component {
           console.log(`error: ${error}`);
         });
     }
+  }
+
+  handleClose = () => {
+    this.setState({openWarning: false});
   }
 
   render() {
@@ -983,6 +654,7 @@ export default class SalesOrder extends React.Component {
                   isGetProduct: true,
                 });
               }}
+              disabled={!this.state.productLoaded}
             />
           </form>
         </Card>
@@ -1082,6 +754,7 @@ export default class SalesOrder extends React.Component {
                   <MenuItem  value="KTP" primaryText="KTP" />
                   <MenuItem  value="KITAS" primaryText="KITAS" />
                   <MenuItem  value="SIM" primaryText="SIM" />
+                  <MenuItem  value="Passport" primaryText="Passport" />
                 </SelectField>
                 <TextField
                   required={true}
@@ -1245,32 +918,7 @@ export default class SalesOrder extends React.Component {
         </div>);
       }
     };
-    let _selectedCustomer = (selectedCustomer) => {
-      if (selectedCustomer) {
-        return (<div>
-          <h1 style={{marginTop: 30, textAlign: 'center'}}>Customer</h1>
-          <Card style={style.card}>
-            <RaisedButton
-              backgroundColor={teal300}
-              style={{marginTop: 10}}
-              labelColor={grey50}
-              containerElement="label"
-              label="Change Customer"
-              // onClick={this._reselectProduct}
-            />
-            <MaterialContainer
-              keys="id"
-              className="mdl-data-table"
-              columns={columnsSelected}
-              dataArray={this.state.custChosen}
-              draggable={false}
-              sortable={false}
-              sortBy={{prop: 'id', order: 'desc'}}
-            />
-          </Card>
-        </div>);
-      }
-    };
+
     let _renderCreateCustomer = () => {
       return (
         <div>
@@ -1287,42 +935,25 @@ export default class SalesOrder extends React.Component {
         </div>
       );
     };
-    let _renderManageUser = () => {
-      return (
-        <div>
-          <h1 style={{marginTop: 15, textAlign: 'center'}}>Customer Table</h1>
-          <Card style={style.card}>
-            <Row>
-              <Col xs={12} md={12} lg={12}>
-                <div className="mdl-layout mdl-layout--no-drawer-button container">
-                  <div className="mdl-layout--fixed-drawer" id="asa">
-                    <br />
-                    <MaterialContainer
-                      keys="id"
-                      className="mdl-data-table"
-                      columns={this.  columns}
-                      dataArray={this.state.dataCustomer}
-                      draggable={false}
-                      sortable={false}
-                      sortBy={{prop: 'id', order: 'asc'}}
-                      pageSizeOptions={[5]}
-                    />
-                    {_selectedCustomer(this.state.selectedCustomer)}
-                    {_renderProduct(this.state.isGetAllProduct)}
-                    {_renderSelectedProduct(this.state.isGetSelectedAllProduct)}
-                    {_renderButton(this.state.textField.homepassedId)}
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-        </div>
-      );
-    };
+    let action = [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
+            <Dialog
+              title={this.state.TitleMessage}
+              actions={action}
+              modal={false}
+              open={this.state.openWarning}
+              onRequestClose={this.handleClose}
+            >
+              {this.state.warningMessage}
+            </Dialog>
             <Tabs value={this.state.currentTab}>
               <Tab
                 value={0}
@@ -1334,7 +965,7 @@ export default class SalesOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 0 && _renderCreateCustomer()}
+                {_renderCreateCustomer()}
               </Tab>
               <Tab
                 value={1}
@@ -1345,7 +976,7 @@ export default class SalesOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
+                <ExistingCustomer />
               </Tab>
             </Tabs>
             <Snackbar
