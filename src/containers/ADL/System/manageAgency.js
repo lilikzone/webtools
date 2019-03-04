@@ -23,6 +23,7 @@ export default class ManageAgency extends React.Component {
     this.data = [];
     this.state = {
       isAgencyValid: true,
+      updateAlert: false,
       isRegistered: false,
       deleteAlert: false,
       deleteId: '',
@@ -121,6 +122,12 @@ export default class ManageAgency extends React.Component {
     this._getAPI(`${HOSTNAME}all`, 'textField');
   }
 
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
   _getAPI(apiUrl, stateName) {
     fetch(apiUrl,
       {
@@ -134,7 +141,7 @@ export default class ManageAgency extends React.Component {
     .then((responseJson) => {
       if (responseJson) {
         this.setState({
-          [stateName]: responseJson,
+          [stateName]: responseJson.data,
           loaded: true,
         });
       }
@@ -202,10 +209,10 @@ export default class ManageAgency extends React.Component {
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'textField');
-        this.setState({
-          currentTab: 0,
-          redirect: true,
-        });
+        // this.setState({
+        //   currentTab: 0,
+        //   redirect: true,
+        // });
       }
 
       )
@@ -239,11 +246,20 @@ export default class ManageAgency extends React.Component {
     });
   }
   _handleUpdate() {
+    this.setState({
+      loaded: false,
+      updateAlert: true,
+    });
     this._putAPI(`${HOSTNAME}`);
+    this._handleClose();
   }
 
   _handleClose(param) {
-    if (param == 'delete') {
+    if (param == 'update') {
+      this.setState({
+        updateAlert: false,
+      });
+    }    else if (param == 'delete') {
       this.setState({
         deleteAlert: false,
       });
@@ -254,6 +270,10 @@ export default class ManageAgency extends React.Component {
     }
   }
   _onTouchDelete(data) {
+    this.setState({
+      loaded: false,
+      redirect: true,
+    });
     this._deleteAPI(`${HOSTNAME}delete?`, data);
     this._getAPI(`${HOSTNAME}all`, 'allData');
     this._handleClose('delete');
@@ -291,6 +311,12 @@ export default class ManageAgency extends React.Component {
       <RaisedButton
         label="Delete" primary={true}
         onTouchTap={() => this._onTouchDelete(this.state.deleteId)}
+      />,
+    ];
+    let actionsUpdate = (val) => [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={() => this._handleClose(val)}
       />,
     ];
     let _renderModalComponent = () => {
@@ -399,6 +425,13 @@ export default class ManageAgency extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
+                  <Dialog
+                    title="Product Updated"
+                    actions={actionsUpdate('update')}
+                    modal={true}
+                    open={this.state.updateAlert}
+                    onRequestClose={() => this._onUpdate()}
+                  />
                   <Dialog
                     title="Edit User"
                     actions={actions}
