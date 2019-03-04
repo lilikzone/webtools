@@ -9,14 +9,12 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 
+// report only
+
 
 export default class WorkingOrder extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      workOrderData: [],
-      cookies: '',
-    };
     this.WorkOrdersColumns = [
       {
         id: 0,
@@ -120,6 +118,10 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+    this.state = {
+      workOrderData: [],
+      cookies: '',
+    };
   }
 
   componentWillMount() {
