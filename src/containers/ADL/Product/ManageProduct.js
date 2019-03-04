@@ -302,7 +302,7 @@ export default class ManageProduct extends React.Component {
         console.log('get', responseJson);
         if (responseJson) {
           this.setState({
-            productAll: responseJson,
+            productAll: responseJson.data,
             loaded: true,
           });
         }
