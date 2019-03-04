@@ -47,6 +47,7 @@ export default class Installation extends React.Component {
       disableEditInstaller: false,
       isVendorValid: true,
       isInstallerValid: true,
+      status: 'Dispatch to dispatcher',
     };
     const EditBtn = (data) => (
       <div className="text-center">
@@ -236,6 +237,8 @@ export default class Installation extends React.Component {
           console.log(`error: ${error}`);
         });
       } else if (role[1] === 'dispatcher') {
+        this.setState({status: 'Dispatch to installer'});
+
         fetch('https://source.adlsandbox.com/api/admin/search?keyword=installer', {
           method: 'GET',
           type: 'cors',
@@ -344,11 +347,10 @@ export default class Installation extends React.Component {
       const id = this.state.dataTemp.id;
       const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
       const installer = this.state.dataTemp.installer;
-      const status = 'Dispatch to dispatcher';
-      if (installer !== '' && installer !== undefined) {
-        const status = 'Dispatch to installer';
-      }
 
+      console.log(installer);
+      const status = this.state.status;
+      console.log(status);
       const json = (response) => response.json();
       console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
       fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`, {
