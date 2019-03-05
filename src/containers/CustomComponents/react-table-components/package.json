@@ -1,0 +1,98 @@
+{
+  "_args": [
+    [
+      "react-table-components@0.0.7",
+      "C:\\Users\\Admin\\Documents\\ibase-webtools-react"
+    ]
+  ],
+  "_from": "react-table-components@0.0.7",
+  "_id": "react-table-components@0.0.7",
+  "_inBundle": false,
+  "_integrity": "sha1-7H1G+chtSwzo3zA0ZhKpeWUg8Yo=",
+  "_location": "/react-table-components",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-table-components@0.0.7",
+    "name": "react-table-components",
+    "escapedName": "react-table-components",
+    "rawSpec": "0.0.7",
+    "saveSpec": null,
+    "fetchSpec": "0.0.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-table-components/-/react-table-components-0.0.7.tgz",
+  "_spec": "0.0.7",
+  "_where": "C:\\Users\\Admin\\Documents\\ibase-webtools-react",
+  "author": {
+    "name": "Vladimir Kolebidenko"
+  },
+  "bugs": {
+    "url": "https://github.com/votsa/react-table-components/issues"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "description": "React components for rendering table data",
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-eslint": "^7.2.1",
+    "babel-jest": "^18.0.0",
+    "babel-loader": "^6.3.0",
+    "babel-plugin-lodash": "^3.2.11",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "css-loader": "^0.28.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "extract-text-webpack-plugin": "^2.0.0-beta.5",
+    "jest": "^18.1.0",
+    "lodash-webpack-plugin": "^0.11.2",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  },
+  "files": [
+    "styles",
+    "lib",
+    "dist",
+    "src"
+  ],
+  "homepage": "https://github.com/votsa/react-table-components#readme",
+  "jest": {
+    "testPathDirs": [
+      "src"
+    ]
+  },
+  "keywords": [
+    "react",
+    "table"
+  ],
+  "license": "MIT",
+  "main": "./lib/index",
+  "name": "react-table-components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/votsa/react-table-components.git"
+  },
+  "scripts": {
+    "build": "npm run test && webpack --config webpack.config.prod.js && babel src -d lib",
+    "build-demo": "webpack --config demo/webpack.config.prod.js",
+    "lint": "eslint src --ext js,jsx --fix; exit 0",
+    "start": "webpack-dev-server -d --config demo/webpack.config.js",
+    "test": "npm run lint && jest"
+  },
+  "version": "0.0.7"
+}
