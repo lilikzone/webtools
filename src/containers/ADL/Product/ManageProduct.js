@@ -16,6 +16,10 @@ import DatePicker from 'material-ui/DatePicker';
 import Cookies from 'universal-cookie';
 import Dialog from 'material-ui/Dialog';
 import CircularProgress from 'material-ui/CircularProgress';
+import {CSVLink} from 'react-csv';
+import {red400} from 'material-ui/styles/colors';
+import moment from  'moment';
+import ChipInput from 'material-ui-chip-input';
 
 const cookies = new Cookies();
 import '../../table/datatable.scss';
@@ -107,6 +111,7 @@ export default class ManageProduct extends React.Component {
       warningMessage: '',
       idUpdate: '',
       dataPromoArea: [],
+      restartField: false,
     };
 
     const EditBtn = (data) => (
@@ -220,7 +225,7 @@ export default class ManageProduct extends React.Component {
       },
       {
         id: 12,
-        title: 'Promo Price',
+        title: 'Promo Percentage (%)',
         prop: 'promo_price',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -257,6 +262,14 @@ export default class ManageProduct extends React.Component {
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.dataPromoArea != this.state.dataPromoArea) {
+      this.setState({
+        restartField: true,
+      });
+    }
   }
   componentWillMount() {
     if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
@@ -500,12 +513,17 @@ export default class ManageProduct extends React.Component {
   _handleValidationPromoArea(input, data) {
     let dataInput = input.toLowerCase();
     let dataArea = data.map((val) => val.toLowerCase());
-
     if (dataArea.includes(dataInput)) {
       this.setState({
         textField: {...this.state.textField, promo_area: dataInput},
       });
     }
+  }
+
+  _requestBeforeAdd(data, val) {
+    let arr = data.map((data) => data.toLowerCase());
+    console.log('beforrr', !arr.includes(val));
+    return !arr.includes(val);
   }
 
   _getAPICity() {
@@ -587,8 +605,21 @@ export default class ManageProduct extends React.Component {
       openEdit: false,
     });
   }
+  _reconstructExportData(data) {
+    let exportData = [];
+    if (data.length > 0) {
+      let header = Object.keys(data[0]);
+      let dataProperties = data.map((val) => {
+        return Object.values(val);
+      });
+      exportData.push(header);
+      exportData.push(...dataProperties);
+    }
+    return exportData;
+  }
 
   render() {
+    console.log('oookkk', this.state.textField.promo_area);
     let _renderCreateProduct = () => {
       const promo_activation = this.state.textField.promo;
       // console.log(promo_activation);
@@ -747,6 +778,7 @@ export default class ManageProduct extends React.Component {
                         onChange={(e, index, value) => {
                           this.setState({
                             textField: {...this.state.textField, promo_type: value},
+                            restartField: false,
                           });
 
                           if (value === 'olt') {
@@ -778,7 +810,7 @@ export default class ManageProduct extends React.Component {
                         <MenuItem value={'fdt'} primaryText="FDT" />
                         <MenuItem value={'cluster'} primaryText="Cluster" />
                       </SelectField>
-                      <div>
+                      {/* <div>
                         <AutoComplete
                           name="promo_area"
                           fullWidth={true}
@@ -791,12 +823,22 @@ export default class ManageProduct extends React.Component {
                             this._handleValidationPromoArea(input, dataSource);
                           }}
                         />
-                      </div>
+                      </div> */}
+                      {this.state.restartField && <ChipInput
+                        allowDuplicates={false}
+                        hintText="Promo Area"
+                        floatingLabelText="Promo Area"
+                        dataSource={this.state.dataPromoArea}
+                        onChange={((val) =>
+                          this.setState({
+                            textField: {...this.state.textField, promo_area: val},
+                          }))}
+                                                  />}
                       <TextField
                         required={true}
-                        hintText="Promo Price"
-                        floatingLabelText="Promo Price"
-                        name="promo_price"
+                        hintText="Promo Percentage (%)"
+                        floatingLabelText="Promo Percentage (%)"
+                        name="promo_percentage"
                         fullWidth={true}
                         type="number"
                         onChange={(e, input) => {
@@ -830,6 +872,19 @@ export default class ManageProduct extends React.Component {
             {/* <Card style={styles.card}> */}
             <div className="mdl-layout mdl-layout--no-drawer-button container">
               <div className="mdl-layout--fixed-drawer" id="asa">
+                <RaisedButton
+                  backgroundColor={red400}
+                  style={{marginTop: 10}}
+                >
+                  <CSVLink
+                    data={this.state.productAll}
+                    filename={`Manage Product ${new Date(moment())}.csv`}
+                    style={{color: 'white'}}
+                    target="_blank"
+                  >
+                      EXPORT
+                    </CSVLink>
+                </RaisedButton>
                 <br />
                 <MaterialContainer
                   keys="id"
@@ -1063,9 +1118,9 @@ export default class ManageProduct extends React.Component {
               </div>
               <TextField
                 required={true}
-                hintText="Promo Price"
-                floatingLabelText="Promo Price"
-                name="promo_price"
+                hintText="Promo Percentage"
+                floatingLabelText="Promo Percentage"
+                name="promo_percentage"
                 fullWidth={true}
                 type="number"
                 onChange={(e, input) => {
