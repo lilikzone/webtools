@@ -62,6 +62,7 @@ export default class ExistingCustomer extends Component {
       dataFullAddress: [],
       dataCustomer: [],
       selectedCustomer: [],
+      customerData: [],
       isClusterValid: true,
       isStreetValid: true,
       isFullAddressValid: true,
@@ -70,6 +71,9 @@ export default class ExistingCustomer extends Component {
       CustomerLoaded: false,
       isGetProduct: false,
       loadChooseCustomer: false,
+      openWarning: false,
+      warningMessage: '',
+      TitleMessage: '',
     };
 
     const ChooseCustBtn = (data) => (
@@ -85,6 +89,7 @@ export default class ExistingCustomer extends Component {
               loadSelectedCustomer: true,
               loadChooseCustomer: false,
               textField: data,
+              customerData: data,
             });
           }
           }
@@ -186,54 +191,54 @@ export default class ExistingCustomer extends Component {
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 10,
-        title: 'ID Address',
-        prop: 'id_address',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: 'Primary Phone',
-        prop: 'phone1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Alternative Phone 1',
-        prop: 'phone2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 13,
-        title: 'Alternative Phone 2',
-        prop: 'phone3',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 14,
-        title: 'Email',
-        prop: 'email1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 15,
-        title: 'Alternative Email',
-        prop: 'email2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 10,
+      //   title: 'ID Address',
+      //   prop: 'id_address',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 11,
+      //   title: 'Primary Phone',
+      //   prop: 'phone1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 12,
+      //   title: 'Alternative Phone 1',
+      //   prop: 'phone2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 13,
+      //   title: 'Alternative Phone 2',
+      //   prop: 'phone3',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 14,
+      //   title: 'Email',
+      //   prop: 'email1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 15,
+      //   title: 'Alternative Email',
+      //   prop: 'email2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
       // {
       //   id: 16,
       //   title: 'Created At',
@@ -257,6 +262,151 @@ export default class ExistingCustomer extends Component {
         width: '5%',
         headerClass: 'mdl-data-table__cell--non-numeric',
       },
+    ];
+    this.custSelectedColumns = [
+      {
+        id: 1,
+        title: 'id',
+        prop: 'id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Subscriber ID',
+        prop: 'subs_id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Customer Name',
+        prop: 'customer_name',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'DOB',
+        prop: 'dob',
+        width: '5.5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'DOB Place',
+        prop: 'birth_place',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'Gender',
+        prop: 'gender',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Group',
+        prop: 'group',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'ID Type',
+        prop: 'type_id',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
+        title: 'ID Number',
+        prop: 'id_number',
+        width: '5%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      // {
+      //   id: 10,
+      //   title: 'ID Address',
+      //   prop: 'id_address',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 11,
+      //   title: 'Primary Phone',
+      //   prop: 'phone1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 12,
+      //   title: 'Alternative Phone 1',
+      //   prop: 'phone2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 13,
+      //   title: 'Alternative Phone 2',
+      //   prop: 'phone3',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 14,
+      //   title: 'Email',
+      //   prop: 'email1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 15,
+      //   title: 'Alternative Email',
+      //   prop: 'email2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 16,
+      //   title: 'Created At',
+      //   prop: 'created_at',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 17,
+      //   title: 'updated At',
+      //   prop: 'updated_at',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 18,
+      //   title: 'Action',
+      //   render: ChooseCustBtn,
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      // },
     ];
     this.Productcolumns = [
       {id: 1, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -415,6 +565,7 @@ export default class ExistingCustomer extends Component {
     }
   }
 
+
   _getClusterDataAPI(city) {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -537,6 +688,45 @@ export default class ExistingCustomer extends Component {
     }
   }
 
+  _handleTouchTap() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const cust_id = this.state.customerData;
+      const payment_type = this.state.textField.typePayment;
+      const homepass_id = this.state.textField.homepassedId;
+    }
+  }
+
+  _createSO() {
+    fetch(`https://source.adlsandbox.com/api/order/create-existing/${cust_id}?status=new&payment_type=${payment_type}`, {
+      method: 'POST',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${cookieData}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(json)
+      .then((respons) => {
+        // console.log(respons);
+        if (respons.status === 200) {
+          // this._uploadFileOrder(respons.sales_order.id);
+          this.setState({
+            openWarning: true,
+            warningMessage: `${respons}`,
+            TitleMessage: 'Success',
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openWarning: true,
+          warningMessage: `${error}`,
+          TitleMessage: 'Error',
+        });
+        console.log(`error: ${error}`);
+      });
+  }
+
   _reselectCustomer = () => {
     this.setState({
       loadChooseCustomer: true,
@@ -544,8 +734,20 @@ export default class ExistingCustomer extends Component {
     });
   }
 
+  _handleValidationTypePayment(input, index, data) {
+    let dataInput = data;
+
+    this.setState({
+      textField: {...this.state.textField, typePayment: dataInput},
+    });
+  }
+
   _reselectProduct = () => {
     this.setState({selectedProduct: false, isGetProduct: true});
+  }
+
+  handleClose = () => {
+    this.setState({openWarning: false});
   }
 
   render() {
@@ -591,7 +793,7 @@ export default class ExistingCustomer extends Component {
                 <MaterialContainer
                   keys="id"
                   className="mdl-data-table"
-                  columns={this.columns}
+                  columns={this.custSelectedColumns}
                   dataArray={this.state.selectedCustomer}
                   draggable={false}
                   sortable={false}
@@ -610,12 +812,20 @@ export default class ExistingCustomer extends Component {
           <form>
             <h2>Customer Address</h2>
             <Col xs={12} md={6} lg={6}>
+              <TextField
+                fullWidth={true}
+                required={true}
+                floatingLabelFixed="true"
+                floatingLabelText="Address"
+                disabled={true}
+                value={this.state.customerData.id_address}
+              />
               <AutoComplete
                 fullWidth={true}
                 required={true}
                 floatingLabelText="City"
                 hintText="City"
-                searchText={this.state.textField.city}
+                searchText={this.state.textField.address}
                 filter={AutoComplete.caseInsensitiveFilter}
                 openOnFocus={true}
                 dataSource={this.state.dataCity}
@@ -775,224 +985,224 @@ export default class ExistingCustomer extends Component {
         <div>
           <h2 style={{marginTop: 15}}>Customer Data</h2>
 
-          <Card style={style.card}>
-            <form>
-              <Col xs={12} md={6} lg={6}>
-                <TextField
-                  disabled={true}
-                  value={this.state.textField.homepassedId}
-                  hintText="Homepassed ID"
-                  floatingLabelText="Homepassed ID"
-                  fullWidth={true}
-                />
-                <SelectField
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Type Payment"
-                  name="type_payment"
-                  value={this.state.textField.typePayment}
-                  onChange={(input, index, dataSource) => {
-                    this._handleValidationTypePayment(input, index, dataSource);
-                  }}
-                >
-                  <MenuItem  value="pbi" primaryText="Regular" />
-                  <MenuItem  value="pai" primaryText="Pay after Installation" />
-                </SelectField>
-                <TextField
-                  value={this.state.textField.name}
-                  hintText="Name"
-                  floatingLabelText="Name"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this._handleValidationName(e, input);
-                  }}
-                />
-                <DatePicker
-                  hintText="Date of Birth"
-                  floatingLabelText="Date of Birth"
-                  fullWidth={true}
-                  value={this.state.textField.dob}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        dob: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  floatingLabelText="DoB Place"
-                  value={this.state.textField.dobPlace}
-                  fullWidth={true}
-                  onChange={(e, value) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        dobPlace: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectField
-                  fullWidth={true}
-                  required={true}
-                  floatingLabelText="Gender"
-                  name="gender"
-                  value={this.state.textField.gender}
-                  onChange={(input, index, dataSource) => {
-                    this._handleValidationGender(input, index, dataSource);
-                  }}
-                >
-                  <MenuItem  value="male" primaryText="Male" />
-                  <MenuItem  value="female" primaryText="Female" />
-                </SelectField>
-                <SelectField
-                  floatingLabelText="ID Type"
-                  fullWidth={true}
-                  value={this.state.textField.idType}
-                  onChange={(e, index, value) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        idType: value,
-                      },
-                    });
-                  }}
-                >
-                  <MenuItem  value="KTP" primaryText="KTP" />
-                  <MenuItem  value="KITAS" primaryText="KITAS" />
-                  <MenuItem  value="SIM" primaryText="SIM" />
-                  <MenuItem  value="Passport" primaryText="Passport" />
-                </SelectField>
-                <TextField
-                  required={true}
-                  value={this.state.textField.idNumber}
-                  hintText="ID Number"
-                  floatingLabelText="ID Number"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        idNumber: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  hintText="Address"
-                  floatingLabelText="Address"
-                  value={this.state.textField.address}
-                  multiLine={true}
-                  rows={2}
-                  rowsMax={4}
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        address: input,
-                      },
-                    });
-                  }}
-                />
-                <SelectField
-                  floatingLabelText="Customer Group"
-                  fullWidth={true}
-                  value={this.state.textField.group}
-                  onChange={(e, index, value) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        group: value,
-                      },
-                    });
-                  }}
-                >
-                  <MenuItem  value="REGULAR" primaryText="REGULAR" />
-                  <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
-                  <MenuItem  value="VIP" primaryText="VIP" />
-                </SelectField>
-                <TextField
-                  required={true}
-                  value={this.state.textField.phone1}
-                  hintText="+62"
-                  floatingLabelText="Phone 1"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        phone1: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  required={true}
-                  value={this.state.textField.phone2}
-                  hintText="+62"
-                  floatingLabelText="Phone 2"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        phone2: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  required={true}
-                  value={this.state.textField.phone3}
-                  hintText="+62"
-                  floatingLabelText="Phone 3"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        phone3: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  required={true}
-                  value={this.state.textField.email1}
-                  hintText="Email"
-                  floatingLabelText="Email 1"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        email1: input,
-                      },
-                    });
-                  }}
-                />
-                <TextField
-                  required={true}
-                  value={this.state.textField.email2}
-                  hintText="Email"
-                  floatingLabelText="Email 2"
-                  fullWidth={true}
-                  onChange={(e, input) => {
-                    this.setState({
-                      textField: {
-                        ...this.state.textField,
-                        email2: input,
-                      },
-                    });
-                  }}
-                />
+          {/* <Card style={style.card}> */}
+          <form>
+            <Col xs={12} md={6} lg={6}>
+              <TextField
+                disabled={true}
+                value={this.state.textField.homepassedId}
+                hintText="Homepassed ID"
+                floatingLabelText="Homepassed ID"
+                fullWidth={true}
+              />
+              <SelectField
+                fullWidth={true}
+                required={true}
+                floatingLabelText="Type Payment"
+                name="type_payment"
+                value={this.state.textField.typePayment}
+                onChange={(input, index, dataSource) => {
+                  this._handleValidationTypePayment(input, index, dataSource);
+                }}
+              >
+                <MenuItem  value="pbi" primaryText="Regular" />
+                <MenuItem  value="pai" primaryText="Pay after Installation" />
+              </SelectField>
+              <TextField
+                value={this.state.textField.name}
+                hintText="Name"
+                floatingLabelText="Name"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this._handleValidationName(e, input);
+                }}
+              />
+              <DatePicker
+                hintText="Date of Birth"
+                floatingLabelText="Date of Birth"
+                fullWidth={true}
+                value={this.state.textField.dob}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      dob: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                floatingLabelText="DoB Place"
+                value={this.state.textField.dobPlace}
+                fullWidth={true}
+                onChange={(e, value) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      dobPlace: value,
+                    },
+                  });
+                }}
+              />
+              <SelectField
+                fullWidth={true}
+                required={true}
+                floatingLabelText="Gender"
+                name="gender"
+                value={this.state.textField.gender}
+                onChange={(input, index, dataSource) => {
+                  this._handleValidationGender(input, index, dataSource);
+                }}
+              >
+                <MenuItem  value="male" primaryText="Male" />
+                <MenuItem  value="female" primaryText="Female" />
+              </SelectField>
+              <SelectField
+                floatingLabelText="ID Type"
+                fullWidth={true}
+                value={this.state.textField.idType}
+                onChange={(e, index, value) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      idType: value,
+                    },
+                  });
+                }}
+              >
+                <MenuItem  value="KTP" primaryText="KTP" />
+                <MenuItem  value="KITAS" primaryText="KITAS" />
+                <MenuItem  value="SIM" primaryText="SIM" />
+                <MenuItem  value="Passport" primaryText="Passport" />
+              </SelectField>
+              <TextField
+                required={true}
+                value={this.state.textField.idNumber}
+                hintText="ID Number"
+                floatingLabelText="ID Number"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      idNumber: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                hintText="Address"
+                floatingLabelText="Address"
+                value={this.state.textField.address}
+                multiLine={true}
+                rows={2}
+                rowsMax={4}
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      address: input,
+                    },
+                  });
+                }}
+              />
+              <SelectField
+                floatingLabelText="Customer Group"
+                fullWidth={true}
+                value={this.state.textField.group}
+                onChange={(e, index, value) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      group: value,
+                    },
+                  });
+                }}
+              >
+                <MenuItem  value="REGULAR" primaryText="REGULAR" />
+                <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
+                <MenuItem  value="VIP" primaryText="VIP" />
+              </SelectField>
+              <TextField
+                required={true}
+                value={this.state.textField.phone1}
+                hintText="+62"
+                floatingLabelText="Phone 1"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      phone1: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                required={true}
+                value={this.state.textField.phone2}
+                hintText="+62"
+                floatingLabelText="Phone 2"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      phone2: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                required={true}
+                value={this.state.textField.phone3}
+                hintText="+62"
+                floatingLabelText="Phone 3"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      phone3: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                required={true}
+                value={this.state.textField.email1}
+                hintText="Email"
+                floatingLabelText="Email 1"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      email1: input,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                required={true}
+                value={this.state.textField.email2}
+                hintText="Email"
+                floatingLabelText="Email 2"
+                fullWidth={true}
+                onChange={(e, input) => {
+                  this.setState({
+                    textField: {
+                      ...this.state.textField,
+                      email2: input,
+                    },
+                  });
+                }}
+              />
 
-              </Col>
-            </form>
-          </Card>
+            </Col>
+          </form>
+          {/* </Card> */}
         </div>
       );
     };
@@ -1007,11 +1217,26 @@ export default class ExistingCustomer extends Component {
         />
       );
     };
+    let action = [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
           <h2>Choose customer</h2>
           <Col xs={12} md={12} lg={12} >
+            <Dialog
+              title={this.state.TitleMessage}
+              actions={action}
+              modal={false}
+              open={this.state.openWarning}
+              onRequestClose={this.handleClose}
+            >
+              {this.state.warningMessage}
+            </Dialog>
             {_renderCustomerTable(this.state.loadChooseCustomer)}
             {_renderSelectedCustomerTable(this.state.loadSelectedCustomer)}
             {_renderCustomerAddressForm()}
