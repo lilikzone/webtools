@@ -158,6 +158,7 @@ export default class SalesOrder extends React.Component {
 
 
   _handleTouchTap() {
+    // console.log('tai');
     const name = this.state.textField.name;
     const homepassedId = this.state.textField.homepassedId;
     const typePayment = this.state.textField.typePayment;
@@ -177,11 +178,12 @@ export default class SalesOrder extends React.Component {
     const product_id = this.state.productId;
     const group = this.state.textField.group;
 
+
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const accessData = cookies.get('npaccess');
       const username = accessData.split('+');
-      console.log(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
+      // console.log(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
       fetch(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`, {
@@ -196,12 +198,7 @@ export default class SalesOrder extends React.Component {
       .then((respons) => {
         // console.log(respons);
         if (respons.status === 200) {
-          this.setState({
-            isRegistered: true,
-            openWarning: true,
-            warningMessage: respons.message,
-            TitleMessage: 'Success',
-          });
+          this._uploadFileOrder(respons.sales_order.id);
         }
       }).catch((error) => {
         this.setState({
@@ -211,15 +208,18 @@ export default class SalesOrder extends React.Component {
         });
         console.log(`error: ${error}`);
       });
+    } else {
+      window.location.pathname = '/login';
     }
   }
 
   _uploadFileOrder(id) {
+    const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
-      // console.log(`https://source.adlsandbox.com/api/order/create?status=${status}&customer_email1=${email1}&customer_email2=${email2}&customer_name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
+      console.log(`https://source.adlsandbox.com/api/order/update/${id}`);
       const fileAbd = this.state.fileAbd.base64;
       const fileForm = this.state.fileForm.base64;
-      const fileKtp = this.state. fileKtpbase64;
+      const fileKtp = this.state.fileKtp.base64;
       const json = (response) => response.json();
       fetch(`https://source.adlsandbox.com/api/order/update/${id}`, {
         method: 'POST',
@@ -240,11 +240,23 @@ export default class SalesOrder extends React.Component {
         if (respons.status === 200) {
           this.setState({
             isRegistered: true,
-            notifMessage: respons.message,
+            openWarning: true,
+            warningMessage: respons.message,
+            TitleMessage: 'Success',
           });
+          // this.setState({
+          //   isRegistered: true,
+          //   notifMessage: respons.message,
+          // });
         }
       }).catch((error) => {
         console.log(`error: ${error}`);
+        this.setState({
+          isRegistered: true,
+          openWarning: true,
+          warningMessage: `${error}`,
+          TitleMessage: 'Error',
+        });
       });
     }
   }
@@ -371,8 +383,7 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
-
+        // console.log(respons);
         const dataCityObject = respons[0].city;
         const dataCity = [];
         let i;
@@ -401,22 +412,6 @@ export default class SalesOrder extends React.Component {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-
-      // fetch('https://source.adlsandbox.com/api/customer/all', {
-      //   method: 'GET',
-      //   type: 'cors',
-      //   headers: {
-      //     'Authorization': `Bearer ${cookieData}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
-      // .then(json)
-      // .then((respons) => {
-      //   console.log(respons);
-      //   this.setState({dataCustomer: respons, loaded: true});
-      // }).catch((error) => {
-      //   console.log(`error: ${error}`);
-      // });
     }
   }
 
@@ -435,7 +430,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataClusterObject = respons;
           const dataCluster = [];
@@ -467,7 +462,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataStreetObject = respons;
           const dataStreet = [];
@@ -500,7 +495,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataFullAddressObject = respons;
           const dataFullAddress = [];
@@ -532,7 +527,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
           const dataHomepass = respons[0];
           this.setState({
             textField: {...this.state.textField,  olt: dataHomepass.olt_location, region: dataHomepass.region, fdt: dataHomepass.fdt_code, homepassedId: dataHomepass.homepass_id}});

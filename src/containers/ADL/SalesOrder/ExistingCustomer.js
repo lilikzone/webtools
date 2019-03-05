@@ -71,6 +71,9 @@ export default class ExistingCustomer extends Component {
       CustomerLoaded: false,
       isGetProduct: false,
       loadChooseCustomer: false,
+      openWarning: false,
+      warningMessage: '',
+      TitleMessage: '',
     };
 
     const ChooseCustBtn = (data) => (
@@ -188,54 +191,54 @@ export default class ExistingCustomer extends Component {
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 10,
-        title: 'ID Address',
-        prop: 'id_address',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: 'Primary Phone',
-        prop: 'phone1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Alternative Phone 1',
-        prop: 'phone2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 13,
-        title: 'Alternative Phone 2',
-        prop: 'phone3',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 14,
-        title: 'Email',
-        prop: 'email1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 15,
-        title: 'Alternative Email',
-        prop: 'email2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 10,
+      //   title: 'ID Address',
+      //   prop: 'id_address',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 11,
+      //   title: 'Primary Phone',
+      //   prop: 'phone1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 12,
+      //   title: 'Alternative Phone 1',
+      //   prop: 'phone2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 13,
+      //   title: 'Alternative Phone 2',
+      //   prop: 'phone3',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 14,
+      //   title: 'Email',
+      //   prop: 'email1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 15,
+      //   title: 'Alternative Email',
+      //   prop: 'email2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
       // {
       //   id: 16,
       //   title: 'Created At',
@@ -333,54 +336,54 @@ export default class ExistingCustomer extends Component {
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 10,
-        title: 'ID Address',
-        prop: 'id_address',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 11,
-        title: 'Primary Phone',
-        prop: 'phone1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Alternative Phone 1',
-        prop: 'phone2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 13,
-        title: 'Alternative Phone 2',
-        prop: 'phone3',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 14,
-        title: 'Email',
-        prop: 'email1',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 15,
-        title: 'Alternative Email',
-        prop: 'email2',
-        width: '5%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
+      // {
+      //   id: 10,
+      //   title: 'ID Address',
+      //   prop: 'id_address',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 11,
+      //   title: 'Primary Phone',
+      //   prop: 'phone1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 12,
+      //   title: 'Alternative Phone 1',
+      //   prop: 'phone2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 13,
+      //   title: 'Alternative Phone 2',
+      //   prop: 'phone3',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 14,
+      //   title: 'Email',
+      //   prop: 'email1',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
+      // {
+      //   id: 15,
+      //   title: 'Alternative Email',
+      //   prop: 'email2',
+      //   width: '5%',
+      //   headerClass: 'mdl-data-table__cell--non-numeric',
+      //   cellClass: 'mdl-data-table__cell--non-numeric',
+      // },
       // {
       //   id: 16,
       //   title: 'Created At',
@@ -685,6 +688,45 @@ export default class ExistingCustomer extends Component {
     }
   }
 
+  _handleTouchTap() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const cust_id = this.state.customerData;
+      const payment_type = this.state.textField.typePayment;
+      const homepass_id = this.state.textField.homepassedId;
+    }
+  }
+
+  _createSO() {
+    fetch(`https://source.adlsandbox.com/api/order/create-existing/${cust_id}?status=new&payment_type=${payment_type}`, {
+      method: 'POST',
+      type: 'cors',
+      headers: {
+        'Authorization': `Bearer ${cookieData}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(json)
+      .then((respons) => {
+        // console.log(respons);
+        if (respons.status === 200) {
+          // this._uploadFileOrder(respons.sales_order.id);
+          this.setState({
+            openWarning: true,
+            warningMessage: `${respons}`,
+            TitleMessage: 'Success',
+          });
+        }
+      }).catch((error) => {
+        this.setState({
+          openWarning: true,
+          warningMessage: `${error}`,
+          TitleMessage: 'Error',
+        });
+        console.log(`error: ${error}`);
+      });
+  }
+
   _reselectCustomer = () => {
     this.setState({
       loadChooseCustomer: true,
@@ -702,6 +744,10 @@ export default class ExistingCustomer extends Component {
 
   _reselectProduct = () => {
     this.setState({selectedProduct: false, isGetProduct: true});
+  }
+
+  handleClose = () => {
+    this.setState({openWarning: false});
   }
 
   render() {
@@ -747,7 +793,7 @@ export default class ExistingCustomer extends Component {
                 <MaterialContainer
                   keys="id"
                   className="mdl-data-table"
-                  columns={this.columns}
+                  columns={this.custSelectedColumns}
                   dataArray={this.state.selectedCustomer}
                   draggable={false}
                   sortable={false}
@@ -1171,11 +1217,26 @@ export default class ExistingCustomer extends Component {
         />
       );
     };
+    let action = [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
       <Row className="m-b-15">
         <Paper style={styles.paper}>
           <h2>Choose customer</h2>
           <Col xs={12} md={12} lg={12} >
+            <Dialog
+              title={this.state.TitleMessage}
+              actions={action}
+              modal={false}
+              open={this.state.openWarning}
+              onRequestClose={this.handleClose}
+            >
+              {this.state.warningMessage}
+            </Dialog>
             {_renderCustomerTable(this.state.loadChooseCustomer)}
             {_renderSelectedCustomerTable(this.state.loadSelectedCustomer)}
             {_renderCustomerAddressForm()}
