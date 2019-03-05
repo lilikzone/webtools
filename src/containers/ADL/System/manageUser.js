@@ -5,7 +5,8 @@ import {Card} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -102,7 +103,11 @@ export default class ManageUser extends React.PureComponent {
       token: '',
       dataVendor: [],
       dataAgency: [],
-      allData: '',
+      allData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       loaded: false,
       redirect: false,
       disableVendorButton: true,
@@ -314,7 +319,7 @@ export default class ManageUser extends React.PureComponent {
 
   componentDidMount() {
     const json = (response) => response.json();
-    fetch('https://source.adlsandbox.com/api/admin/all', {
+    fetch(`https://source.adlsandbox.com/api/admin/all?page=${this.state.allData.current_page}`, {
       method: 'GET',
       type: 'cors',
       headers: {
@@ -323,11 +328,33 @@ export default class ManageUser extends React.PureComponent {
       },
     }).then(json)
       .then((respons) => {
-        console.log(respons);
-        this.setState({allData: respons.data, loaded: true});
+        // console.log(respons);
+        this.setState({allData: respons, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.allData.current_page != this.state.allData.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/admin/all?page=${this.state.allData.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.token}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        // console.log(respons);
+        this.setState({allData: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
   }
   componentWillMount() {
     const cookiesData = cookies.get('ssid');
@@ -335,7 +362,6 @@ export default class ManageUser extends React.PureComponent {
       this.setState({token: cookiesData});
 
       const json = (response) => response.json();
-      console.log('apa zzzzzini', cookiesData);
       fetch('https://source.adlsandbox.com/api/admin/check', {
         method: 'GET',
         type: 'cors',
@@ -375,7 +401,7 @@ export default class ManageUser extends React.PureComponent {
           dataVendor.push({textKey: dataVendorObject[i].name, valueKey: dataVendorObject[i].code});
         }
         this.setState({dataVendor: dataVendor});
-        console.log(this.state.dataVendor);
+        // console.log(this.state.dataVendor);
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -403,7 +429,7 @@ export default class ManageUser extends React.PureComponent {
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-      fetch('https://source.adlsandbox.com/api/admin/all', {
+      fetch(`https://source.adlsandbox.com/api/admin/all?page=${this.state.allData.current_page}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -412,8 +438,8 @@ export default class ManageUser extends React.PureComponent {
         },
       }).then(json)
       .then((respons) => {
-        console.log(respons);
-        this.setState({allData: respons.data, loaded: true});
+        // console.log(respons);
+        this.setState({allData: respons, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
@@ -440,7 +466,7 @@ export default class ManageUser extends React.PureComponent {
     })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
         if (respons.user.token !== '') {
           this.setState({
             currentTab: 1,
@@ -471,8 +497,8 @@ export default class ManageUser extends React.PureComponent {
       },
     }).then(json)
       .then((respons) => {
-        console.log(respons);
-        this.setState({allData: respons.data, loaded: true});
+        // console.log(respons);
+        this.setState({allData: respons, loaded: true});
       }).catch((error) => {
         console.log(error);
       });
@@ -547,7 +573,7 @@ export default class ManageUser extends React.PureComponent {
 
   _handleValidationVendor(input, data) {
     let dataInput = input;
-    console.log(data);
+    // console.log(data);
     const found = data.find((element) => {
       if (element.textKey == input) {
         return (element);
@@ -633,7 +659,7 @@ export default class ManageUser extends React.PureComponent {
       })
         .then((response) => response.json())
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
           this.setState({
             redirect: true,
           });
@@ -655,7 +681,7 @@ export default class ManageUser extends React.PureComponent {
       })
         .then((response) => response.json())
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
           this.setState({
             redirect: true,
           });
@@ -675,7 +701,7 @@ export default class ManageUser extends React.PureComponent {
       },
     }).then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
         this.setState({allData: respons, loaded: true});
       }).catch((error) => {
         console.log(error);
@@ -714,7 +740,7 @@ export default class ManageUser extends React.PureComponent {
     let _renderCreateUser = () => {
       const dataRole = this.state.dataRole;
       const user_data = this.state.role;
-      console.log(agentShowRole.includes(user_data) );
+      // console.log(agentShowRole.includes(user_data) );
       return (
         <div>
           <h3 style={styles.navigation}>Create User</h3>
@@ -924,11 +950,16 @@ export default class ManageUser extends React.PureComponent {
                     keys="id"
                     className="mdl-data-table"
                     columns={this.state.role !== 'admin' ? this.NonAdmincolumns : this.columns}
-                    dataArray={this.state.allData}
+                    onChangePage={((page) => this.setState({
+                      allData: {...this.state.allData, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.allData.data}
                     draggable={true}
                     sortable={false}
-                    sortBy={{prop: 'id', order: 'desc'}}
-                    pageSizeOptions={[5]}
+                    currentPage={this.state.allData.current_page - 1}
+                    total={this.state.allData.total}
+                    sortBy={{prop: 'id', order: 'asc'}}
+                    pageSizeOptions={[10]}
                   />
                 </div>
               </div>
@@ -966,7 +997,7 @@ export default class ManageUser extends React.PureComponent {
                 }}
 
               >
-                {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
+                {this.state.loaded && _renderManageUser()}
               </Tab>
             </Tabs>
             <Snackbar
