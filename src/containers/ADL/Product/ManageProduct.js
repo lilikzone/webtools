@@ -619,7 +619,6 @@ export default class ManageProduct extends React.Component {
   }
 
   render() {
-    console.log('oookkk', this.state.textField.promo_area);
     let _renderCreateProduct = () => {
       const promo_activation = this.state.textField.promo;
       // console.log(promo_activation);

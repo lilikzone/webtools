@@ -6,12 +6,18 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import styles from '../../../styles';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {blue400, teal300, red400} from 'material-ui/styles/colors';
 import {CSVLink, CSVDownload} from 'react-csv';
 import 'react-leaflet-markercluster/dist/styles.min.css';
 import 'leaflet/dist/leaflet.css';
 import {RaisedButton} from 'material-ui';
+import moment from  'moment';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const HOSTNAME = 'https://source.adlsandbox.com/api/homespassed?';
 const style = {
   tableButton: {
     cursor: 'pointer',
@@ -41,6 +47,16 @@ export default class HomePassed extends React.Component {
       lng: 118.0149,
       zoom: 4,
       currentTab: 0,
+      markerData: [],
+      tableData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
+      loadedMap: false,
+      loadedTable: false,
+      cookies: '',
+      page: 1,
     };
     this.pins = [];
     for (let i = 0; i < 500; i++) {
@@ -97,19 +113,80 @@ export default class HomePassed extends React.Component {
       },
     ];
   }
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+  componentDidMount() {
+    // this._getAPIMap(`${HOSTNAME}map`);
+    this._getAPITable(HOSTNAME, this.state.tableData.current_page);
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.tableData.current_page != this.state.tableData.current_page) {
+      this.setState({
+        loadedTable: false,
+      });
+      this._getAPITable(HOSTNAME, this.state.tableData.current_page);
+    }
+  }
   _mapEvent(event) {
     const {lat, lng} = event.target.getCenter();
     this.setState({lat, lng, zoom: event.target.getZoom()});
+  }
+  _getAPIMap(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          this.setState({
+            markerData: responseJson,
+            loadedMap: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _getAPITable(apiUrl, page) {
+    fetch(`${apiUrl}page=${page}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          this.setState({
+            tableData: responseJson,
+            loadedTable: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   render() {
     var position = [this.state.lat, this.state.lng];
     let _renderPin = (data) => {
       return data.map((value, index) => {
         return (
-          <Marker key={index} position={value}>
+          <Marker key={index} position={[value.fat_latitude, val.fat_longitude]}>
             <Popup>
               <div>
-                <p>Jakarta</p>
+                <p>{value.full_address}</p>
               </div>
             </Popup>
           </Marker>
@@ -131,7 +208,7 @@ export default class HomePassed extends React.Component {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <MarkerClusterGroup>{_renderPin(this.pins)}</MarkerClusterGroup>
+          <MarkerClusterGroup>{_renderPin(this.state.markerData)}</MarkerClusterGroup>
         </Map>
       );
     };
@@ -260,8 +337,8 @@ export default class HomePassed extends React.Component {
                     style={{marginTop: 10}}
                   >
                     <CSVLink
-                      data={csvData}
-                      filename={'my-file.csv'}
+                      data={this.state.tableData.data}
+                      filename={`Homespassed List ${new Date(moment())}.csv`}
                       style={{color: 'white'}}
                       target="_blank"
                     >
@@ -273,13 +350,16 @@ export default class HomePassed extends React.Component {
                     keys="id"
                     className="mdl-data-table"
                     columns={columns}
-                    // onDragColumn={(columns) => console.log(columns)}
-                    // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.data}
+                    onChangePage={((page) => this.setState({
+                      tableData: {...this.state.tableData, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.tableData.data}
                     draggable={true}
                     sortable={false}
+                    currentPage={this.state.tableData.current_page - 1}
+                    total={this.state.tableData.last_page}
                     sortBy={{prop: 'id', order: 'asc'}}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[10]}
                   />
                 </div>
               </div>
@@ -350,8 +430,6 @@ export default class HomePassed extends React.Component {
                   keys="id"
                   className="mdl-data-table"
                   columns={columns}
-                  // onDragColumn={(columns) => console.log(columns)}
-                  // onChangeColumnsVisibility={(columns) => console.log(columns)}
                   dataArray={this.dataImport}
                   draggable={false}
                   sortable={false}
@@ -378,7 +456,8 @@ export default class HomePassed extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab == 0 && _renderMap()}
+                {/* later on will need to add condition parameter --  && this.state.loadedMap */}
+                {this.state.currentTab == 0  && _renderMap()}
               </Tab>
               <Tab
                 value={1}
@@ -389,7 +468,7 @@ export default class HomePassed extends React.Component {
                   });
                 }}
               >
-                {_renderTable()}
+                {this.state.loadedTable && _renderTable()}
               </Tab>
               <Tab
                 value={2}
