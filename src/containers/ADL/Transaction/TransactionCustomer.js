@@ -259,7 +259,7 @@ export default class TransactionCustomer extends React.Component {
       .then((responseJson) => {
         console.log(responseJson);
         this.setState({
-          dataCustomer: responseJson,
+          dataCustomer: responseJson.data,
           loaded: true,
         });
       })

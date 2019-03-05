@@ -17,7 +17,6 @@ import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const cookieData = cookies.get('ssid');
 
 
 export default class TrackingOrder extends React.Component {
@@ -48,6 +47,7 @@ export default class TrackingOrder extends React.Component {
       redirect: false,
       note: '',
       editWarning: false,
+      orderFilter: '',
     };
     const EditBtnSO = (data) => (
       <div className="text-center">
@@ -196,8 +196,8 @@ export default class TrackingOrder extends React.Component {
       },
       {
         id: 2,
-        title: 'Customer ID',
-        prop: 'customer_id',
+        title: 'Subscription ID',
+        prop: 'subs_id',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -361,12 +361,34 @@ export default class TrackingOrder extends React.Component {
     this._getWOdata();
   }
 
+  componentWillMount() {
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      const userData = cookies.get('rdata');
+      const role =  userData.split('+');
+      if (role === 'sales') {
+        this.setState({
+          cookies: cookieData,
+          role: role[1],
+          orderFilter: `sales_name=${role[0]}`,
+        });
+      } else {
+        this.setState({
+          cookies: cookieData,
+          role: role[1],
+        });
+      }
+    }
+  }
+
   _onRequestClose=(data) => {
     this.setState({alert: false});
   }
 
   _getSOdata() {
+    const cookieData = this.state.cookies;
     if (cookieData !== undefined && cookieData !== '') {
+      const orderFilter = this.state.orderFilter;
       const status = (response) => {
         if (response.status >= 200 && response.status < 300) {
           return Promise.resolve(response);
@@ -374,7 +396,9 @@ export default class TrackingOrder extends React.Component {
         return Promise.reject(new Error(response.statusText));
       };
       const json = (response) => response.json();
-      fetch('https://source.adlsandbox.com/api/order/all',
+
+      console.log(`https://source.adlsandbox.com/api/order/all?${orderFilter}`);
+      fetch(`https://source.adlsandbox.com/api/order/all?${orderFilter}`,
         {
           method: 'get',
           type: 'cors',
@@ -481,25 +505,43 @@ export default class TrackingOrder extends React.Component {
   }
 
   render() {
-    let actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={() => this._handleClose()}
-      />,
-      <FlatButton
-        label="Decline"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => this._handleWarning()}
-      />,
-      <FlatButton
-        label="Verified"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => this._updateStatus('verified')}
-      />,
-    ];
+    let actions = (role) => {
+      if (role === 'sales') {
+        return ([
+          <FlatButton
+            label="Cancel"
+            primary={true}
+            onTouchTap={() => this._handleClose()}
+          />,
+          <FlatButton
+            label="Update"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={() => this._handleWarning()}
+          />,
+        ]);
+      } else {
+        return ([
+          <FlatButton
+            label="Cancel"
+            primary={true}
+            onTouchTap={() => this._handleClose()}
+          />,
+          <FlatButton
+            label="Decline"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={() => this._handleWarning()}
+          />,
+          <FlatButton
+            label="Verified"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={() => this._updateStatus('verified')}
+          />,
+        ]);
+      }
+    };
     let actionsWarning = [
       <FlatButton
         label="Cancel"
@@ -526,7 +568,7 @@ export default class TrackingOrder extends React.Component {
                   <br />
                   <Dialog
                     title="Update Sales Order"
-                    actions={actions}
+                    actions={actions(this.state.role)}
                     modal={false}
                     open={this.state.onEditOrder}
                     onRequestClose={() => this._handleClose()}
@@ -838,7 +880,7 @@ export default class TrackingOrder extends React.Component {
                   <br />
                   <Dialog
                     title="Update"
-                    actions={actions}
+                    actions={actions()}
                     modal={false}
                     open={this.state.onEditWo}
                     onRequestClose={() => this._handleClose()}

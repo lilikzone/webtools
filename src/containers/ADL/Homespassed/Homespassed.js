@@ -30,6 +30,9 @@ const style = {
     opacity: 0,
   },
 };
+
+const accessImport = ['admin', 'operation', 'homepassed'];
+
 // generate Marker
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -57,6 +60,7 @@ export default class HomePassed extends React.Component {
       loadedTable: false,
       cookies: '',
       page: 1,
+      role: '',
     };
     this.pins = [];
     for (let i = 0; i < 500; i++) {
@@ -113,13 +117,7 @@ export default class HomePassed extends React.Component {
       },
     ];
   }
-  componentWillMount() {
-    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
-      this.setState({
-        cookies: cookies.get('ssid'),
-      });
-    }
-  }
+
   componentDidMount() {
     // this._getAPIMap(`${HOSTNAME}map`);
     this._getAPITable(HOSTNAME, this.state.tableData.current_page);
@@ -178,6 +176,20 @@ export default class HomePassed extends React.Component {
         console.error(error);
       });
   }
+
+  componentWillMount() {
+    const cookieData = cookies.get('ssid');
+
+    if (cookieData !== undefined && cookieData !== '') {
+      const userData = cookies.get('rdata');
+      const role = userData.split('+');
+      this.setState({
+        cookies: cookieData,
+        role: role[1],
+      });
+    }
+  }
+
   render() {
     var position = [this.state.lat, this.state.lng];
     let _renderPin = (data) => {
@@ -470,7 +482,7 @@ export default class HomePassed extends React.Component {
               >
                 {this.state.loadedTable && _renderTable()}
               </Tab>
-              <Tab
+              {accessImport.includes(this.state.role) ? <Tab
                 value={2}
                 label="Import Files"
                 onActive={(val) => {
@@ -478,9 +490,10 @@ export default class HomePassed extends React.Component {
                     currentTab: val.props.index,
                   });
                 }}
-              >
+                                                        >
                 {_renderImport()}
-              </Tab>
+              </Tab> : ''}
+
             </Tabs>
           </Col>
         </Row>
