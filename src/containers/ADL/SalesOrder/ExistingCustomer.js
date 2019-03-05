@@ -773,7 +773,7 @@ export default class ExistingCustomer extends Component {
     let _renderCustomerData = () => {
       return (
         <div>
-          <h1 style={{marginTop: 15, textAlign: 'center'}}>Customer Data</h1>
+          <h2 style={{marginTop: 15}}>Customer Data</h2>
 
           <Card style={style.card}>
             <form>
@@ -897,6 +897,23 @@ export default class ExistingCustomer extends Component {
                     });
                   }}
                 />
+                <SelectField
+                  floatingLabelText="Customer Group"
+                  fullWidth={true}
+                  value={this.state.textField.group}
+                  onChange={(e, index, value) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        group: value,
+                      },
+                    });
+                  }}
+                >
+                  <MenuItem  value="REGULAR" primaryText="REGULAR" />
+                  <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
+                  <MenuItem  value="VIP" primaryText="VIP" />
+                </SelectField>
                 <TextField
                   required={true}
                   value={this.state.textField.phone1}

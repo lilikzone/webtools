@@ -95,6 +95,7 @@ export default class ManageUser extends React.PureComponent {
         role: '',
         vendor: '',
         agency: '',
+        vendorValue: '',
       },
       role: '',
       dataRole: '',

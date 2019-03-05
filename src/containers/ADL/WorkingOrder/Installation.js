@@ -79,6 +79,13 @@ export default class Installation extends React.Component {
     this.WorkOrdersColumns = [
       {
         id: 0,
+        title: 'Edit Action',
+        render: EditBtn,
+        width: '2%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 1,
         title: 'Id',
         prop: 'id',
         width: '20%',
@@ -86,7 +93,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 1,
+        id: 2,
         title: 'Installation Type',
         prop: 'type_installation',
         width: '20%',
@@ -94,7 +101,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 2,
+        id: 3,
         title: 'Status',
         prop: 'status',
         width: '20%',
@@ -102,7 +109,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 3,
+        id: 4,
         title: 'Subscription ID',
         prop: 'subs_id',
         width: '20%',
@@ -110,7 +117,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 4,
+        id: 5,
         title: 'Product ID',
         prop: 'product_id',
         width: '20%',
@@ -118,7 +125,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 5,
+        id: 6,
         title: 'Vendor',
         prop: 'vendor',
         width: '20%',
@@ -126,7 +133,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 6,
+        id: 7,
         title: 'Installer',
         prop: 'installer',
         width: '20%',
@@ -134,7 +141,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
+        id: 8,
         title: 'bast',
         prop: 'bast',
         width: '20%',
@@ -142,7 +149,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
+        id: 9,
         title: 'Sales Name',
         prop: 'sales_name',
         width: '20%',
@@ -150,7 +157,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 10,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -158,20 +165,14 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 11,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
-      {
-        id: 11,
-        title: 'Edit Action',
-        render: EditBtn,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-      },
+
       // {
       //   id: 11,
       //   title: '',
@@ -238,8 +239,6 @@ export default class Installation extends React.Component {
           console.log(`error: ${error}`);
         });
       } else if (role[1] === 'dispatcher') {
-        this.setState({status: 'Dispatch to installer'});
-
         fetch('https://source.adlsandbox.com/api/admin/search?keyword=installer', {
           method: 'GET',
           type: 'cors',
@@ -251,13 +250,16 @@ export default class Installation extends React.Component {
         .then(json)
         .then((respons) => {
           console.log(respons);
+          this.setState({});
           const dataInstallerObject = respons.result.data;
           const dataInstaller = [];
           let i;
           for (i = 0;i < dataInstallerObject.length;i++) {
             dataInstaller.push(dataInstallerObject[i].username);
           }
-          this.setState({dataInstaller: dataInstaller});
+          this.setState({
+            dataInstaller: dataInstaller,
+            status: 'Dispatch to installer'});
         }).catch((error) => {
           console.log(`error: ${error}`);
         });

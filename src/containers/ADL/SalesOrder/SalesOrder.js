@@ -21,6 +21,7 @@ import Cookies from 'universal-cookie';
 import moment from  'moment';
 import Dialog from 'material-ui/Dialog';
 import ExistingCustomer from './ExistingCustomer';
+import FileBase64 from 'react-file-base64';
 
 
 const cookies = new Cookies();
@@ -91,6 +92,7 @@ export default class SalesOrder extends React.Component {
         email1: '',
         email2: '',
         gender: '',
+        group: 'REGULAR',
         dob: {},
         installationDate: {},
       },
@@ -110,6 +112,9 @@ export default class SalesOrder extends React.Component {
       TitleMessage: '',
       warningMessage: '',
       openWarning: false,
+      fileKtp: '',
+      fileAbd: '',
+      fileForm: '',
     };
 
     const ChooseBtn = (data) => (
@@ -170,7 +175,7 @@ export default class SalesOrder extends React.Component {
     const gender = this.state.textField.gender;
     const status = 'new';
     const product_id = this.state.productId;
-    const group = 'VIP';
+    const group = this.state.textField.group;
 
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -206,22 +211,6 @@ export default class SalesOrder extends React.Component {
         });
         console.log(`error: ${error}`);
       });
-
-      // fetch('https://source.adlsandbox.com/api/customer/all', {
-      //   method: 'GET',
-      //   type: 'cors',
-      //   headers: {
-      //     'Authorization': `Bearer ${cookieData}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
-      // .then(json)
-      // .then((respons) => {
-      //   console.log(respons);
-      //   this.setState({dataCustomer: respons});
-      // }).catch((error) => {
-      //   console.log(`error: ${error}`);
-      // });
     }
   }
 
@@ -522,6 +511,16 @@ export default class SalesOrder extends React.Component {
     this.setState({openWarning: false});
   }
 
+  getFilesKtp(file) {
+    this.setState({fileKtp: file});
+  }
+  getFilesAbd(file) {
+    this.setState({fileAbd: file});
+  }
+  getFilesForm(file) {
+    this.setState({fileForm: file});
+  }
+
   render() {
     let _renderProduct = (data) => {
       if (data) {
@@ -788,6 +787,23 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
+                <SelectField
+                  floatingLabelText="Customer Group"
+                  fullWidth={true}
+                  value={this.state.textField.group}
+                  onChange={(e, index, value) => {
+                    this.setState({
+                      textField: {
+                        ...this.state.textField,
+                        group: value,
+                      },
+                    });
+                  }}
+                >
+                  <MenuItem  value="REGULAR" primaryText="REGULAR" />
+                  <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
+                  <MenuItem  value="VIP" primaryText="VIP" />
+                </SelectField>
                 <TextField
                   required={true}
                   value={this.state.textField.phone1}
@@ -863,6 +879,37 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
+                <br />
+                <br />
+                <h3>Upload</h3>
+                <hr />
+                <div className="input-group">
+                  <span className="input-group-icon">
+                    <label>File KTP</label>
+                  </span>
+                  <div className="input-group-text">
+                    <FileBase64 name="ktp" multiple={false} onDone={this.getFilesKtp.bind(this)} />
+                  </div>
+                  {this.state.fileKtp !== undefined && this.state.fileKtp !== '' ? <img style={{width: 500}} src={this.state.fileKtp.base64} /> : ''}
+                </div>
+                <div className="input-group">
+                  <span className="input-group-icon">
+                    <label>File ABD</label>
+                  </span>
+                  <div className="input-group-text">
+                    <FileBase64 multiple={false} name="abd"  onDone={this.getFilesAbd.bind(this)} />
+                  </div>
+                  {this.state.fileAbd !== undefined && this.state.fileAbd !== '' ? <img style={{width: 500}} src={this.state.fileAbd.base64} /> : ''}
+                </div>
+                <div className="input-group">
+                  <span className="input-group-icon">
+                    <label>File Form</label>
+                  </span>
+                  <div className="input-group-text">
+                    <FileBase64 multiple={false}  name="file_form" onDone={this.getFilesForm.bind(this)} />
+                  </div>
+                  {this.state.fileForm !== undefined && this.state.fileForm !== '' ? <img style={{width: 500}} src={this.state.fileForm.base64} /> : ''}
+                </div>
 
               </Col>
             </form>
@@ -979,12 +1026,6 @@ export default class SalesOrder extends React.Component {
                 <ExistingCustomer />
               </Tab>
             </Tabs>
-            <Snackbar
-              open={this.state.isRegistered}
-              message={this.state.notifMessage}
-              autoHideDuration={4000}
-              bodyStyle={{backgroundColor: 'teal'}}
-            />
           </Col>
         </Paper>
       </Row>

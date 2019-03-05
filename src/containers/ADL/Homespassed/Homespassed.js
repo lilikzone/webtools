@@ -12,6 +12,10 @@ import {CSVLink, CSVDownload} from 'react-csv';
 import 'react-leaflet-markercluster/dist/styles.min.css';
 import 'leaflet/dist/leaflet.css';
 import {RaisedButton} from 'material-ui';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
 const style = {
   tableButton: {
     cursor: 'pointer',
@@ -24,6 +28,9 @@ const style = {
     opacity: 0,
   },
 };
+
+const accessImport = ['admin', 'operation', 'homepassed'];
+
 // generate Marker
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -41,6 +48,8 @@ export default class HomePassed extends React.Component {
       lng: 118.0149,
       zoom: 4,
       currentTab: 0,
+      cookies: '',
+      role: '',
     };
     this.pins = [];
     for (let i = 0; i < 500; i++) {
@@ -101,6 +110,20 @@ export default class HomePassed extends React.Component {
     const {lat, lng} = event.target.getCenter();
     this.setState({lat, lng, zoom: event.target.getZoom()});
   }
+
+  componentWillMount() {
+    const cookieData = cookies.get('ssid');
+
+    if (cookieData !== undefined && cookieData !== '') {
+      const userData = cookies.get('rdata');
+      const role = userData.split('+');
+      this.setState({
+        cookies: cookieData,
+        role: role[1],
+      });
+    }
+  }
+
   render() {
     var position = [this.state.lat, this.state.lng];
     let _renderPin = (data) => {
@@ -391,7 +414,7 @@ export default class HomePassed extends React.Component {
               >
                 {_renderTable()}
               </Tab>
-              <Tab
+              {accessImport.includes(this.state.role) ? <Tab
                 value={2}
                 label="Import Files"
                 onActive={(val) => {
@@ -399,9 +422,10 @@ export default class HomePassed extends React.Component {
                     currentTab: val.props.index,
                   });
                 }}
-              >
+                                                        >
                 {_renderImport()}
-              </Tab>
+              </Tab> : ''}
+
             </Tabs>
           </Col>
         </Row>
