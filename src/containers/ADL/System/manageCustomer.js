@@ -5,7 +5,8 @@ import {Card} from 'material-ui/Card';
 import 'react-table-components/styles/styles.css';
 import '../../table/datatable.scss';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -117,7 +118,11 @@ export default class ManageCustomer extends React.Component {
         fullAddress: '',
         homepassedId: '',
       },
-      allCustomer: [],
+      allCustomer: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       dataTemp: [],
       dataCity: [],
       dataCluster: [],
@@ -338,6 +343,15 @@ export default class ManageCustomer extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.allCustomer.current_page != this.state.allCustomer.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
+    }
+  }
+
   _getAPICity() {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -352,7 +366,7 @@ export default class ManageCustomer extends React.Component {
       })
       .then(json)
       .then((respons) => {
-        console.log(respons);
+        // console.log(respons);
 
         const dataCityObject = respons[0].city;
         const dataCity = [];
@@ -369,7 +383,7 @@ export default class ManageCustomer extends React.Component {
 
 
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
     this._getAPICity();
   }
 
@@ -382,7 +396,6 @@ export default class ManageCustomer extends React.Component {
   _putAPI(
     apiUrl,
     id) {
-    console.log(this.state.dataTemp);
     const dob = moment(this.state.dataTemp.dob).format('YYYY-MM-DD');
     const birth_place = this.state.dataTemp.birth_place;
     const gender = this.state.dataTemp.gender;
@@ -396,7 +409,6 @@ export default class ManageCustomer extends React.Component {
     const email2 = this.state.dataTemp.email2;
     const name = this.state.dataTemp.customer_name;
 
-    console.log(`${apiUrl}${id}?dob=${dob}&birth_place=${birth_place}&gender=${gender}&type_id=${identification_type}&id_number=${identification_number}&id_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&name=${name}`);
 
     fetch(`${apiUrl}${id}?dob=${dob}&birth_place=${birth_place}&gender=${gender}&type_id=${identification_type}&id_number=${identification_number}&id_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&name=${name}`, {
       method: 'PUT',
@@ -407,9 +419,9 @@ export default class ManageCustomer extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        // console.log(responseJson);
         if (responseJson.status === 200) {
-          this._getAPI(`${HOSTNAME}all`, 'textField');
+          this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
         }
       })
       .catch((error) => {
@@ -427,9 +439,9 @@ export default class ManageCustomer extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        // console.log(responseJson);
         this.setState({
-          allCustomer: responseJson.data,
+          allCustomer: responseJson,
           loaded: true,
         });
       })
@@ -453,7 +465,7 @@ export default class ManageCustomer extends React.Component {
     const name = this.state.textField.name;
     const homepass_id = this.state.textField.homepassedId;
 
-    console.log(`${apiUrl}dob=${dob}&birth_place=${birth_place}&gender=${gender}&type_id=${identification_type}&id_number=${identification_number}&id_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&name=${name}&homepassed_id=${homepass_id}`);
+    // console.log(`${apiUrl}dob=${dob}&birth_place=${birth_place}&gender=${gender}&type_id=${identification_type}&id_number=${identification_number}&id_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&name=${name}&homepassed_id=${homepass_id}`);
     fetch(
       `${apiUrl}dob=${dob}&birth_place=${birth_place}&gender=${gender}&type_id=${identification_type}&id_number=${identification_number}&id_address=${identification_address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&email1=${email1}&email2=${email2}&name=${name}&homepassed_id=${homepass_id}`,
       {
@@ -495,8 +507,8 @@ export default class ManageCustomer extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log('responseJSON', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        // console.log('responseJSON', responseJson);
+        this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
         // this.setState({
         //   currentTab: 0,
         // });
@@ -523,7 +535,7 @@ export default class ManageCustomer extends React.Component {
   }
   _onTouchDelete(data) {
     this._deleteAPI(`${HOSTNAME}delete?`, data);
-    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'allData');
     this._handleClose('delete');
   }
 
@@ -538,7 +550,7 @@ export default class ManageCustomer extends React.Component {
     this._postAPI(
       `${HOSTNAME}register?`
     );
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
     this.setState({
       textField: {
         name: '',
@@ -673,7 +685,7 @@ export default class ManageCustomer extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataClusterObject = respons;
           const dataCluster = [];
@@ -705,7 +717,7 @@ export default class ManageCustomer extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataStreetObject = respons;
           const dataStreet = [];
@@ -738,7 +750,7 @@ export default class ManageCustomer extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
 
           const dataFullAddressObject = respons;
           const dataFullAddress = [];
@@ -770,7 +782,7 @@ export default class ManageCustomer extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          console.log(respons);
+          // console.log(respons);
           const dataHomepass = respons[0];
           this.setState({
             textField: {...this.state.textField,  olt: dataHomepass.olt_location, region: dataHomepass.region, fdt: dataHomepass.fdt_code, homepassedId: dataHomepass.homepass_id}});
@@ -1436,7 +1448,7 @@ export default class ManageCustomer extends React.Component {
                   Are you sure want to delete this #{this.state.deleteId} product?
             </Dialog>
 
-                  <MaterialContainer
+                  {/* <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
                     columns={this.columns}
@@ -1445,6 +1457,21 @@ export default class ManageCustomer extends React.Component {
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
                     pageSizeOptions={[5]}
+                  /> */}
+                  <MaterialContainer
+                    keys="name"
+                    className="mdl-data-table"
+                    columns={this.columns}
+                    onChangePage={((page) => this.setState({
+                      allCustomer: {...this.state.allCustomer, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.allCustomer.data}
+                    draggable={true}
+                    sortable={false}
+                    currentPage={this.state.allCustomer.current_page - 1}
+                    total={this.state.allCustomer.total}
+                    sortBy={{prop: 'id', order: 'asc'}}
+                    pageSizeOptions={[10]}
                   />
                 </div>
               </div>
