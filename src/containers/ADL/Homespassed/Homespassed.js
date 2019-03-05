@@ -5,7 +5,10 @@ import {Map, Marker, Popup, TileLayer, Tooltip} from 'react-leaflet';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import styles from '../../../styles';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
+import CircularProgress from 'material-ui/CircularProgress';
 // import {MaterialContainer} from 'react-table-components';
 import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {blue400, teal300, red400} from 'material-ui/styles/colors';
@@ -15,9 +18,17 @@ import 'leaflet/dist/leaflet.css';
 import {RaisedButton} from 'material-ui';
 import moment from  'moment';
 import Cookies from 'universal-cookie';
-
+import TextField from 'material-ui/TextField';
+const blueMarker = L.icon({
+  iconUrl: require('../../../assets/images/blue-marker.png'),
+  iconSize: [30, 30], // size of the icon
+});
+const redMarker = L.icon({
+  iconUrl: require('../../../assets/images/red-marker.png'),
+  iconSize: [30, 30], // size of the icon
+});
 const cookies = new Cookies();
-const HOSTNAME = 'https://source.adlsandbox.com/api/homespassed?';
+const HOSTNAME = 'https://source.adlsandbox.com/api/homespassed';
 const style = {
   tableButton: {
     cursor: 'pointer',
@@ -51,6 +62,8 @@ export default class HomePassed extends React.Component {
       zoom: 4,
       currentTab: 0,
       markerData: [],
+      keyword: '',
+      searchType: 'keyword',
       tableData: {
         current_page: 1,
         last_page: 1,
@@ -62,13 +75,13 @@ export default class HomePassed extends React.Component {
       page: 1,
       role: '',
     };
-    this.pins = [];
-    for (let i = 0; i < 500; i++) {
-      this.pins.push({
-        lat: -7.250445 + Math.floor(Math.random() * 10),
-        lng: 112.768845 + Math.floor(Math.random() * 10),
-      });
-    }
+    // this.pins = [];
+    // for (let i = 0; i < 500; i++) {
+    //   this.pins.push({
+    //     lat: -7.250445 + Math.floor(Math.random() * 10),
+    //     lng: 112.768845 + Math.floor(Math.random() * 10),
+    //   });
+    // }
     this.data = {
       firstLayer: [
         {
@@ -119,7 +132,7 @@ export default class HomePassed extends React.Component {
   }
 
   componentDidMount() {
-    // this._getAPIMap(`${HOSTNAME}map`);
+    this._getAPIMap(`${HOSTNAME}/map`);
     this._getAPITable(HOSTNAME, this.state.tableData.current_page);
   }
   componentDidUpdate(prevProps, prevState) {
@@ -144,6 +157,7 @@ export default class HomePassed extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
+        // console.log('response_MAP', responseJson);
         if (responseJson) {
           this.setState({
             markerData: responseJson,
@@ -156,7 +170,7 @@ export default class HomePassed extends React.Component {
       });
   }
   _getAPITable(apiUrl, page) {
-    fetch(`${apiUrl}page=${page}`, {
+    fetch(`${apiUrl}?page=${page}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${this.state.cookies}`,
@@ -177,6 +191,37 @@ export default class HomePassed extends React.Component {
       });
   }
 
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.data != null) {
+          console.log('ssshh', responseJson);
+          this.setState({
+            tableData: responseJson.data,
+          });
+        }
+        this.setState({
+          loadedTable: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _handleUpdate() {
+    this.setState({
+      loadedTable: false,
+    });
+    this._getUpdate(`${HOSTNAME}/search?${this.state.searchType}=${this.state.keyword}`);
+  }
   componentWillMount() {
     const cookieData = cookies.get('ssid');
 
@@ -189,22 +234,26 @@ export default class HomePassed extends React.Component {
       });
     }
   }
-
+  _renderPin = (data) => {
+    let arrTemp = [];
+    data.map((value, index) => {
+      if (!isNaN(parseFloat(value.fat_latitude)) && !isNaN(parseFloat(value.fat_longitude))) {
+        let latlng = {position: [parseFloat(value.fat_latitude), parseFloat(value.fat_longitude)], popup: this._getLeafletPopup(value.full_address), options: {title: value.full_address, icon: value.in_use == 1 ? redMarker : blueMarker}};
+        arrTemp.push(latlng);
+      }
+    });
+    return arrTemp;
+  };
+  _getLeafletPopup(name) {
+    return L.popup({minWidth: 200, closeButton: true})
+      .setContent(`
+        <div>
+          <p>${name}</p>
+        </div>
+      `);
+  }
   render() {
     var position = [this.state.lat, this.state.lng];
-    let _renderPin = (data) => {
-      return data.map((value, index) => {
-        return (
-          <Marker key={index} position={[value.fat_latitude, val.fat_longitude]}>
-            <Popup>
-              <div>
-                <p>{value.full_address}</p>
-              </div>
-            </Popup>
-          </Marker>
-        );
-      });
-    };
     let _renderMap = () => {
       return (
         <Map
@@ -214,13 +263,13 @@ export default class HomePassed extends React.Component {
           style={styles.map}
           center={position}
           zoom={this.state.zoom}
-          minZoom={2}
+          minZoom={1}
         >
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <MarkerClusterGroup>{_renderPin(this.state.markerData)}</MarkerClusterGroup>
+          <MarkerClusterGroup  markers={this._renderPin(this.state.markerData)} chunkedLoading={true} maxClusterRadius={(zoom) => zoom > 16 ? 5 : 20} />
         </Map>
       );
     };
@@ -350,14 +399,49 @@ export default class HomePassed extends React.Component {
                   >
                     <CSVLink
                       data={this.state.tableData.data}
-                      filename={`Homespassed List ${new Date(moment())}.csv`}
+                      filename={`Homespassed List ${new Date(moment())}.xls`}
                       style={{color: 'white'}}
                       target="_blank"
                     >
                       EXPORT
                     </CSVLink>
                   </RaisedButton>
-
+                  <div>
+                    <SelectField
+                      fullWidth={false}
+                      hintText={'Search by'}
+                      floatingLabelText="Search By"
+                      name="search_by"
+                      value={this.state.searchType}
+                      onChange={(e, index, value) => {
+                        this.setState({
+                          searchType: value,
+                        });
+                      }}
+                    >
+                      <MenuItem value={'cluster'} primaryText="Cluster" />
+                      <MenuItem value={'street'} primaryText="Street" />
+                      <MenuItem value={'full_address'} primaryText="Full Address" />
+                      <MenuItem value={'get_city'} primaryText="Get City" />
+                      <MenuItem value={'city'} primaryText="City" />
+                      <MenuItem value={'keyword'} primaryText="Keyword" />
+                      <MenuItem value={'key'} primaryText="key" />
+                    </SelectField>
+                  </div>
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText="Search"
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdate()} />
                   <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
@@ -377,6 +461,21 @@ export default class HomePassed extends React.Component {
               </div>
             </Col>
           </Row>
+        </div>
+      );
+    };
+    let _renderLoading = () => {
+      return (
+
+        <div style={{minWidth: 700}}>
+          <div
+            style={{margin: '0 auto',
+              marginTop: 20,
+              width: '20%',
+              textAlign: 'center'}}
+          >
+            <CircularProgress />
+          </div>
         </div>
       );
     };
@@ -469,7 +568,7 @@ export default class HomePassed extends React.Component {
                 }}
               >
                 {/* later on will need to add condition parameter --  && this.state.loadedMap */}
-                {this.state.currentTab == 0  && _renderMap()}
+                {this.state.currentTab == 0  && this.state.loadedMap  ? _renderMap() :  _renderLoading()}
               </Tab>
               <Tab
                 value={1}
@@ -480,7 +579,7 @@ export default class HomePassed extends React.Component {
                   });
                 }}
               >
-                {this.state.loadedTable && _renderTable()}
+                {this.state.loadedTable ? _renderTable() :  _renderLoading()}
               </Tab>
               {accessImport.includes(this.state.role) ? <Tab
                 value={2}
