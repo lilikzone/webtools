@@ -13,6 +13,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const cookies = new Cookies();
 const HOSTNAME = 'https://source.adlsandbox.com/api/vendor/';
@@ -24,6 +25,7 @@ export default class ManageVendor extends React.Component {
     this.state = {
       loaded: false,
       cookies: '',
+      keyword: '',
       currentTab: 0,
       deleteAlert: false,
       deleteId: '',
@@ -164,6 +166,36 @@ export default class ManageVendor extends React.Component {
       deleteAlert: true,
     });
   }
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            vendorData: responseJson.result.data,
+          });
+        }
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _handleUpdateKeyword() {
+    this.setState({
+      loaded: false,
+    });
+    this._getUpdate(`${HOSTNAME}search?keyword=${this.state.keyword}`);
+  }
   _handleTouchTap() {
     this.data.push({
       'code': this.state.textField.code,
@@ -245,6 +277,21 @@ export default class ManageVendor extends React.Component {
   }
 
   render() {
+    let _renderLoading = () => {
+      return (
+
+        <div style={{minWidth: 700}}>
+          <div
+            style={{margin: '0 auto',
+              marginTop: 20,
+              width: '20%',
+              textAlign: 'center'}}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      );
+    };
     let actions = [
       <FlatButton
         label="Cancel" primary={true}
@@ -403,6 +450,22 @@ export default class ManageVendor extends React.Component {
                   >
                   Are you sure want to delete this #{this.state.deleteId} product?
             </Dialog>
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText="Search"
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+                  </div>
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
@@ -413,7 +476,7 @@ export default class ManageVendor extends React.Component {
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[10]}
                   />
                 </div>
               </div>
@@ -450,7 +513,7 @@ export default class ManageVendor extends React.Component {
                     });
                   }}
                 >
-                  {this.state.loaded && this.state.currentTab == 1 && _renderManageUser()}
+                  {this.state.loaded && this.state.currentTab == 1 ? _renderManageUser() :  _renderLoading()}
                 </Tab>
               </Tabs>
             </Col>

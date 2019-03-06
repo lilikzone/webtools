@@ -69,6 +69,7 @@ export default class ManageProduct extends React.Component {
       cookies: '',
       currentTab: 0,
       loaded: false,
+      keyword: '',
       validation: {
         code: false,
         promo: false,
@@ -479,6 +480,38 @@ export default class ManageProduct extends React.Component {
       });
   }
 
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            productAll: responseJson.result.data,
+          });
+        }
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _handleUpdateKeyword() {
+    this.setState({
+      loaded: false,
+    });
+    this._getUpdate(`${HOSTNAME}search?keyword=${this.state.keyword}`);
+  }
+
+
   _handleTouchTap() {
     this._postAPI();
     this._getAPI(`${HOSTNAME}all?`);
@@ -877,14 +910,29 @@ export default class ManageProduct extends React.Component {
                 >
                   <CSVLink
                     data={this.state.productAll}
-                    filename={`Manage Product ${new Date(moment())}.csv`}
+                    filename={`Manage Product ${new Date(moment())}.xls`}
                     style={{color: 'white'}}
                     target="_blank"
                   >
                       EXPORT
                     </CSVLink>
                 </RaisedButton>
-                <br />
+                <div>
+                  <TextField
+                    required={true}
+                    value={this.state.keyword}
+                    hintText="Search"
+                    fullWidth={false}
+                    onChange={(e, input) => {
+                      this.setState({
+                        keyword: input,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+                </div>
                 <MaterialContainer
                   keys="id"
                   className="mdl-data-table"
@@ -895,7 +943,7 @@ export default class ManageProduct extends React.Component {
                   sortable={true}
                   sortBy={{prop: 'id', order: 'desc'}}
                   generateRowProps={generateRowProps}
-                  pageSizeOptions={[5]}
+                  pageSizeOptions={[10]}
                 />
               </div>
             </div>
