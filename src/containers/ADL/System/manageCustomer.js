@@ -1514,16 +1514,6 @@ export default class ManageCustomer extends React.Component {
                   <div>
                     <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
                   </div>
-                  {/* <MaterialContainer
-                    keys="name"
-                    className="mdl-data-table"
-                    columns={this.columns}
-                    dataArray={this.state.allCustomer}
-                    draggable={false}
-                    sortable={false}
-                    sortBy={{prop: 'country.name', order: 'asc'}}
-                    pageSizeOptions={[5]}
-                  /> */}
                   <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
