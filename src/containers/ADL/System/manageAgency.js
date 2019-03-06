@@ -29,6 +29,7 @@ export default class ManageAgency extends React.Component {
       isRegistered: false,
       deleteAlert: false,
       deleteId: '',
+      deleteName: '',
       cookies: '',
       loaded: false,
       currentTab: 0,
@@ -226,6 +227,7 @@ export default class ManageAgency extends React.Component {
   _onDelete(data) {
     this.setState({
       deleteId: data.id,
+      deleteName: data.name,
       deleteAlert: true,
     });
   }
@@ -500,7 +502,7 @@ export default class ManageAgency extends React.Component {
                       })
                   }
                   >
-                  Are you sure want to delete this #{this.state.deleteId} product?
+                  Are you sure want to delete {this.state.deleteName}?
             </Dialog>
                   <div>
                     <TextField

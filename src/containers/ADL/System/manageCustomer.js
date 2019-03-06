@@ -85,6 +85,7 @@ export default class ManageCustomer extends React.Component {
       phoneNumberTemp: '',
       deleteAlert: false,
       deleteId: '',
+      deleteName: '',
       isGenderValid: true,
       isEmailValid1: true,
       isEmailValid2: true,
@@ -578,6 +579,7 @@ export default class ManageCustomer extends React.Component {
   _onDelete(data) {
     this.setState({
       deleteId: data.id,
+      deleteName: `${data.customer_name} - Subsriber ID ${data.subs_id}`,
       deleteAlert: true,
     });
   }
@@ -1496,7 +1498,7 @@ export default class ManageCustomer extends React.Component {
                       })
                   }
                   >
-                  Are you sure want to delete this #{this.state.deleteId} product?
+                  Are you sure want to delete {this.state.deleteName}?
             </Dialog>
                   <div>
                     <TextField

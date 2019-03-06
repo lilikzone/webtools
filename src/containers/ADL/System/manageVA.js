@@ -37,6 +37,7 @@ export default class ManageVA extends React.Component {
       onEdit: false,
       deleteAlert: false,
       deleteId: '',
+      deleteName: '',
       idTemp: '',
       codeTemp: '',
       nameTemp: '',
@@ -249,8 +250,10 @@ export default class ManageVA extends React.Component {
   }
 
   _onDelete(data) {
+    console.log('pijit', data);
     this.setState({
       deleteId: data.id,
+      deleteName: `${data.issuer}`,
       deleteAlert: true,
     });
   }
@@ -535,7 +538,7 @@ export default class ManageVA extends React.Component {
                       })
                   }
                   >
-                  Are you sure want to delete this #{this.state.deleteId} product?
+                  Are you sure want to delete {this.state.deleteName}?
             </Dialog>
                   <MaterialContainer
                     keys="id"
