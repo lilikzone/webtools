@@ -7,7 +7,11 @@ import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+import {red400} from 'material-ui/styles/colors';
+import {CSVLink} from 'react-csv';
+import moment from  'moment';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import CircularProgress from 'material-ui/CircularProgress';
 import Cookies from 'universal-cookie';
 
@@ -230,7 +234,12 @@ export default class TransactionCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataCustomer: [],
+      dataCustomer: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
+      keyword: '',
       loaded: false,
     };
   }
@@ -247,6 +256,57 @@ export default class TransactionCustomer extends React.Component {
     this._getAPI(`${HOSTNAME}all`);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.dataCustomer.current_page != this.state.dataCustomer.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      this._getAPI(`${HOSTNAME}all?page=${this.state.dataCustomer.current_page}`);
+    }
+  }
+
+  _onUpdate() {
+    this.setState({
+      updateAlert: false,
+    });
+  }
+
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            dataCustomer: {
+              data: responseJson.result.data,
+              current_page: responseJson.result.current_page,
+              total: responseJson.result.total,
+            },
+          });
+        }
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _handleUpdateKeyword() {
+    this.setState({
+      loaded: false,
+    });
+    this._getUpdate(`${HOSTNAME}search?keyword=${this.state.keyword}`);
+  }
+
   _getAPI(apiUrl) {
     fetch(apiUrl, {
       method: 'GET',
@@ -259,7 +319,7 @@ export default class TransactionCustomer extends React.Component {
       .then((responseJson) => {
         console.log(responseJson);
         this.setState({
-          dataCustomer: responseJson.data,
+          dataCustomer: responseJson,
           loaded: true,
         });
       })
@@ -269,41 +329,77 @@ export default class TransactionCustomer extends React.Component {
   }
 
   render() {
-    return (<Row>
-      {this.state.loaded ?
-        <div>
+    return (
+      <Row className="m-b-15">
+        {this.state.loaded ?
+          <div className="mdl-layout mdl-layout--no-drawer-button container">
+            <h3>Customer Data</h3>
+            <Paper style={styles.paper}>
+              <Col xs={12} md={12} lg={12} sm={12}>
+                <div>
+                  <RaisedButton
+                    backgroundColor={red400}
+                    style={{marginTop: 10, marginBottom: 10}}
+                  >
+                    <CSVLink
+                      data={this.state.dataCustomer.data}
+                      filename={`Transaction Customer ${new Date(moment())}.xls`}
+                      style={{color: 'white'}}
+                      target="_blank"
+                    >
+                      EXPORT
+                    </CSVLink>
+                  </RaisedButton>
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText={'Search'}
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+                  </div>
+                </div>
+                <MaterialContainer
+                  keys="id"
+                  className="mdl-data-table"
+                  columns={columns}
+                  onChangePage={((page) => this.setState({
+                    dataCustomer: {...this.state.dataCustomer, current_page: page + 1},
+                  }))}
+                  dataArrayCustom={this.state.dataCustomer.data}
+                  draggable={true}
+                  sortable={false}
+                  currentPage={this.state.dataCustomer.current_page - 1}
+                  total={this.state.dataCustomer.total}
+                  sortBy={{prop: 'id', order: 'asc'}}
+                  pageSizeOptions={[10]}
+                />
+              </Col>
+            </Paper>
+          </div> :
 
-          <h3>Customer Data</h3>
           <Paper style={styles.paper}>
-            <Col xs={12} md={12} lg={12} sm={12}>
-              <MaterialContainer
-                keys="id"
-                className="mdl-data-table"
-                columns={columns}
-                dataArray={this.state.dataCustomer}
-                draggable={false}
-                sortable={false}
-                sortBy={{prop: 'id', order: 'desc'}}
-                pageSizeOptions={[5]}
-              />
-            </Col>
-          </Paper>
-        </div> :
-
-        <Paper style={styles.paper}>
-          <div style={{minWidth: 700}}>
-            <div
-              style={{margin: '0 auto',
-                width: '20%',
-                textAlign: 'center'}}
-            >
-              <CircularProgress />
+            <div style={{minWidth: 700}}>
+              <div
+                style={{margin: '0 auto',
+                  width: '20%',
+                  textAlign: 'center'}}
+              >
+                <CircularProgress />
+              </div>
             </div>
-          </div>
-        </Paper>
+          </Paper>
        }
 
-      {/* </div> */}
-    </Row>);
+        {/* </div> */}
+      </Row>);
   }
 }
