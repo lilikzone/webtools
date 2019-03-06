@@ -19,6 +19,7 @@ import Dialog from 'material-ui/Dialog';
 import Cookies from 'universal-cookie';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import CircularProgress from 'material-ui/CircularProgress';
 import moment from  'moment';
 
 
@@ -77,6 +78,7 @@ export default class ManageCustomer extends React.Component {
       loaded: false,
       updateAlert: false,
       cookies: '',
+      keyword: '',
       onEdit: false,
       nameTemp: '',
       emailTemp: '',
@@ -379,6 +381,40 @@ export default class ManageCustomer extends React.Component {
         console.log(`error: ${error}`);
       });
     }
+  }
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            allCustomer: {
+              data: responseJson.result.data,
+              current_page: responseJson.result.current_page,
+              total: responseJson.result.total,
+            },
+          });
+        }
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _handleUpdateKeyword() {
+    this.setState({
+      loaded: false,
+    });
+    this._getUpdate(`${HOSTNAME}search?keyword=${this.state.keyword}`);
   }
 
 
@@ -863,6 +899,21 @@ export default class ManageCustomer extends React.Component {
   }
 
   render() {
+    let _renderLoading = () => {
+      return (
+
+        <div style={{minWidth: 700}}>
+          <div
+            style={{margin: '0 auto',
+              marginTop: 20,
+              width: '20%',
+              textAlign: 'center'}}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      );
+    };
     let actions = [
       <FlatButton
         label="Cancel"
@@ -1447,7 +1498,22 @@ export default class ManageCustomer extends React.Component {
                   >
                   Are you sure want to delete this #{this.state.deleteId} product?
             </Dialog>
-
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText="Search"
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+                  </div>
                   {/* <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
@@ -1508,8 +1574,8 @@ export default class ManageCustomer extends React.Component {
                 }}
               >
                 {this.state.loaded &&
-                  this.state.currentTab == 1 &&
-                  _renderManageUser()}
+                  this.state.currentTab == 1 ?
+                  _renderManageUser() : _renderLoading()}
               </Tab>
             </Tabs>
             <Snackbar

@@ -17,6 +17,7 @@ import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
+import CircularProgress from 'material-ui/CircularProgress';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
@@ -69,6 +70,7 @@ export default class ManageUser extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      keyword: '',
       isEmailValid: true,
       isEmailValidTemp: true,
       isPhoneValid: true,
@@ -274,6 +276,40 @@ export default class ManageUser extends React.PureComponent {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
     ];
+  }
+  _getUpdate(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            allData: {
+              data: responseJson.result.data,
+              current_page: responseJson.result.current_page,
+              total: responseJson.result.total,
+            },
+          });
+        }
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  _handleUpdateKeyword() {
+    this.setState({
+      loaded: false,
+    });
+    this._getUpdate(`https://source.adlsandbox.com/api/admin/search?keyword=${this.state.keyword}`);
   }
   _onDelete(data) {
     this.setState({
@@ -710,6 +746,21 @@ export default class ManageUser extends React.PureComponent {
   }
 
   render() {
+    let _renderLoading = () => {
+      return (
+
+        <div style={{minWidth: 700}}>
+          <div
+            style={{margin: '0 auto',
+              marginTop: 20,
+              width: '20%',
+              textAlign: 'center'}}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      );
+    };
     let actions = [
       <FlatButton
         label="Cancel" primary={true}
@@ -946,6 +997,22 @@ export default class ManageUser extends React.PureComponent {
                   >
                   Are you sure want to delete this #{this.state.deleteId} product?
             </Dialog>
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText="Search"
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+                  </div>
                   <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
@@ -997,7 +1064,7 @@ export default class ManageUser extends React.PureComponent {
                 }}
 
               >
-                {this.state.loaded && _renderManageUser()}
+                {this.state.loaded ? _renderManageUser() : _renderLoading()}
               </Tab>
             </Tabs>
             <Snackbar
