@@ -40,6 +40,7 @@ export default class ManageAgency extends React.Component {
         code: '',
         agency: '',
       },
+      agencyData: {},
       // dataTable: this.data,
       redirect: false,
     };
@@ -121,7 +122,7 @@ export default class ManageAgency extends React.Component {
 
 
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'agencyData');
   }
 
   _onUpdate() {
@@ -165,7 +166,7 @@ export default class ManageAgency extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('res', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'agencyData');
         this.setState({redirect: true});
       })
       .catch((error) => {
@@ -184,7 +185,7 @@ export default class ManageAgency extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'agencyData');
         // this.setState({
         //   currentTab: 0,
         // });
@@ -210,7 +211,7 @@ export default class ManageAgency extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('responseJSON', responseJson);
-        this._getAPI(`${HOSTNAME}all`, 'textField');
+        this._getAPI(`${HOSTNAME}all`, 'agencyData');
         // this.setState({
         //   currentTab: 0,
         //   redirect: true,
@@ -267,7 +268,7 @@ export default class ManageAgency extends React.Component {
       agency: this.state.textField.agency,
     });
     this._postAPI(`${HOSTNAME}register?`, 'test', this.state.textField.code, this.state.textField.agency);
-    this._getAPI(`${HOSTNAME}all`, 'textField');
+    this._getAPI(`${HOSTNAME}all`, 'agencyData');
     this.setState({
       // dataTable: this.data,
       // currentTab: 1,
@@ -308,7 +309,7 @@ export default class ManageAgency extends React.Component {
       redirect: true,
     });
     this._deleteAPI(`${HOSTNAME}delete?`, data);
-    this._getAPI(`${HOSTNAME}all`, 'allData');
+    this._getAPI(`${HOSTNAME}all`, 'agencyData');
     this._handleClose('delete');
   }
 
@@ -524,7 +525,7 @@ export default class ManageAgency extends React.Component {
                     columns={this.columns}
                     // onDragColumn={(columns) => console.log(columns)}
                     // onChangeColumnsVisibility={(columns) => console.log(columns)}
-                    dataArray={this.state.textField}
+                    dataArray={this.state.agencyData}
                     draggable={false}
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
