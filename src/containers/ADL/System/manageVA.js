@@ -48,6 +48,8 @@ export default class ManageVA extends React.Component {
         cred1: '',
         cred2: '',
         cred3: '',
+        subnet: '',
+        ip: '',
       },
       dataTable: this.data,
       allData: [],
@@ -309,6 +311,9 @@ export default class ManageVA extends React.Component {
   }
 
   _onTouchDelete(data) {
+    this.setState({
+      loaded: false,
+    });
     this._deleteAPI(`${HOSTNAME}delete?`, data);
     this._getAPI(`${HOSTNAME}all`, 'allData');
     this._handleClose('delete');
@@ -364,6 +369,32 @@ export default class ManageVA extends React.Component {
                     onChange={(e, input) => {
                       this.setState({
                         textField: {...this.state.textField, issuer: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    // hintText="Issuer"
+                    value={this.state.textField.ip}
+                    floatingLabelFixed={true}
+                    floatingLabelText="IP"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, ip: input},
+                      });
+                    }}
+                  />
+                  <TextField
+                    required={true}
+                    // hintText="Issuer"
+                    value={this.state.textField.subnet}
+                    floatingLabelFixed={true}
+                    floatingLabelText="Subnet"
+                    fullWidth={true}
+                    onChange={(e, input) => {
+                      this.setState({
+                        textField: {...this.state.textField, subnet: input},
                       });
                     }}
                   />
@@ -535,7 +566,7 @@ export default class ManageVA extends React.Component {
                       })
                   }
                   >
-                  Are you sure want to delete this #{this.state.deleteId} product?
+                  Are you sure want to delete this #{this.state.deleteId} VA?
             </Dialog>
                   <MaterialContainer
                     keys="id"
