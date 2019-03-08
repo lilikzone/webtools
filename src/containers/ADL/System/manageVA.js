@@ -675,6 +675,7 @@ export default class ManageVA extends React.Component {
                     title="Edit VA"
                     actions={actions}
                     modal={false}
+                    autoScrollBodyContent={true}
                     open={this.state.onEdit}
                     onRequestClose={() => this._handleClose()}
                   >
