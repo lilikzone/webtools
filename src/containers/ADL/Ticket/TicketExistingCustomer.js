@@ -586,8 +586,8 @@ export default class TicketNewCustomer extends React.Component {
     this.setState({selected: false});
   }
 
-  handleClose = () => {
-    this.setState({openWarning: false});
+  _handleClose = () => {
+    this.setState({openWarning: false, openModal: false});
   }
 
   _handleValidationPriority(input, index, data) {
@@ -867,7 +867,7 @@ export default class TicketNewCustomer extends React.Component {
         label="cancel"
         secondary={true}
         style={styles.raisedButton}
-        onTouchTap={this.handleClose}
+        onTouchTap={this._handleClose}
       />,
       <RaisedButton
         label="Submit"
@@ -881,7 +881,7 @@ export default class TicketNewCustomer extends React.Component {
         label="Close"
         secondary={true}
         style={styles.raisedButton}
-        onTouchTap={this.handleClose}
+        onTouchTap={this._handleClose}
       />,
     ];
     return (<Row>
@@ -964,6 +964,7 @@ export default class TicketNewCustomer extends React.Component {
                 onTouchTap={() => {
                   this.setState({openModal: true});
                 }}
+                disabled={this.state.selectedCustomer.id === undefined}
               />
             </Col>
             <Col xs={12} md={6} sm={6} lg={6}>
