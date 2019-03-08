@@ -78,11 +78,29 @@ export default class TicketNewCustomer extends React.Component {
       dataProduct: [],
       dataBilling: [],
       dataTicket: [],
+      dataRole: [
+        {'name': 'Admin', 'value': 'admin'},
+        {'name': 'Homepassed', 'value': 'homepassed'},
+        {'name': 'Operation', 'value': 'operation'},
+        {'name': 'Product', 'value': 'product'},
+        {'name': 'Finance', 'value': 'finance'},
+        {'name': 'Internal Sales', 'value': 'internalsales'},
+        {'name': 'Sales Admin', 'value': 'salesadmin'},
+        {'name': 'Sales', 'value': 'sales'},
+        {'name': 'Manage Service', 'value': 'manageservice'},
+        {'name': 'Dispatcher', 'value': 'dispatcher'},
+        {'name': 'Installer', 'value': 'installer'},
+        {'name': 'CS', 'value': 'cs'},
+        {'name': 'CS External', 'value': 'csexternal'},
+      ],
       cookies: '',
       loaded: false,
       selected: false,
       selectedId: '',
       openModal: false,
+      openWarning: false,
+      TitleMessage: '',
+      warningMessage: '',
     };
 
     const ChooseBtn = (data) => (
@@ -487,9 +505,21 @@ export default class TicketNewCustomer extends React.Component {
       });
   }
 
-  _getAPI(apiUrl, stateName) {
-    fetch(apiUrl, {
-      method: 'GET',
+  _postAPI(apiUrl) {
+    const customer_id = this.state.selectedCustomer.id;
+    const case_id = this.state.textField.case_id;
+    const departement = this.state.textField.departement;
+    const status_id = 1;
+    const priority_id = this.state.textField.priority_id;
+    const description = this.state.textField.description;
+    const detail = this.state.textField.detail;
+    const assignee_user = this.state.textField.assignee_user;
+    const assignee_role = this.state.textField.departement;
+
+    console.log(`${apiUrl}ticket/exist-customer/create/${customer_id}?case_id=${case_id}&status_id=${status_id}&departement=${departement}&priority=${priority_id}&description=${description}&detail=${detail}&assignee_user=${assignee_user}`);
+
+    fetch(`${apiUrl}ticket/exist-customer/create/${customer_id}?case_id=${case_id}&status_id=${status_id}&departement=${departement}&priority=${priority_id}&description=${description}&detail=${detail}&assignee_user=${assignee_user}`, {
+      method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
@@ -497,14 +527,22 @@ export default class TicketNewCustomer extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log(responseJson);
+        console.log(responseJson);
         this.setState({
-          allCustomer: responseJson,
-          loaded: true,
+          openWarning: true,
+          TitleMessage: 'Success',
+          warningMessage: responseJson.message,
+
         });
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          openWarning: true,
+          TitleMessage: 'Error',
+          warningMessage: `${error}`,
+
+        });
       });
   }
 
@@ -549,15 +587,26 @@ export default class TicketNewCustomer extends React.Component {
   }
 
   handleClose = () => {
-    this.setState({openModal: false});
+    this.setState({openWarning: false});
   }
 
   _handleValidationPriority(input, index, data) {
     let dataInput = data.toLowerCase();
-
+    console.log(data);
     this.setState({
-      textField: {...this.state.textField, priority: dataInput},
+      textField: {...this.state.textField, priority_id: dataInput},
     });
+  }
+
+
+  _handleValidationDepartement(input, index, data) {
+    this.setState({
+      textField: {...this.state.textField, departement: data},
+    });
+  }
+
+  _handleTouchTap = () => {
+    this._postAPI(HOSTNAME);
   }
 
 
@@ -718,15 +767,37 @@ export default class TicketNewCustomer extends React.Component {
       return (
         <div>
           <TextField
-            floatingLabelText="Departement"
+            floatingLabelText="Case ID"
             fullWidth={true}
             required={true}
+            value={this.state.textField.case_id}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, case_id: input},
+              });
+            }}
           />
+          <SelectField
+            fullWidth={true}
+            floatingLabelText="Departement"
+            name="role"
+            value={this.state.textField.departement}
+            onChange={(e, input, value) => {
+              this._handleValidationDepartement(e, input, value);
+            }}
+          >
+            {this.state.dataRole !== '' ? this.state.dataRole.map((data, j) => {
+              j++;
+              return (<MenuItem key={j} value={data.value} primaryText={data.name} />);
+            }) : ''}
+
+          </SelectField>
+
           <SelectField
             fullWidth={true}
             required={true}
             floatingLabelText="Priority"
-            value={this.state.textField.priority}
+            value={this.state.textField.priority_id}
             onChange={(input, index, dataSource) => {
               this._handleValidationPriority(input, index, dataSource);
             }}
@@ -740,6 +811,12 @@ export default class TicketNewCustomer extends React.Component {
             fullWidth={true}
             required={true}
             multiLine={true}
+            value={this.state.textField.description}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, description: input},
+              });
+            }}
             rows={2}
             rowsMax={4}
           />
@@ -748,13 +825,25 @@ export default class TicketNewCustomer extends React.Component {
             fullWidth={true}
             required={true}
             multiLine={true}
-            rows={4}
+            value={this.state.textField.detail}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, detail: input},
+              });
+            }}
+            rows={2}
             rowsMax={4}
           />
           <TextField
             floatingLabelText="Assignee user"
             fullWidth={true}
             required={true}
+            value={this.state.textField.assignee_user}
+            onChange={(e, input) => {
+              this.setState({
+                textField: {...this.state.textField, assignee_user: input},
+              });
+            }}
           />
           {/* <AutoComplete
             fullWidth={true}
@@ -778,13 +867,21 @@ export default class TicketNewCustomer extends React.Component {
         label="cancel"
         secondary={true}
         style={styles.raisedButton}
-        onTouchTap={() => this.handleClose}
+        onTouchTap={this.handleClose}
       />,
       <RaisedButton
         label="Submit"
         secondary={true}
         style={styles.raisedButton}
-        onTouchTap={() => this._handleTouchTap()}
+        onTouchTap={this._handleTouchTap}
+      />,
+    ];
+    let actionWarning = [
+      <RaisedButton
+        label="Close"
+        secondary={true}
+        style={styles.raisedButton}
+        onTouchTap={this.handleClose}
       />,
     ];
     return (<Row>
@@ -799,6 +896,15 @@ export default class TicketNewCustomer extends React.Component {
             autoScrollBodyContent={true}
           >
             {_componentModal()}
+          </Dialog>
+          <Dialog
+            title={this.state.TitleMessage}
+            actions={actionWarning}
+            modal={false}
+            open={this.state.openWarning}
+            onRequestClose={this.handleClose}
+          >
+            {this.state.warningMessage}
           </Dialog>
           <h3>Existing Customer</h3>
           <div style={{marginTop: 10}}>
