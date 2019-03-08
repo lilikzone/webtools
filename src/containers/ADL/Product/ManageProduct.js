@@ -18,7 +18,7 @@ import Dialog from 'material-ui/Dialog';
 import CircularProgress from 'material-ui/CircularProgress';
 import {CSVLink} from 'react-csv';
 import {red400} from 'material-ui/styles/colors';
-import moment from  'moment';
+import moment from 'moment';
 import ChipInput from 'material-ui-chip-input';
 
 const cookies = new Cookies();
@@ -54,7 +54,6 @@ const generateRowProps = (row) => {
   }
   return options;
 };
-
 
 const CheckBtn = () => (
   <div style={styles.action}>
@@ -112,17 +111,53 @@ export default class ManageProduct extends React.Component {
       warningMessage: '',
       idUpdate: '',
       dataPromoArea: [],
+      dataPromoAreaTemp: [],
       restartField: false,
+      restartTemp: true,
+      promoTypeTemp: [],
+      promoTemp: '',
+      codeTemp: '',
+      nameTemp: '',
+      promoPercentageTemp: '',
+      promo_valueTemp: '',
+      priceTemp: '',
+      charging_nameTemp: '',
+      soc_labelTemp: '',
+      soc_idTemp: '',
+      descriptionTemp: '',
+      promo_endTemp: '',
+      promo_startTemp: '',
+      promo_activationTemp: '',
     };
 
     const EditBtn = (data) => (
       <div className="text-center">
         <button
           onClick={() => {
-            this.setState({openEdit: true, textField: data, idUpdate: data.id});
+            this.setState({
+              openEdit: true,
+              idUpdate: data.id,
+              promoTypeTemp: data.promo_type,
+              promoTemp: data.promo,
+              codeTemp: data.code,
+              nameTemp: data.name,
+              promoPercentageTemp: data.promo_price,
+              promo_valueTemp: data.promo_value,
+              priceTemp: data.price,
+              charging_nameTemp: data.charging_name,
+              soc_labelTemp: data.soc_label,
+              soc_idTemp: data.soc_id,
+              descriptionTemp: data.description,
+              promo_endTemp: '',
+              promo_startTemp: '',
+              promo_activationTemp: data.promo,
+              dataPromoAreaTemp: this._handleDataSource(data.promo_type),
+            });
           }}
           className="mdl-button mdl-button--raised"
-        >Edit</button>
+        >
+          Edit
+        </button>
       </div>
     );
     const DeleteBtn = (data) => (
@@ -270,6 +305,11 @@ export default class ManageProduct extends React.Component {
       this.setState({
         restartField: true,
       });
+    }    else if (prevState.dataPromoAreaTemp != this.state.dataPromoAreaTemp) {
+      this.setState({
+        restartTemp: true,
+        promo_valueTemp: '',
+      });
     }
   }
   componentWillMount() {
@@ -296,6 +336,19 @@ export default class ManageProduct extends React.Component {
     this.setState({
       updateAlert: false,
     });
+  }
+  _handleDataSource(value) {
+    if (value === 'olt') {
+      return this.state.dataOlt;
+    } else if (value === 'fdt') {
+      return this.state.dataFdt;
+    } else if (value === 'cluster') {
+      return this.state.dataCluster;
+    } else if (value === 'city') {
+      return this.state.dataCity;
+    } else {
+      return this.state.dataRegion;
+    }
   }
 
   _handleDelete(data) {
@@ -335,36 +388,26 @@ export default class ManageProduct extends React.Component {
     const soc_label = this.state.textField.soc_label;
     const charging_name = this.state.textField.charging_name;
     const price = this.state.textField.price;
-    const promo_type = this.state.textField.promo_type === '' ? 0 : this.state.textField.promo_type;
-    const promo_value = this.state.textField.promo_area === '' ? 0 : this.state.textField.promo_area;
-    const promo_price = this.state.textField.promo_price === '' ? 0 : this.state.textField.promo_price;
+    const promo_type =
+      this.state.textField.promo_type === '' ?
+        0 :
+        this.state.textField.promo_type;
+    const promo_value =
+      this.state.textField.promo_area === '' ?
+        0 :
+        this.state.textField.promo_area;
+    const promo_price =
+      this.state.textField.promo_price === '' ?
+        0 :
+        this.state.textField.promo_price;
     const promo = this.state.textField.promo;
 
-
-    console.log(`https://source.adlsandbox.com/api/product/register?code=${
-      code
-    }&name=${name}&description=${description}&soc_id=${
-      soc_id
-    }&soc_label=${soc_label}&charging_name=${
-      charging_name
-    }&price=${price}&promo_type=${
-      promo_type
-    }&promo_value=${promo_value}&promo_price=${
-      promo_price
-    }&promo=${promo}`);
+    // console.log(
+    //   `https://source.adlsandbox.com/api/product/register?code=${code}&name=${name}&description=${description}&soc_id=${soc_id}&soc_label=${soc_label}&charging_name=${charging_name}&price=${price}&promo_type=${promo_type}&promo_value=${promo_value}&promo_price=${promo_price}&promo=${promo}`
+    // );
 
     fetch(
-      `https://source.adlsandbox.com/api/product/register?code=${
-        code
-      }&name=${name}&description=${description}&soc_id=${
-        soc_id
-      }&soc_label=${soc_label}&charging_name=${
-        charging_name
-      }&price=${price}&promo_type=${
-        promo_type
-      }&promo_value=${promo_value}&promo_price=${
-        promo_price
-      }&promo=${promo}`,
+      `https://source.adlsandbox.com/api/product/register?code=${code}&name=${name}&description=${description}&soc_id=${soc_id}&soc_label=${soc_label}&charging_name=${charging_name}&price=${price}&promo_type=${promo_type}&promo_value=${promo_value}&promo_price=${promo_price}&promo=${promo}`,
       {
         method: 'POST',
         headers: {
@@ -387,43 +430,45 @@ export default class ManageProduct extends React.Component {
       });
   }
   _putAPI() {
-    const code = this.state.textField.code;
-    const name = this.state.textField.name;
-    const description = this.state.textField.description;
-    const soc_id = this.state.textField.soc_id;
-    const soc_label = this.state.textField.soc_label;
-    const charging_name = this.state.textField.charging_name;
-    const price = this.state.textField.price;
-    const promo_type = this.state.textField.promo_type === '' ? 0 : this.state.textField.promo_type;
-    const promo_value = this.state.textField.promo_area === '' ? 0 : this.state.textField.promo_area;
-    const promo_price = this.state.textField.promo_price === '' ? 0 : this.state.textField.promo_price;
-    const promo = this.state.textField.promo;
+    const code = this.state.codeTemp;
+    const name = this.state.nameTemp;
+    const description = this.state.descriptionTemp;
+    const soc_id = this.state.soc_idTemp;
+    const soc_label = this.state.soc_labelTemp;
+    const charging_name = this.state.charging_nameTemp;
+    const price = this.state.priceTemp;
+    const promo_type =
+      this.state.textField.promo_type === '' ?
+        0 :
+        this.state.textField.promo_type;
+    const promo_value =
+      this.state.textField.promo_area === '' ?
+        0 :
+        this.state.textField.promo_area;
+    const promo_price =
+      this.state.textField.promo_price === '' ?
+        0 :
+        this.state.textField.promo_price;
+    const promo = this.state.promoTemp;
 
-
-    console.log(`https://source.adlsandbox.com/api/product/${this.state.idUpdate}?code=${
-      code
-    }&name=${name}&description=${description}&soc_id=${
-      soc_id
-    }&soc_label=${soc_label}&charging_name=${
-      charging_name
-    }&price=${price}&promo_type=${
-      promo_type
-    }&promo_value=${promo_value}&promo_price=${
-      promo_price
-    }&promo=${promo}`);
+    // console.log(
+    //   `https://source.adlsandbox.com/api/product/${
+    //     this.state.idUpdate
+    //   }?code=${code}&name=${name}&description=${description}&soc_id=${soc_id}&soc_label=${soc_label}&charging_name=${charging_name}&price=${price}&promo_type=${
+    //     this.state.promoTypeTemp
+    //   }&promo_value=${
+    //     this.state.promo_valueTemp
+    //   }&promo_price=${promo_price}&promo=${promo}`
+    // );
 
     fetch(
-      `https://source.adlsandbox.com/api/product/${this.state.idUpdate}?code=${
-        code
-      }&name=${name}&description=${description}&soc_id=${
-        soc_id
-      }&soc_label=${soc_label}&charging_name=${
-        charging_name
-      }&price=${price}&promo_type=${
-        promo_type
-      }&promo_value=${promo_value}&promo_price=${
-        promo_price
-      }&promo=${promo}`,
+      `https://source.adlsandbox.com/api/product/${
+        this.state.idUpdate
+      }?code=${code}&name=${name}&description=${description}&soc_id=${soc_id}&soc_label=${soc_label}&charging_name=${charging_name}&price=${price}&promo_type=${
+        this.state.promoTypeTemp
+      }&promo_value=${
+        this.state.promo_valueTemp
+      }&promo_price=${promo_price}&promo=${promo}`,
       {
         method: 'PUT',
         headers: {
@@ -433,7 +478,7 @@ export default class ManageProduct extends React.Component {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        console.log('result_update', responseJson);
         this.setState({
           textField: {
             promo: 0,
@@ -512,7 +557,6 @@ export default class ManageProduct extends React.Component {
     this._getUpdate(`${HOSTNAME}search?keyword=${this.state.keyword}`);
   }
 
-
   _handleTouchTap() {
     this._postAPI();
     this._getAPI(`${HOSTNAME}all?`);
@@ -566,7 +610,7 @@ export default class ManageProduct extends React.Component {
       method: 'GET',
       type: 'cors',
       headers: {
-        'Authorization': `Bearer ${this.state.cookies}`,
+        Authorization: `Bearer ${this.state.cookies}`,
         'Content-Type': 'application/json',
       },
     })
@@ -577,32 +621,32 @@ export default class ManageProduct extends React.Component {
         const dataCityObject = respons[0].city;
         const dataCity = [];
         let i;
-        for (i = 0;i < dataCityObject.length;i++) {
+        for (i = 0; i < dataCityObject.length; i++) {
           dataCity.push(dataCityObject[i].city);
         }
         const dataOltObject = respons[0].olt_location;
         const dataOlt = [];
         let j;
-        for (j = 0;j < dataOltObject.length;j++) {
+        for (j = 0; j < dataOltObject.length; j++) {
           dataOlt.push(dataOltObject[j].olt_location);
         }
         const dataFdtObject = respons[0].fdt_code;
         const dataFdt = [];
         let k;
-        for (k = 0;k < dataFdtObject.length;k++) {
+        for (k = 0; k < dataFdtObject.length; k++) {
           dataFdt.push(dataFdtObject[k].fdt_code);
         }
         const dataRegionObject = respons[0].region;
         const dataRegion = [];
         let m;
-        for (m = 0;m < dataRegionObject.length;m++) {
+        for (m = 0; m < dataRegionObject.length; m++) {
           dataRegion.push(dataRegionObject[m].region);
         }
 
         const dataClusterObject = respons[0].cluster;
         const dataCluster = [];
         let n;
-        for (n = 0;n < dataClusterObject.length;n++) {
+        for (n = 0; n < dataClusterObject.length; n++) {
           dataCluster.push(dataClusterObject[n].cluster);
         }
 
@@ -613,7 +657,8 @@ export default class ManageProduct extends React.Component {
           dataRegion: dataRegion,
           dataCluster: dataCluster,
         });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log(`error: ${error}`);
       });
   }
@@ -623,11 +668,11 @@ export default class ManageProduct extends React.Component {
       this.setState({
         updateAlert: false,
       });
-    }      else if (param == 'delete') {
+    } else if (param == 'delete') {
       this.setState({
         deleteAlert: false,
       });
-    }     else {
+    } else {
       this.setState({openWarning: false, openEdit: false});
     }
   };
@@ -638,7 +683,7 @@ export default class ManageProduct extends React.Component {
       updateAlert: true,
       openEdit: false,
     });
-  }
+  };
   _reconstructExportData(data) {
     let exportData = [];
     if (data.length > 0) {
@@ -673,8 +718,7 @@ export default class ManageProduct extends React.Component {
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {...this.state.textField, code: input}
-                        ,
+                        textField: {...this.state.textField, code: input},
                       });
                     }}
                   />
@@ -703,8 +747,10 @@ export default class ManageProduct extends React.Component {
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {...this.state.textField, description: input}
-                        ,
+                        textField: {
+                          ...this.state.textField,
+                          description: input,
+                        },
                       });
                     }}
                   />
@@ -743,7 +789,10 @@ export default class ManageProduct extends React.Component {
                     fullWidth={true}
                     onChange={(e, input) => {
                       this.setState({
-                        textField: {...this.state.textField, charging_name: input},
+                        textField: {
+                          ...this.state.textField,
+                          charging_name: input,
+                        },
                       });
                     }}
                   />
@@ -770,7 +819,10 @@ export default class ManageProduct extends React.Component {
                     style={styles.toggle}
                     onToggle={(input, inputChecked) => {
                       this.setState({
-                        textField: {...this.state.textField, promo: inputChecked == false ? 0 : 1},
+                        textField: {
+                          ...this.state.textField,
+                          promo: inputChecked == false ? 0 : 1,
+                        },
                       });
                     }}
                     toggled={promo_activation}
@@ -785,7 +837,10 @@ export default class ManageProduct extends React.Component {
                         fullWidth={true}
                         onChange={(e, input) => {
                           this.setState({
-                            textField: {...this.state.textField, promo_start: input},
+                            textField: {
+                              ...this.state.textField,
+                              promo_start: input,
+                            },
                           });
                         }}
                         // errorText={validation.promo_start}
@@ -798,7 +853,10 @@ export default class ManageProduct extends React.Component {
                         fullWidth={true}
                         onChange={(e, input) => {
                           this.setState({
-                            textField: {...this.state.textField, promo_end: input},
+                            textField: {
+                              ...this.state.textField,
+                              promo_end: input,
+                            },
                           });
                         }}
                         // errorText={validation.promo_end}
@@ -810,7 +868,10 @@ export default class ManageProduct extends React.Component {
                         value={this.state.textField.promo_type}
                         onChange={(e, index, value) => {
                           this.setState({
-                            textField: {...this.state.textField, promo_type: value},
+                            textField: {
+                              ...this.state.textField,
+                              promo_type: value,
+                            },
                             restartField: false,
                           });
 
@@ -857,16 +918,22 @@ export default class ManageProduct extends React.Component {
                           }}
                         />
                       </div> */}
-                      {this.state.restartField && <ChipInput
-                        allowDuplicates={false}
-                        hintText="Promo Area"
-                        floatingLabelText="Promo Area"
-                        dataSource={this.state.dataPromoArea}
-                        onChange={((val) =>
-                          this.setState({
-                            textField: {...this.state.textField, promo_area: val},
-                          }))}
-                                                  />}
+                      {this.state.restartField && (
+                        <ChipInput
+                          allowDuplicates={false}
+                          hintText="Promo Area"
+                          floatingLabelText="Promo Area"
+                          dataSource={this.state.dataPromoArea}
+                          onChange={(val) =>
+                            this.setState({
+                              textField: {
+                                ...this.state.textField,
+                                promo_area: val,
+                              },
+                            })
+                          }
+                        />
+                      )}
                       <TextField
                         required={true}
                         hintText="Promo Percentage (%)"
@@ -876,7 +943,10 @@ export default class ManageProduct extends React.Component {
                         type="number"
                         onChange={(e, input) => {
                           this.setState({
-                            textField: {...this.state.textField, promo_price: input},
+                            textField: {
+                              ...this.state.textField,
+                              promo_price: input,
+                            },
                           });
                         }}
                       />
@@ -901,95 +971,107 @@ export default class ManageProduct extends React.Component {
     let _renderTableProduct = () => {
       return (
         <Row>
-          {this.state.loaded ?           <Col xs={12} md={12} lg={12}>
-            {/* <Card style={styles.card}> */}
-            <div className="mdl-layout mdl-layout--no-drawer-button container">
-              <div className="mdl-layout--fixed-drawer" id="asa">
-                <RaisedButton
-                  backgroundColor={red400}
-                  style={{marginTop: 10}}
-                >
-                  <CSVLink
-                    data={this.state.productAll}
-                    filename={`Manage Product ${new Date(moment())}.xls`}
-                    style={{color: 'white'}}
-                    target="_blank"
+          {this.state.loaded ? (
+            <Col xs={12} md={12} lg={12}>
+              {/* <Card style={styles.card}> */}
+              <div className="mdl-layout mdl-layout--no-drawer-button container">
+                <div className="mdl-layout--fixed-drawer" id="asa">
+                  <RaisedButton
+                    backgroundColor={red400}
+                    style={{marginTop: 10}}
                   >
+                    <CSVLink
+                      data={this.state.productAll}
+                      filename={`Manage Product ${new Date(moment())}.xls`}
+                      style={{color: 'white'}}
+                      target="_blank"
+                    >
                       EXPORT
                     </CSVLink>
-                </RaisedButton>
-                <div>
-                  <TextField
-                    required={true}
-                    value={this.state.keyword}
-                    hintText="Search"
-                    fullWidth={false}
-                    onChange={(e, input) => {
-                      this.setState({
-                        keyword: input,
-                      });
-                    }}
+                  </RaisedButton>
+                  <div>
+                    <TextField
+                      required={true}
+                      value={this.state.keyword}
+                      hintText="Search"
+                      fullWidth={false}
+                      onChange={(e, input) => {
+                        this.setState({
+                          keyword: input,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <RaisedButton
+                      secondary={true}
+                      label={'Search'}
+                      onMouseDown={() => this._handleUpdateKeyword()}
+                    />
+                  </div>
+                  <MaterialContainer
+                    keys="id"
+                    className="mdl-data-table"
+                    columns={this.columns}
+                    dataArray={this.state.productAll}
+                    // dataArray={dataDummy}
+                    draggable={true}
+                    sortable={true}
+                    sortBy={{prop: 'id', order: 'desc'}}
+                    generateRowProps={generateRowProps}
+                    pageSizeOptions={[10]}
                   />
                 </div>
-                <div>
-                  <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
+              </div>
+              {/* </Card> */}
+            </Col>
+          ) : (
+            <Paper style={styles.paper}>
+              <div style={{minWidth: 700}}>
+                <div
+                  style={{
+                    margin: '0 auto',
+                    width: '20%',
+                    textAlign: 'center',
+                  }}
+                >
+                  <CircularProgress />
                 </div>
-                <MaterialContainer
-                  keys="id"
-                  className="mdl-data-table"
-                  columns={this.columns}
-                  dataArray={this.state.productAll}
-                  // dataArray={dataDummy}
-                  draggable={true}
-                  sortable={true}
-                  sortBy={{prop: 'id', order: 'desc'}}
-                  generateRowProps={generateRowProps}
-                  pageSizeOptions={[10]}
-                />
               </div>
-            </div>
-            {/* </Card> */}
-          </Col> : <Paper style={styles.paper}>
-            <div style={{minWidth: 700}}>
-              <div
-                style={{margin: '0 auto',
-                  width: '20%',
-                  textAlign: 'center'}}
-              >
-                <CircularProgress />
-              </div>
-            </div>
-          </Paper>
-
-        }
-
+            </Paper>
+          )}
         </Row>
       );
     };
 
     let actions = (val) => [
       <RaisedButton
-        label="OK" primary={true}
+        label="OK"
+        primary={true}
         onTouchTap={() => this.handleClose(val)}
       />,
     ];
     let actionsModalTable = [
       <RaisedButton
-        label="Cancel" primary={true}
+        label="Cancel"
+        primary={true}
         onTouchTap={this.handleClose}
       />,
       <RaisedButton
-        label="Update" primary={true}
+        label="Update"
+        primary={true}
         onTouchTap={this._handleUpdate}
       />,
     ];
     let actionsDeleteTable = [
       <RaisedButton
-        label="Cancel" primary={true}
+        label="Cancel"
+        primary={true}
         onTouchTap={() => this.handleClose('delete')}
       />,
       <RaisedButton
-        label="Delete" primary={true}
+        label="Delete"
+        primary={true}
         onTouchTap={() => this._handleDelete(this.state.deleteId)}
       />,
     ];
@@ -1001,13 +1083,12 @@ export default class ManageProduct extends React.Component {
             required={true}
             hintText="Code"
             floatingLabelText="Code"
-            value={this.state.textField.code}
+            value={this.state.codeTemp}
             name="code"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, code: input}
-                        ,
+                codeTemp: input,
               });
             }}
           />
@@ -1016,11 +1097,11 @@ export default class ManageProduct extends React.Component {
             hintText="Name"
             floatingLabelText="Name"
             name="name"
-            value={this.state.textField.name}
+            value={this.state.nameTemp}
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, name: input},
+                nameTemp: input,
               });
             }}
           />
@@ -1031,13 +1112,12 @@ export default class ManageProduct extends React.Component {
             multiLine={true}
             rows={2}
             rowsMax={4}
-            value={this.state.textField.description}
+            value={this.state.descriptionTemp}
             name="description"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, description: input}
-                        ,
+                descriptionTemp: input,
               });
             }}
           />
@@ -1046,11 +1126,11 @@ export default class ManageProduct extends React.Component {
             hintText="SOC ID"
             floatingLabelText="SOC ID"
             name="soc_id"
-            value={this.state.textField.soc_id}
+            value={this.state.soc_idTemp}
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, soc_id: input},
+                soc_idTemp: input,
               });
             }}
           />
@@ -1060,10 +1140,10 @@ export default class ManageProduct extends React.Component {
             floatingLabelText="SOC Label"
             name="soc_label"
             fullWidth={true}
-            value={this.state.textField.soc_label}
+            value={this.state.soc_labelTemp}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, soc_label: input},
+                soc_labelTemp: input,
               });
             }}
           />
@@ -1072,27 +1152,27 @@ export default class ManageProduct extends React.Component {
             hintText="Charging Name"
             floatingLabelText="Charging Name"
             name="charging_name"
-            value={this.state.textField.charging_name}
+            value={this.state.charging_nameTemp}
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, charging_name: input},
+                charging_nameTemp: input,
               });
             }}
           />
           <TextField
             required={true}
-                    // hintText="Price"
+            // hintText="Price"
             floatingLabelText="Price"
             name="price"
             fullWidth={true}
-            value={this.state.textField.price}
+            value={this.state.priceTemp}
             onChange={(e, input) => {
               this.setState({
-                textField: {...this.state.textField, price: input},
+                priceTemp: input,
               });
             }}
-                    // errorText={validation.price}
+            // errorText={validation.price}
             type="number"
           />
           <br />
@@ -1103,22 +1183,22 @@ export default class ManageProduct extends React.Component {
             style={styles.toggle}
             onToggle={(input, inputChecked) => {
               this.setState({
-                textField: {...this.state.textField, promo: inputChecked == false ? 0 : 1},
+                promoTemp: inputChecked == false ? 0 : 1,
               });
             }}
-            toggled={promo_activation}
+            toggled={this.state.promo_activationTemp}
           />
-          {promo_activation ? (
+          {this.state.promo_activationTemp ? (
             <div>
               <DatePicker
                 hintText="Promo Start"
                 floatingLabelText="Promo Start"
                 name="promo_start"
-                value={this.state.textField.promo_start}
+                value={this.state.promo_startTemp}
                 fullWidth={true}
                 onChange={(e, input) => {
                   this.setState({
-                    textField: {...this.state.textField, promo_start: input},
+                    promo_startTemp: input,
                   });
                 }}
               />
@@ -1126,11 +1206,11 @@ export default class ManageProduct extends React.Component {
                 hintText="Promo End"
                 floatingLabelText="Promo End"
                 name="promo_end"
-                value={this.state.textField.promo_end}
+                value={this.state.promo_endTemp}
                 fullWidth={true}
                 onChange={(e, input) => {
                   this.setState({
-                    textField: {...this.state.textField, promo_end: input},
+                    promo_endTemp: input,
                   });
                 }}
               />
@@ -1138,11 +1218,34 @@ export default class ManageProduct extends React.Component {
                 fullWidth={true}
                 floatingLabelText="Promo Type"
                 name="promo_type"
-                value={this.state.textField.promo_type}
+                value={this.state.promoTypeTemp}
                 onChange={(e, index, value) => {
                   this.setState({
-                    textField: {...this.state.textField, promo_type: value},
+                    promoTypeTemp: value,
+                    restartTemp: false,
                   });
+
+                  if (value === 'olt') {
+                    this.setState({
+                      dataPromoAreaTemp: this.state.dataOlt,
+                    });
+                  } else if (value === 'fdt') {
+                    this.setState({
+                      dataPromoAreaTemp: this.state.dataFdt,
+                    });
+                  } else if (value === 'cluster') {
+                    this.setState({
+                      dataPromoAreaTemp: this.state.dataCluster,
+                    });
+                  } else if (value === 'city') {
+                    this.setState({
+                      dataPromoAreaTemp: this.state.dataCity,
+                    });
+                  } else {
+                    this.setState({
+                      dataPromoAreaTemp: this.state.dataRegion,
+                    });
+                  }
                 }}
               >
                 <MenuItem value={'olt'} primaryText="OLT" />
@@ -1151,18 +1254,20 @@ export default class ManageProduct extends React.Component {
                 <MenuItem value={'fdt'} primaryText="FDT" />
               </SelectField>
               <div>
-                <AutoComplete
-                  name="promo_area"
-                  fullWidth={true}
-                  hintText="Promo area"
-                  floatingLabelText="Promo Area"
-                  filter={AutoComplete.noFilter}
-                  dataSource={this.state.dataCity}
-                  openOnFocus={true}
-                  onUpdateInput={(input, dataSource) => {
-                    this._handleValidationPromoArea(input, dataSource);
-                  }}
-                />
+                {this.state.restartTemp && (
+                  <ChipInput
+                    allowDuplicates={false}
+                    hintText="Promo Area"
+                    floatingLabelText="Promo Area"
+                    dataSource={this.state.dataPromoAreaTemp}
+                    defaultValue={[this.state.promo_valueTemp]}
+                    onChange={(val) =>
+                      this.setState({
+                        promo_valueTemp: val,
+                      })
+                    }
+                  />
+                )}
               </div>
               <TextField
                 required={true}
@@ -1173,14 +1278,14 @@ export default class ManageProduct extends React.Component {
                 type="number"
                 onChange={(e, input) => {
                   this.setState({
-                    textField: {...this.state.textField, promo_price: input},
+                    promoPercentageTemp: input,
                   });
                 }}
               />
             </div>
-                  ) : (
-                    ''
-                  )}
+          ) : (
+            ''
+          )}
         </div>
       );
     };
@@ -1225,9 +1330,9 @@ export default class ManageProduct extends React.Component {
                 this.setState({
                   deleteAlert: false,
                 })
-            }
+              }
             >
-            Are you sure want to delete {this.state.deleteName}?
+              Are you sure want to delete {this.state.deleteName}?
             </Dialog>
             <Tabs value={this.state.currentTab}>
               <Tab
@@ -1250,8 +1355,7 @@ export default class ManageProduct extends React.Component {
                 }}
                 label="Manage Product"
               >
-                { this.state.currentTab == 1 &&
-                  _renderTableProduct()}
+                {this.state.currentTab == 1 && _renderTableProduct()}
               </Tab>
             </Tabs>
           </Col>
