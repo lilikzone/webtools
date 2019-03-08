@@ -332,7 +332,7 @@ export default class TransactionCustomer extends React.Component {
     return (
       <Row className="m-b-15">
         {this.state.loaded ?
-          <div className="mdl-layout mdl-layout--no-drawer-button container">
+          <div>
             <h3>Customer Data</h3>
             <Paper style={styles.paper}>
               <Col xs={12} md={12} lg={12} sm={12}>
@@ -367,21 +367,29 @@ export default class TransactionCustomer extends React.Component {
                     <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword()} />
                   </div>
                 </div>
-                <MaterialContainer
-                  keys="id"
-                  className="mdl-data-table"
-                  columns={columns}
-                  onChangePage={((page) => this.setState({
-                    dataCustomer: {...this.state.dataCustomer, current_page: page + 1},
-                  }))}
-                  dataArrayCustom={this.state.dataCustomer.data}
-                  draggable={true}
-                  sortable={false}
-                  currentPage={this.state.dataCustomer.current_page - 1}
-                  total={this.state.dataCustomer.total}
-                  sortBy={{prop: 'id', order: 'asc'}}
-                  pageSizeOptions={[10]}
-                />
+                <Row>
+                  <Col xs={12} md={12} lg={12}>
+                    <div className="mdl-layout mdl-layout--no-drawer-button container">
+                      <div className="mdl-layout--fixed-drawer" id="asa">
+                        <MaterialContainer
+                          keys="id"
+                          className="mdl-data-table"
+                          columns={columns}
+                          onChangePage={((page) => this.setState({
+                            dataCustomer: {...this.state.dataCustomer, current_page: page + 1},
+                          }))}
+                          dataArrayCustom={this.state.dataCustomer.data}
+                          draggable={true}
+                          sortable={false}
+                          currentPage={this.state.dataCustomer.current_page - 1}
+                          total={this.state.dataCustomer.total}
+                          sortBy={{prop: 'id', order: 'asc'}}
+                          pageSizeOptions={[10]}
+                        />
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Paper>
           </div> :

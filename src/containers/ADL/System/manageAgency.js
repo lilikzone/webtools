@@ -488,6 +488,7 @@ export default class ManageAgency extends React.Component {
                     actions={actions}
                     modal={false}
                     open={this.state.onEdit}
+                    autoScrollBodyContent={true}
                     onRequestClose={() => this._handleClose()}
                   >
                     {_renderModalComponent()}

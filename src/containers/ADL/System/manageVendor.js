@@ -435,6 +435,7 @@ export default class ManageVendor extends React.Component {
                     actions={actions}
                     modal={false}
                     open={this.state.onEdit}
+                    autoScrollBodyContent={true}
                     onRequestClose={() => this._handleClose()}
                   >
                     {_renderModalComponent()}
