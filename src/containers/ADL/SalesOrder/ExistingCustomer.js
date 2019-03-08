@@ -756,22 +756,22 @@ export default class ExistingCustomer extends Component {
         const CustomerLoaded  = this.state.CustomerLoaded;
         return (
           <Row>
-            <Card style={style.card}>
-              <Col md={12} lg={12} xs={12} sm={12} >
-                {CustomerLoaded ?
-                  <MaterialContainer
-                    keys="id"
-                    className="mdl-data-table"
-                    columns={this.columns}
-                    dataArray={this.state.dataCustomer}
-                    draggable={false}
-                    sortable={false}
-                    sortBy={{prop: 'id', order: 'desc'}}
-                    pageSizeOptions={[10]}
-                  /> : ''}
+            {/* <Card style={style.card}> */}
+            <Col md={12} lg={12} xs={12} sm={12} >
+              {CustomerLoaded ?
+                <MaterialContainer
+                  keys="id"
+                  className="mdl-data-table"
+                  columns={this.columns}
+                  dataArray={this.state.dataCustomer}
+                  draggable={false}
+                  sortable={false}
+                  sortBy={{prop: 'id', order: 'desc'}}
+                  pageSizeOptions={[10]}
+                /> : ''}
 
-              </Col>
-            </Card>
+            </Col>
+            {/* </Card> */}
           </Row>);
       }
     };
@@ -986,7 +986,7 @@ export default class ExistingCustomer extends Component {
           <h2 style={{marginTop: 15}}>Customer Data</h2>
 
           {/* <Card style={style.card}> */}
-          <form>
+          <form >
             <Col xs={12} md={6} lg={6}>
               <TextField
                 disabled={true}
@@ -1009,40 +1009,24 @@ export default class ExistingCustomer extends Component {
                 <MenuItem  value="pai" primaryText="Pay after Installation" />
               </SelectField>
               <TextField
-                value={this.state.textField.name}
+                value={this.state.textField.customer_name}
                 hintText="Name"
                 floatingLabelText="Name"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this._handleValidationName(e, input);
-                }}
+                disabled={true}
               />
               <DatePicker
                 hintText="Date of Birth"
                 floatingLabelText="Date of Birth"
                 fullWidth={true}
-                value={this.state.textField.dob}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      dob: input,
-                    },
-                  });
-                }}
+                value={this.state.textField.dob === undefined ? '' : new Date(this.state.textField.dob)}
+                disabled={true}
               />
               <TextField
                 floatingLabelText="DoB Place"
-                value={this.state.textField.dobPlace}
+                value={this.state.textField.birth_place}
                 fullWidth={true}
-                onChange={(e, value) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      dobPlace: value,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <SelectField
                 fullWidth={true}
@@ -1050,9 +1034,10 @@ export default class ExistingCustomer extends Component {
                 floatingLabelText="Gender"
                 name="gender"
                 value={this.state.textField.gender}
-                onChange={(input, index, dataSource) => {
-                  this._handleValidationGender(input, index, dataSource);
-                }}
+                // onChange={(input, index, dataSource) => {
+                //   this._handleValidationGender(input, index, dataSource);
+                // }}
+                disabled={true}
               >
                 <MenuItem  value="male" primaryText="Male" />
                 <MenuItem  value="female" primaryText="Female" />
@@ -1060,15 +1045,16 @@ export default class ExistingCustomer extends Component {
               <SelectField
                 floatingLabelText="ID Type"
                 fullWidth={true}
-                value={this.state.textField.idType}
-                onChange={(e, index, value) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      idType: value,
-                    },
-                  });
-                }}
+                value={this.state.textField.type_id}
+                // onChange={(e, index, value) => {
+                //   this.setState({
+                //     textField: {
+                //       ...this.state.textField,
+                //       idType: value,
+                //     },
+                //   });
+                // }}
+                disabled={true}
               >
                 <MenuItem  value="KTP" primaryText="KTP" />
                 <MenuItem  value="KITAS" primaryText="KITAS" />
@@ -1077,48 +1063,27 @@ export default class ExistingCustomer extends Component {
               </SelectField>
               <TextField
                 required={true}
-                value={this.state.textField.idNumber}
+                value={this.state.textField.id_number}
                 hintText="ID Number"
                 floatingLabelText="ID Number"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      idNumber: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <TextField
                 hintText="Address"
                 floatingLabelText="Address"
-                value={this.state.textField.address}
+                value={this.state.textField.id_address}
                 multiLine={true}
                 rows={2}
                 rowsMax={4}
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      address: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <SelectField
                 floatingLabelText="Customer Group"
                 fullWidth={true}
                 value={this.state.textField.group}
-                onChange={(e, index, value) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      group: value,
-                    },
-                  });
-                }}
+                disabled={true}
               >
                 <MenuItem  value="REGULAR" primaryText="REGULAR" />
                 <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
@@ -1130,14 +1095,7 @@ export default class ExistingCustomer extends Component {
                 hintText="+62"
                 floatingLabelText="Phone 1"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      phone1: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <TextField
                 required={true}
@@ -1145,14 +1103,7 @@ export default class ExistingCustomer extends Component {
                 hintText="+62"
                 floatingLabelText="Phone 2"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      phone2: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <TextField
                 required={true}
@@ -1160,14 +1111,7 @@ export default class ExistingCustomer extends Component {
                 hintText="+62"
                 floatingLabelText="Phone 3"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      phone3: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <TextField
                 required={true}
@@ -1175,14 +1119,7 @@ export default class ExistingCustomer extends Component {
                 hintText="Email"
                 floatingLabelText="Email 1"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      email1: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
               <TextField
                 required={true}
@@ -1190,14 +1127,7 @@ export default class ExistingCustomer extends Component {
                 hintText="Email"
                 floatingLabelText="Email 2"
                 fullWidth={true}
-                onChange={(e, input) => {
-                  this.setState({
-                    textField: {
-                      ...this.state.textField,
-                      email2: input,
-                    },
-                  });
-                }}
+                disabled={true}
               />
 
             </Col>
@@ -1213,7 +1143,7 @@ export default class ExistingCustomer extends Component {
           secondary={true}
           style={styles.raisedButton}
           onTouchTap={() => this._handleTouchTap()}
-          disabled={isCoverage !== ''}
+          disabled={isCoverage === undefined}
         />
       );
     };

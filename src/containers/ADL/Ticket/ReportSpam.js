@@ -8,8 +8,14 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import {Subheader, DatePicker} from 'material-ui';
+import Cookies from 'universal-cookie';
+import moment from  'moment';
+import Dialog from 'material-ui/Dialog';
 
-const HOSTNAME = 'https://source.adlsandbox.com/api/prank/';
+const cookies = new Cookies();
+
+const HOSTNAME = 'https://source.adlsandbox.com/api/prank-caller/';
 const futureLeadsColumn = [
   {id: 0, title: 'Id', prop: 'id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
   {id: 1, title: 'Msisdn', prop: 'msisdn', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
@@ -40,55 +46,49 @@ export default class ReportSpam extends React.Component {
         name: '',
         reason: '',
       },
+      openWarning: false,
+      TitleMessage: '',
+      warningMessage: '',
     };
   }
-  _getAPI(apiUrl) {
-    fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.state.cookies}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log('get', responseJson);
-        if (responseJson) {
-          this.setState({
-            reportSpamAll: responseJson,
-            loadedSpamData: true,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
+
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
       });
+    }
   }
-  _postAPI(apiUrl) {
-    const code = this.state.textField.code;
+  // _getAPI(apiUrl) {
+  //   fetch(apiUrl, {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: `Bearer ${this.state.cookies}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((responseJson) => {
+  //       console.log('get', responseJson);
+  //       if (responseJson) {
+  //         this.setState({
+  //           reportSpamAll: responseJson,
+  //           loadedSpamData: true,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }
+  _postAPI() {
+    const msisdn = this.state.textField.msisdn;
     const name = this.state.textField.name;
-    const description = this.state.textField.description;
-    const soc_id = this.state.textField.soc_id;
-    const soc_label = this.state.textField.soc_label;
-    const charging_name = this.state.textField.charging_name;
-    const price = this.state.textField.price;
-    const promo_type = this.state.textField.promo_type === '' ? 0 : this.state.textField.promo_type;
-    const promo_value = this.state.textField.promo_area === '' ? 0 : this.state.textField.promo_area;
-    const promo_price = this.state.textField.promo_price === '' ? 0 : this.state.textField.promo_price;
-    const promo = this.state.textField.promo;
+    const category = this.state.textField.category;
+    const reason = this.state.textField.reason;
 
     fetch(
-      `${apiUrl}register?code=${
-        code
-      }&name=${name}&description=${description}&soc_id=${
-        soc_id
-      }&soc_label=${soc_label}&charging_name=${
-        charging_name
-      }&price=${price}&promo_type=${
-        promo_type
-      }&promo_value=${promo_value}&promo_price=${
-        promo_price
-      }&promo=${promo}`,
+      `${HOSTNAME}create?msisdn=${msisdn}&name=${name}&category=${category}&reason=${reason}`,
       {
         method: 'POST',
         headers: {
@@ -98,17 +98,31 @@ export default class ReportSpam extends React.Component {
     )
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson);
         this.setState({
-          createdCode: responseJson.id,
-          createdName: responseJson.product_name,
-          warningMessage: responseJson.status,
+          TitleMessage: 'Success',
           openWarning: true,
+          warningMessage: responseJson.message,
         });
-        this._getAPI(`${HOSTNAME}all?`);
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          TitleMessage: 'Failed',
+          openWarning: true,
+          warningMessage: `${error}`,
+        });
       });
+  }
+
+  _handleTouch=() => {
+    this._postAPI();
+  }
+
+  handleClose= () => {
+    this.setState({
+      openWarning: false,
+    });
   }
   render() {
     let _createPrankData = () => {
@@ -118,6 +132,7 @@ export default class ReportSpam extends React.Component {
             <TextField
               floatingLabelText="Msisdn"
               hintText="Msisdn"
+              type="number"
               fullWidth={true}
               required={true}
               value={this.state.textField.msisdn}
@@ -171,6 +186,7 @@ export default class ReportSpam extends React.Component {
               label="Submit Data"
               secondary={true}
               style={styles.raisedButton}
+              onTouchTap={this._handleTouch}
             />
           </form>
         </Col>
@@ -191,11 +207,27 @@ export default class ReportSpam extends React.Component {
         />
       </div>);
     };
+
+    let action = [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
       <Row>
         <Col xs={12} md={12} lg={12} sm={12}>
           <h3>Report Spam</h3>
           <Paper style={styles.paper}>
+            <Dialog
+              title={this.state.TitleMessage}
+              actions={action}
+              modal={false}
+              open={this.state.openWarning}
+              onRequestClose={this.handleClose}
+            >
+              {this.state.warningMessage}
+            </Dialog>
             <Tabs value={this.state.currentTab} >
               <Tab
                 value={0}
