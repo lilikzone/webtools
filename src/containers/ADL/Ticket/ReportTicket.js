@@ -6,8 +6,19 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {MaterialContainer} from 'react-table-components';
+import FontIcon from 'material-ui/FontIcon';
+import MaterialContainerCustom from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
+import CircularProgress from 'material-ui/CircularProgress';
+import Cookies from 'universal-cookie';
+import Dialog from 'material-ui/Dialog';
+import AutoComplete from 'material-ui/AutoComplete';
+
+const cookies = new Cookies();
+
+const HOSTNAME = 'https://source.adlsandbox.com/api/ticket';
 
 const ChooseBtn = (data) => (
   <div className="text-center">
@@ -27,34 +38,89 @@ const ChooseBtn = (data) => (
   </div>
   );
 
-const customerColumn = [
+const ticketColumn = [
     {id: 1, title: 'Id', prop: 'ticket_id', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 2, title: 'Name', prop: 'name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 3, title: 'Type', prop: 'type', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 4, title: 'Reason', prop: 'reason', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 5, title: 'Status', prop: 'ticket_status', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
-    {id: 6, title: 'Choose Action', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 2, title: 'Priority', prop: 'priority_id', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 3, title: 'Name', prop: 'customer_name', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 4, title: 'Type', prop: 'request_type', width: '20%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 5, title: 'Departement', prop: 'departement', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    {id: 6, title: 'Status', prop: 'status_id', width: '10%', headerClass: 'mdl-data-table__cell--non-numeric', cellClass: 'mdl-data-table__cell--non-numeric'},
+    // {id: 7, title: 'Choose Action', render: ChooseBtn, width: '2%', headerClass: 'mdl-data-table__cell--non-numeric'},
 ];
 export default class TicketNewCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currentTab: 0,
-      dataCustomer: [],
+      ticketAll: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
+      cookies: '',
     };
   }
+
+
+  componentWillMount() {
+    if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
+      this.setState({
+        cookies: cookies.get('ssid'),
+      });
+    }
+  }
+
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}/all?page=${this.state.ticketAll.current_page}`);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.ticketAll.current_page != this.state.ticketAll.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      this._getAPI(`${HOSTNAME}/all?page=${this.state.ticketAll.current_page}`, 'textField');
+    }
+  }
+
+  _getAPI(apiUrl) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          ticketAll: responseJson,
+          loaded: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   render() {
     let _ticketTable = () => {
       return (<div className="mdl-layout">
-        <MaterialContainer
+        <MaterialContainerCustom
           keys="msisdn"
           className="mdl-data-table"
-          columns={customerColumn}
-          dataArray={this.state.dataCustomer}
+          columns={ticketColumn}
+          onChangePage={((page) => this.setState({
+            ticketAll: {...this.state.ticketAll, current_page: page + 1},
+          }))}
+          dataArrayCustom={this.state.ticketAll.data}
           draggable={false}
           sortable={false}
           sortBy={{prop: 'msisdn', order: 'asc'}}
-          pageSizeOptions={[5]}
+          currentPage={this.state.ticketAll.current_page - 1}
+          total={this.state.ticketAll.total}
+          pageSizeOptions={[10]}
         />
       </div>);
     };
