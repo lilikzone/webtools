@@ -17,6 +17,7 @@ import Cookies from 'universal-cookie';
 import {blue400, teal300, red400} from 'material-ui/styles/colors';
 import AutoComplete from 'material-ui/AutoComplete';
 import FontIcon from 'material-ui/FontIcon';
+import FileBase64 from 'react-file-base64';
 import IconButton from 'material-ui/IconButton';
 
 
@@ -40,6 +41,8 @@ export default class Installation extends React.Component {
       dataVendor: [],
       dataInstaller: [],
       workOrderData: [],
+      snStb: '',
+      snOnt: '',
       load: false,
       onEdit: false,
       onEditCheck: false,
@@ -54,6 +57,7 @@ export default class Installation extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-button--raised"
+          style={(data.status == 'Complete' || data.status == 'Active') && this.state.role == 'operation' ? {backgroundColor: teal300, color: 'white'} : {}}
           onClick={() => {
             console.log(data);
             this.setState({
@@ -62,8 +66,12 @@ export default class Installation extends React.Component {
             });
           }}
         >
-                  Update
-                </button>
+          {
+            data.status == 'Finish installation' || (data.status != 'Complete' && this.state.role != 'operation') ? 'Upload' :
+            (data.status == 'Complete' || data.status == 'Active') && this.state.role == 'operation' ? 'Activate' :
+           'Update'
+          }
+        </button>
       </div>
             );
     const DeleteBtn = (data) => (
@@ -142,7 +150,7 @@ export default class Installation extends React.Component {
       },
       {
         id: 8,
-        title: 'bast',
+        title: 'BAST',
         prop: 'bast',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
@@ -150,6 +158,22 @@ export default class Installation extends React.Component {
       },
       {
         id: 9,
+        title: 'SN STB',
+        prop: 'sn_stb',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'SN ONT',
+        prop: 'sn_ont',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 11,
         title: 'Sales Name',
         prop: 'sales_name',
         width: '20%',
@@ -157,7 +181,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 12,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -165,7 +189,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 13,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
@@ -195,7 +219,9 @@ export default class Installation extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          this.setState({role: respons.user.role});
+          this.setState({
+            role: respons.user.role,
+          });
           if (AssignVendor.includes(respons.user.role) === false) {
             this.setState({disableEditVendor: true});
           }
@@ -238,7 +264,7 @@ export default class Installation extends React.Component {
         }).catch((error) => {
           console.log(`error: ${error}`);
         });
-      } else if (role[1] === 'dispatcher') {
+      } if (AssignInstaller.includes(role[1])) {
         fetch('https://source.adlsandbox.com/api/admin/search?keyword=installer', {
           method: 'GET',
           type: 'cors',
@@ -249,8 +275,6 @@ export default class Installation extends React.Component {
         })
         .then(json)
         .then((respons) => {
-          console.log(respons);
-          this.setState({});
           const dataInstallerObject = respons.result.data;
           const dataInstaller = [];
           let i;
@@ -310,11 +334,17 @@ export default class Installation extends React.Component {
       onEditCheck: true,
     });
   }
-  _handleOpenRemark() {
+  _handleOpenRemark(finishedInstallation) {
+    if (!finishedInstallation) {
+      this.setState({
+        status: 'Complete',
+      });
+      this._updateDispatchWO('', 'Complete');
+    }
     this.setState({
       onEdit: false,
       onEditCheck: false,
-      onEditRemark: true,
+      onEditRemark: finishedInstallation,
     });
   }
 
@@ -352,16 +382,14 @@ export default class Installation extends React.Component {
     }
   }
 
-  _updateDispatchWO(role) {
+  _updateDispatchWO(role, stats) {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const id = this.state.dataTemp.id;
       const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
       const installer = this.state.dataTemp.installer;
 
-      console.log(installer);
-      const status = this.state.status;
-      console.log(status);
+      const status = stats || this.state.status;
       const json = (response) => response.json();
       console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
       fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`, {
@@ -451,123 +479,198 @@ export default class Installation extends React.Component {
     }
   }
 
+  _handleActiveStatus() {
+    this._updateDispatchWO('', 'Active');
+    this.setState({
+      status: 'Active',
+    });
+  }
+
   render() {
     const workOrder = this.state.workOrderData;
     const role = this.state.role;
-    let _renderModalComponent = (role) => {
-      return (
-        <div>
-          <TextField
-            fullWidth={true}
-            required={true}
-            value={this.state.dataTemp.type_installation}
-            hintText="type_installation"
-            floatingLabelText="type_installation"
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     codeTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="status"
-            floatingLabelText="status"
-            value={this.state.dataTemp.status}
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     nameTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="subs_id"
-            floatingLabelText="subs_id"
-            value={this.state.dataTemp.subs_id}
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     nameTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="product_id"
-            floatingLabelText="product_id"
-            value={this.state.dataTemp.product_id}
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     nameTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-          <AutoComplete
-            required={true}
-            fullWidth={true}
-            floatingLabelText="Vendor"
-            filter={AutoComplete.caseInsensitiveFilter}
-            disabled={this.state.disableEditVendor}
-            openOnFocus={true}
-            dataSource={this.state.dataVendor}
-            searchText={this.state.dataTemp.vendor}
-            dataSourceConfig={dataSourceConfig}
-            onUpdateInput={(input, dataSource) => {
-              this._handleValidationVendor(input, dataSource);
-            }}
-            errorText={!this.state.isVendorValid}
-          />
-          <AutoComplete
-            required={true}
-            fullWidth={true}
-            floatingLabelText="Installer"
-            filter={AutoComplete.caseInsensitiveFilter}
-            disabled={this.state.disableEditInstaller}
-            openOnFocus={true}
-            dataSource={this.state.dataInstaller}
-            searchText={this.state.dataTemp.installer}
-            onUpdateInput={(input, dataSource) => {
-              this._handleValidationInstaller(input, dataSource);
-            }}
-            errorText={!this.state.isInstallerValid}
-          />
+    const disabled = (this.state.dataTemp.status == 'Active' || this.state.dataTemp.status == 'Complete') && this.state.role == 'operation';
+    let _renderModalComponent = (role, status) => {
+      if (status == 'Finish installation' || (status == 'Complete' && this.state.role != 'operation')) {
+        return (
+          <div>
+            <TextField
+              fullWidth={true}
+              required={true}
+              value={this.state.snStb}
+              hintText="SN STB"
+              floatingLabelText="SN STB"
+              onChange={(e, input) => {
+                this.setState({
+                  snStb: input,
+                });
+              }}
 
-
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="bast"
-            floatingLabelText="bast"
-            value={this.state.dataTemp.bast}
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     nameTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            hintText="created_at"
-            floatingLabelText="created_at"
-            value={this.state.dataTemp.created_at}
-            // onChange={(e, input) => {
-            //   this.setState({
-            //     nameTemp: input,
-            //   });
-            // }}
-            disabled={true}
-          />
-        </div>
-      );
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="SN ONT"
+              floatingLabelText="SN ONT"
+              value={this.state.snOnt}
+              onChange={(e, input) => {
+                this.setState({
+                  snOnt: input,
+                });
+              }}
+            />
+            <h3 style={{marginTop: 20}} >Upload</h3>
+            <hr />
+            <div className="input-group">
+              <span className="input-group-icon">
+                <label>BAST FILE</label>
+              </span>
+              <div className="input-group-text">
+                <FileBase64 name="BAST" multiple={false} onDone={(file) => this.setState({bast: file})}  />
+              </div>
+              {this.state.bast !== undefined && this.state.bast !== '' ? <img style={{width: 500}} src={this.state.bast.base64} /> : ''}
+            </div>
+          </div>
+        );
+      }      else {
+        return (
+          <div>
+            <TextField
+              fullWidth={true}
+              required={true}
+              value={this.state.dataTemp.type_installation}
+              hintText="type_installation"
+              floatingLabelText="type_installation"
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     codeTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="status"
+              floatingLabelText="status"
+              value={this.state.dataTemp.status}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     nameTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="subs_id"
+              floatingLabelText="subs_id"
+              value={this.state.dataTemp.subs_id}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     nameTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="product_id"
+              floatingLabelText="product_id"
+              value={this.state.dataTemp.product_id}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     nameTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+            <AutoComplete
+              required={true}
+              fullWidth={true}
+              floatingLabelText="Vendor"
+              filter={AutoComplete.caseInsensitiveFilter}
+              disabled={this.state.disableEditVendor || disabled}
+              openOnFocus={true}
+              dataSource={this.state.dataVendor}
+              searchText={this.state.dataTemp.vendor}
+              dataSourceConfig={dataSourceConfig}
+              onUpdateInput={(input, dataSource) => {
+                this._handleValidationVendor(input, dataSource);
+              }}
+              errorText={!this.state.isVendorValid}
+            />
+            <AutoComplete
+              required={true}
+              fullWidth={true}
+              floatingLabelText="Installer"
+              filter={AutoComplete.caseInsensitiveFilter}
+              disabled={this.state.disableEditInstaller || disabled}
+              openOnFocus={true}
+              dataSource={this.state.dataInstaller}
+              searchText={this.state.dataTemp.installer}
+              onUpdateInput={(input, dataSource) => {
+                this._handleValidationInstaller(input, dataSource);
+              }}
+              errorText={!this.state.isInstallerValid}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="BASR"
+              floatingLabelText="BAST"
+              value={this.state.dataTemp.bast}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     nameTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              value={this.state.snStb}
+              hintText="SN STB"
+              floatingLabelText="SN STB"
+              disabled={true}
+              onChange={(e, input) => {
+                this.setState({
+                  snStb: input,
+                });
+              }}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="SN ONT"
+              floatingLabelText="SN ONT"
+              disabled={true}
+              value={this.state.snOnt}
+              onChange={(e, input) => {
+                this.setState({
+                  snOnt: input,
+                });
+              }}
+            />
+            <TextField
+              fullWidth={true}
+              required={true}
+              hintText="created_at"
+              floatingLabelText="created_at"
+              value={this.state.dataTemp.created_at}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     nameTemp: input,
+              //   });
+              // }}
+              disabled={true}
+            />
+          </div>
+        );
+      }
     };
 
     let _renderModalComponentInstaller = () => {
@@ -623,7 +726,6 @@ export default class Installation extends React.Component {
       </Row>);
     };
     let actions = (role) => {
-      // console.log(role);
       if (role !== 'installer') {
         return ([
           <FlatButton
@@ -632,10 +734,12 @@ export default class Installation extends React.Component {
             onTouchTap={() => this._handleClose()}
           />,
           <FlatButton
-            label="update"
+            label={disabled ? 'Activate' : 'Update'}
             primary={true}
             keyboardFocused={true}
-            onTouchTap={() => this._updateDispatchWO(role)}
+            onTouchTap={() => {
+              disabled ? this._handleActiveStatus() : this._updateDispatchWO(role);
+            }}
           />,
         ]);
       } else {
@@ -649,7 +753,11 @@ export default class Installation extends React.Component {
             secondary={true}
             keyboardFocused={true}
             backgroundColor={teal300}
-            style={{color: '#fff', marginLeft: 5}}
+            style={{
+              color: '#fff',
+              marginLeft: 5,
+              display: ['Finish installation', 'Complete'].includes(this.state.dataTemp.status) ? 'none' : 'inline',
+            }}
             onTouchTap={() => this._handleOpenCheck()}
           />,
           <FlatButton
@@ -658,7 +766,7 @@ export default class Installation extends React.Component {
             keyboardFocused={true}
             backgroundColor={blue400}
             style={{color: '#fff', marginLeft: 5}}
-            onTouchTap={() => this._handleOpenRemark()}
+            onTouchTap={() => this._handleOpenRemark(!['Finish installation', 'Complete'].includes(this.state.dataTemp.status))}
           />,
         ]);
       }
@@ -703,7 +811,7 @@ export default class Installation extends React.Component {
           draggable={false}
           sortable={false}
           sortBy={{prop: 'id', order: 'desc'}}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[10]}
         />
       );
     };
@@ -717,14 +825,14 @@ export default class Installation extends React.Component {
               <div className="mdl-layout--fixed-drawer" id="asa">
                 <br />
                 <Dialog
-                  title="Update Work Order"
-                  actions={actions(role)}
+                  title={disabled ? 'Activate Work Order' : 'Update Work Order'}
+                  actions={actions(this.state.role)}
                   modal={false}
                   open={this.state.onEdit}
                   autoScrollBodyContent={true}
                   onRequestClose={() => this._handleClose()}
                 >
-                  {_renderModalComponent(role)}
+                  {_renderModalComponent(role, this.state.dataTemp.status)}
                 </Dialog>
                 <Dialog
                   title="Checking"

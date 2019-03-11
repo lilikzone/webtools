@@ -463,6 +463,7 @@ export default class TrackingOrder extends React.Component {
   }
 
   _updateStatus(statusData) {
+    const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
       const status = (response) => {
         if (response.status >= 200 && response.status < 300) {
@@ -494,13 +495,17 @@ export default class TrackingOrder extends React.Component {
           load: true,
           onEditOrder: false,
           editWarning: false,
-          redirect: true,
+          // redirect: true,
         });
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
 
       this._getSOdata();
+      this._handleClose();
+      this.setState({
+        redirect: true,
+      });
     }
   }
 
