@@ -8,6 +8,7 @@ import Dialog from 'material-ui/Dialog';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import DatePicker from 'material-ui/DatePicker';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
@@ -18,6 +19,7 @@ import {blue400, teal300, red400} from 'material-ui/styles/colors';
 import AutoComplete from 'material-ui/AutoComplete';
 import FontIcon from 'material-ui/FontIcon';
 import FileBase64 from 'react-file-base64';
+import moment from  'moment';
 import IconButton from 'material-ui/IconButton';
 
 
@@ -41,8 +43,8 @@ export default class Installation extends React.Component {
       dataVendor: [],
       dataInstaller: [],
       workOrderData: [],
-      snStb: '',
-      snOnt: '',
+      // snStb: '',
+      // snOnt: '',
       load: false,
       onEdit: false,
       onEditCheck: false,
@@ -67,7 +69,7 @@ export default class Installation extends React.Component {
           }}
         >
           {
-            data.status == 'Finish installation' || (data.status != 'Complete' && this.state.role != 'operation') ? 'Upload' :
+            data.status == 'Finish installation' || (data.status != 'Complete' && !['operation', 'manageservice', 'dispatcher'].includes(this.state.role) ) ? 'Upload' :
             (data.status == 'Complete' || data.status == 'Active') && this.state.role == 'operation' ? 'Activate' :
            'Update'
           }
@@ -142,6 +144,22 @@ export default class Installation extends React.Component {
       },
       {
         id: 7,
+        title: 'Time Slot',
+        prop: 'time_slot',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'Installation Date',
+        prop: 'installation_date',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
         title: 'Installer',
         prop: 'installer',
         width: '20%',
@@ -149,7 +167,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
+        id: 10,
         title: 'BAST',
         prop: 'bast',
         width: '20%',
@@ -157,7 +175,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 11,
         title: 'SN STB',
         prop: 'sn_stb',
         width: '20%',
@@ -165,7 +183,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 12,
         title: 'SN ONT',
         prop: 'sn_ont',
         width: '20%',
@@ -173,7 +191,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 11,
+        id: 13,
         title: 'Sales Name',
         prop: 'sales_name',
         width: '20%',
@@ -181,7 +199,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 12,
+        id: 14,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -189,7 +207,7 @@ export default class Installation extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 13,
+        id: 15,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
@@ -452,7 +470,10 @@ export default class Installation extends React.Component {
       const installer = this.state.dataTemp.installer;
       const status = 'Finish installation';
       const notes = '';
-
+      const snOnt = this.state.dataTemp.snOnt;
+      const snStb = this.state.dataTemp.snStb;
+      const time_slot = this.state.dataTemp.time_slot;
+      const installation_date = moment(this.state.dataTemp.installation_date).format('YYYY-MM-DD');
       const json = (response) => response.json();
 
       console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`);
@@ -497,12 +518,12 @@ export default class Installation extends React.Component {
             <TextField
               fullWidth={true}
               required={true}
-              value={this.state.snStb}
+              value={this.state.dataTemp.snStb}
               hintText="SN STB"
               floatingLabelText="SN STB"
               onChange={(e, input) => {
                 this.setState({
-                  snStb: input,
+                  dataTemp: {...this.state.dataTemp, snStb: input},
                 });
               }}
 
@@ -512,10 +533,10 @@ export default class Installation extends React.Component {
               required={true}
               hintText="SN ONT"
               floatingLabelText="SN ONT"
-              value={this.state.snOnt}
+              value={this.state.dataTemp.snOnt}
               onChange={(e, input) => {
                 this.setState({
-                  snOnt: input,
+                  dataTemp: {...this.state.dataTemp, snOnt: input},
                 });
               }}
             />
@@ -602,6 +623,39 @@ export default class Installation extends React.Component {
               }}
               errorText={!this.state.isVendorValid}
             />
+            <SelectField
+              fullWidth={false}
+              hintText={'Time Slot'}
+              floatingLabelText="Time Slot"
+              name="time_slot"
+              value={this.state.dataTemp.time_slot}
+              onChange={(e, index, value) => {
+                this.setState({
+                  dataTemp: {...this.state.dataTemp, time_slot: value},
+                });
+              }}
+            >
+              <MenuItem value={'06:00-08:00'} primaryText="06:00 - 08:00" />
+              <MenuItem value={'08:00-10:00'} primaryText="10:00 - 12:00" />
+              <MenuItem value={'12:00-13:00'} primaryText="13:00 - 14:00" />
+              <MenuItem value={'14:00-15:00'} primaryText="14:00 - 15:00" />
+              <MenuItem value={'15:00-16:00'} primaryText="15:00 - 16:00" />
+              <MenuItem value={'16:00-18:00'} primaryText="16:00 - 18:00" />
+            </SelectField>
+            <DatePicker
+              hintText="Installation Date"
+              floatingLabelText="Installation Date"
+              fullWidth={true}
+              value={this.state.dataTemp.installation_date}
+              onChange={(e, input) => {
+                this.setState({
+                  dataTemp: {
+                    ...this.state.dataTemp,
+                    installation_date: input,
+                  },
+                });
+              }}
+            />
             <AutoComplete
               required={true}
               fullWidth={true}
@@ -632,13 +686,13 @@ export default class Installation extends React.Component {
             <TextField
               fullWidth={true}
               required={true}
-              value={this.state.snStb}
+              value={this.state.dataTemp.snStb}
               hintText="SN STB"
               floatingLabelText="SN STB"
               disabled={true}
               onChange={(e, input) => {
                 this.setState({
-                  snStb: input,
+                  dataTemp: {...this.state.dataTemp, snStb: input},
                 });
               }}
             />
@@ -648,10 +702,10 @@ export default class Installation extends React.Component {
               hintText="SN ONT"
               floatingLabelText="SN ONT"
               disabled={true}
-              value={this.state.snOnt}
+              value={this.state.dataTemp.snOnt}
               onChange={(e, input) => {
                 this.setState({
-                  snOnt: input,
+                  dataTemp: {...this.state.dataTemp, snOnt: input},
                 });
               }}
             />
