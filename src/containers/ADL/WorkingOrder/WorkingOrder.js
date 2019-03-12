@@ -66,6 +66,22 @@ export default class WorkingOrder extends React.Component {
       },
       {
         id: 6,
+        title: 'Time Slot',
+        prop: 'time_slot',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Installation Date',
+        prop: 'installation_date',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
         title: 'Installer',
         prop: 'installer',
         width: '20%',
@@ -73,15 +89,31 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 7,
-        title: 'bast',
+        id: 9,
+        title: 'BAST',
         prop: 'bast',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 8,
+        id: 10,
+        title: 'SN STB',
+        prop: 'sn_stb',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 11,
+        title: 'SN ONT',
+        prop: 'sn_ont',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 12,
         title: 'Sales Name',
         prop: 'sales_name',
         width: '20%',
@@ -89,7 +121,7 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 9,
+        id: 13,
         title: 'Created At',
         prop: 'created_at',
         width: '20%',
@@ -97,7 +129,7 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
-        id: 10,
+        id: 14,
         title: 'Updated At',
         prop: 'updated_at',
         width: '20%',
@@ -151,7 +183,7 @@ export default class WorkingOrder extends React.Component {
 
   render() {
     return (<div>
-      <h3 style={styles.navigation}>Manage Work Order</h3>
+      <h3 style={styles.navigation}>Report Work Order</h3>
       <Row>
         <Paper  style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
