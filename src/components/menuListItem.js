@@ -15,7 +15,7 @@ const cookies = new Cookies();
 
 const dashboardShowRule = ['admin', 'homepassed', 'operation', 'product'];
 const systemShowRule = ['admin'];
-const homepassedShowRule = ['admin', 'homepassed', 'product', 'cs', 'csexternal'];
+const homepassedShowRule = ['admin', 'homepassed', 'product', 'cs', 'csexternal', 'internalsales', 'salesadmin', 'sales'];
 const taxmanagementShowRule = ['admin', 'operation'];
 const productmanagementShowRule = ['admin', 'operation', 'product'];
 const transactionShowRule = ['admin', 'operation', 'product', 'finance', 'internalsales', 'salesadmin', 'sales'];
