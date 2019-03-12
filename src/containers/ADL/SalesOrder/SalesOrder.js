@@ -209,7 +209,12 @@ export default class SalesOrder extends React.Component {
       .then((respons) => {
         if (respons.status === 200) {
           console.log('response', respons);
-          // this._uploadFileOrder(respons.sales_order.id);
+          this.setState({
+            isRegistered: true,
+            openWarning: true,
+            warningMessage: respons.message,
+            TitleMessage: 'Success',
+          });
         }
       }).catch((error) => {
         this.setState({
@@ -505,7 +510,6 @@ export default class SalesOrder extends React.Component {
 
   getFilesKtp(file) {
     this.setState({fileKtp: file});
-    console.log('ktpp', this.state.fileKtp);
   }
   getFilesAbd(file) {
     this.setState({fileAbd: file});
