@@ -88,6 +88,7 @@ export default class TicketNewCustomer extends React.Component {
         {'name': 'Sales Admin', 'value': 'salesadmin'},
         {'name': 'Sales', 'value': 'sales'},
         {'name': 'Manage Service', 'value': 'manageservice'},
+        {'name': 'Manage Service Manager', 'value': 'manageservicemanager'},
         {'name': 'Dispatcher', 'value': 'dispatcher'},
         {'name': 'Installer', 'value': 'installer'},
         {'name': 'CS', 'value': 'cs'},
@@ -494,7 +495,7 @@ export default class TicketNewCustomer extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log(responseJson);
+        console.log(responseJson);
         this.setState({
           allCustomer: responseJson,
           loaded: true,

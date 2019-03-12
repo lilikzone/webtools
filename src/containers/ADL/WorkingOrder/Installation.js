@@ -26,7 +26,7 @@ import IconButton from 'material-ui/IconButton';
 const cookies = new Cookies();
 
 // const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
-const AssignVendor = ['admin', 'operation', 'manageservice'];
+const AssignVendor = ['admin', 'operation', 'manageservice', 'manageservicemanager'];
 const AssignInstaller = ['admin', 'operation', 'dispatcher'];
 const dataSourceConfig = {
   text: 'textKey',
@@ -59,7 +59,7 @@ export default class Installation extends React.Component {
       <div className="text-center">
         <button
           className="mdl-button mdl-button--raised"
-          style={(data.status == 'Complete' || data.status == 'Active') && this.state.role == 'operation' ? {backgroundColor: teal300, color: 'white'} : {}}
+          style={(data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ? {backgroundColor: teal300, color: 'white'} : {}}
           onClick={() => {
             console.log(data);
             this.setState({
@@ -69,8 +69,8 @@ export default class Installation extends React.Component {
           }}
         >
           {
-            data.status == 'Finish installation' || (data.status != 'Complete' && !['operation', 'manageservice', 'dispatcher'].includes(this.state.role) ) ? 'Upload' :
-            (data.status == 'Complete' || data.status == 'Active') && this.state.role == 'operation' ? 'Activate' :
+            data.status == 'Finish installation' || (data.status != 'Complete' && !['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ) ? 'Upload' :
+            (data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ? 'Activate' :
            'Update'
           }
         </button>
@@ -510,7 +510,7 @@ export default class Installation extends React.Component {
   render() {
     const workOrder = this.state.workOrderData;
     const role = this.state.role;
-    const disabled = (this.state.dataTemp.status == 'Active' || this.state.dataTemp.status == 'Complete') && this.state.role == 'operation';
+    const disabled = (this.state.dataTemp.status == 'Active' || this.state.dataTemp.status == 'Complete') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role);
     let _renderModalComponent = (role, status) => {
       if (status == 'Finish installation' || (status == 'Complete' && this.state.role != 'operation')) {
         return (

@@ -24,7 +24,7 @@ const cookies = new Cookies();
 
 const dataGender = ['Male', 'Female'];
 
-const vendorShowRole = ['manageservice', 'operation', 'admin'];
+const vendorShowRole = ['manageservice', 'manageservicemanager', 'operation', 'admin'];
 const agentShowRole = ['operation', 'admin', 'internalsales'];
 
 const enableAgency = ['sales', 'salesadmin'];
@@ -321,7 +321,7 @@ export default class ManageUser extends React.PureComponent {
   }
 
   _dataRole(role) {
-    if (role === 'manageservice') {
+    if (role === 'manageservice' || role === 'manageservicemanager') {
       return [{
         'value': 'dispatcher',
         'name': 'Dispatcher',
@@ -341,6 +341,7 @@ export default class ManageUser extends React.PureComponent {
         {'name': 'Sales Admin', 'value': 'salesadmin'},
         {'name': 'Sales', 'value': 'sales'},
         {'name': 'Manage Service', 'value': 'manageservice'},
+        {'name': 'Manage Service Manager', 'value': 'manageservicemanager'},
         {'name': 'Dispatcher', 'value': 'dispatcher'},
         {'name': 'Installer', 'value': 'installer'},
         {'name': 'CS', 'value': 'cs'},

@@ -21,9 +21,9 @@ const productmanagementShowRule = ['admin', 'operation', 'product'];
 const transactionShowRule = ['admin', 'operation', 'product', 'finance', 'internalsales', 'salesadmin', 'sales'];
 const managesalesuserShowRule = ['admin', 'operation', 'internalsales'];
 const salesmanagementShowRule = ['admin', 'operation', 'internalsales', 'salesadmin', 'sales'];
-const manageMSuserShowRule = ['admin', 'operation', 'manageservice'];
-const workOrderShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
-const ticketShowRule = ['admin', 'operation', 'manageservice', 'dispatcher', 'installer'];
+const manageMSuserShowRule = ['admin', 'operation', 'manageservicemanager'];
+const workOrderShowRule = ['admin', 'operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'installer'];
+const ticketShowRule = ['admin', 'operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'installer'];
 const customerserviceShowRule = ['admin', 'operation', 'cs', 'csexternal'];
 
 const styles_list = {

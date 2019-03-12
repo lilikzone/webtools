@@ -183,6 +183,9 @@ export default class SalesOrder extends React.Component {
     if (cookieData !== undefined && cookieData !== '') {
       const accessData = cookies.get('npaccess');
       const username = accessData.split('+');
+      const fileAbd = this.state.fileAbd;
+      const fileForm = this.state.fileForm;
+      const fileKtp = this.state.fileKtp;
       // console.log(`https://source.adlsandbox.com/api/order/create?status=${status}&email1=${email1}&email2=${email2}&name=${name}&product_id=${product_id}&dob=${dob}&birth_place=${dobPlace}&gender=${gender}&group=${group}&payment_type=${typePayment}&type_id=${idType}&id_number=${idNumber}&id_address=${address}&phone1=${phone1}&phone2=${phone2}&phone3=${phone3}&sales_name=${username[0]}&homepassed_id=${homepassedId}`);
 
       const json = (response) => response.json();
@@ -193,12 +196,25 @@ export default class SalesOrder extends React.Component {
           'Authorization': `Bearer ${cookieData}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          'abd': fileAbd.base64,
+          'abd_filename': fileAbd.name,
+          'ktp': fileKtp.base64,
+          'ktp_filename': fileKtp.name,
+          'form': fileForm.base64,
+          'form_filename': fileForm.name,
+        }),
       })
       .then(json)
       .then((respons) => {
-        // console.log(respons);
         if (respons.status === 200) {
-          this._uploadFileOrder(respons.sales_order.id);
+          console.log('response', respons);
+          this.setState({
+            isRegistered: true,
+            openWarning: true,
+            warningMessage: respons.message,
+            TitleMessage: 'Success',
+          });
         }
       }).catch((error) => {
         this.setState({
@@ -212,55 +228,6 @@ export default class SalesOrder extends React.Component {
       window.location.pathname = '/login';
     }
   }
-
-  _uploadFileOrder(id) {
-    const cookieData = cookies.get('ssid');
-    if (cookieData !== undefined && cookieData !== '') {
-      console.log(`https://source.adlsandbox.com/api/order/update/${id}`);
-      const fileAbd = this.state.fileAbd.base64;
-      const fileForm = this.state.fileForm.base64;
-      const fileKtp = this.state.fileKtp.base64;
-      const json = (response) => response.json();
-      fetch(`https://source.adlsandbox.com/api/order/update/${id}`, {
-        method: 'POST',
-        type: 'cors',
-        headers: {
-          'Authorization': `Bearer ${cookieData}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          'abd': fileAbd,
-          'ktp': fileKtp,
-          'form': fileForm,
-        }),
-      })
-      .then(json)
-      .then((respons) => {
-        // console.log(respons);
-        if (respons.status === 200) {
-          this.setState({
-            isRegistered: true,
-            openWarning: true,
-            warningMessage: respons.message,
-            TitleMessage: 'Success',
-          });
-          // this.setState({
-          //   isRegistered: true,
-          //   notifMessage: respons.message,
-          // });
-        }
-      }).catch((error) => {
-        console.log(`error: ${error}`);
-        this.setState({
-          isRegistered: true,
-          openWarning: true,
-          warningMessage: `${error}`,
-          TitleMessage: 'Error',
-        });
-      });
-    }
-  }
-
 
   _handleValidationEmail(e, input, email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
