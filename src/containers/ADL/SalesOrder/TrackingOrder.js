@@ -65,6 +65,11 @@ export default class TrackingOrder extends React.Component {
         </button>
       </div>
     );
+    const paymentTypeValue = (data) => (
+      <div>
+        {this._reformatPaymentType(data.payment_type)}
+      </div>
+    );
     const EditBtnWO = (data) => (
       <div className="text-center">
         <button
@@ -286,6 +291,7 @@ export default class TrackingOrder extends React.Component {
         id: 13,
         title: 'Payment Type',
         prop: 'payment_type',
+        render: paymentTypeValue,
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -383,6 +389,15 @@ export default class TrackingOrder extends React.Component {
 
   _onRequestClose=(data) => {
     this.setState({alert: false});
+  }
+
+  _reformatPaymentType(paymentTypeValue) {
+    if (paymentTypeValue == 'pai') {
+      paymentTypeValue = 'Payment After Installation';
+    } else if (paymentTypeValue == 'pbi' ) {
+      paymentTypeValue = 'Regular';
+    }
+    return paymentTypeValue;
   }
 
   _getSOdata() {
