@@ -322,7 +322,7 @@ export default class SalesOrder extends React.Component {
     });
     if (dataFullAddress.includes(dataInput)) {
       this.setState({
-        textField: {...this.state.textField, fullAddress: dataInput, homepassedId: ''}, // homepassedID just for SAMPLE
+        textField: {...this.state.textField, fullAddress: dataInput.toUpperCase(), homepassedId: ''}, // homepassedID just for SAMPLE
       });
       this._getHomespassedId(dataInput);
     } else {

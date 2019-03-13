@@ -57,23 +57,44 @@ export default class Installation extends React.Component {
     };
     const EditBtn = (data) => (
       <div className="text-center">
-        <button
-          className="mdl-button mdl-button--raised"
-          style={(data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ? {backgroundColor: teal300, color: 'white'} : {}}
-          onClick={() => {
-            console.log(data);
-            this.setState({
-              onEdit: true,
-              dataTemp: data,
-            });
-          }}
-        >
-          {
-            data.status == 'Finish installation' || (data.status != 'Complete' && !['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ) ? 'Upload' :
-            (data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role) ? 'Activate' :
-           'Update'
-          }
-        </button>
+        {data.status == 'Finish installation' && this.state.role == 'operation' ?
+          <RaisedButton
+            label="Upload"
+            disabled={true}
+          /> :
+          data.status == 'Complete' && this.state.role != 'operation' ?
+            <RaisedButton
+              label="Activate"
+              // secondary={true}
+              disabled={true}
+              // backgroundColor={teal300}
+              // style={{
+              //   color: '#fff',
+              // }}
+            />          :
+        data.status != 'Active' ?
+          <button
+            className="mdl-button mdl-button--raised"
+            style={(data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin', 'installer'].includes(this.state.role) ? {backgroundColor: teal300, color: 'white'} : {}}
+            onClick={() => {
+              console.log(data);
+              this.setState({
+                onEdit: true,
+                dataTemp: data,
+              });
+            }}
+          >
+            {
+                data.status == 'Finish installation' || (data.status != 'Complete' && !['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin', 'installer'].includes(this.state.role) ) ? 'Upload' :
+                (data.status == 'Complete' || data.status == 'Active') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin', 'installer'].includes(this.state.role) ? 'Activate' :
+               'Update'
+              }
+          </button> :
+          <FlatButton
+            label="Active"
+            disabled={true}
+            style={{color: teal300}}
+          />}
       </div>
             );
     const DeleteBtn = (data) => (
@@ -122,6 +143,14 @@ export default class Installation extends React.Component {
         id: 4,
         title: 'Installation Address',
         prop: 'id_address',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 18,
+        title: 'Status',
+        prop: 'status',
         width: '20%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -526,7 +555,7 @@ export default class Installation extends React.Component {
   render() {
     const workOrder = this.state.workOrderData;
     const role = this.state.role;
-    const disabled = (this.state.dataTemp.status == 'Active' || this.state.dataTemp.status == 'Complete') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin'].includes(this.state.role);
+    const disabled = (this.state.dataTemp.status == 'Active' || this.state.dataTemp.status == 'Complete') && ['operation', 'manageservice', 'manageservicemanager', 'dispatcher', 'admin', 'installer'].includes(this.state.role);
     let _renderModalComponent = (role, status) => {
       if (status == 'Finish installation' || (status == 'Complete' && this.state.role != 'operation')) {
         return (
@@ -644,6 +673,7 @@ export default class Installation extends React.Component {
               hintText={'Time Slot'}
               floatingLabelText="Time Slot"
               name="time_slot"
+              disabled={!(this.state.role == 'manageservice' || this.state.role == 'manageservicemanager')}
               value={this.state.dataTemp.time_slot}
               onChange={(e, index, value) => {
                 this.setState({
@@ -662,6 +692,7 @@ export default class Installation extends React.Component {
               hintText="Installation Date"
               floatingLabelText="Installation Date"
               fullWidth={true}
+              disabled={!(this.state.role == 'manageservice' || this.state.role == 'manageservicemanager')}
               value={this.state.dataTemp.installation_date}
               onChange={(e, input) => {
                 this.setState({
