@@ -82,7 +82,7 @@ export class MenuList extends React.Component {
       .then((respons) => {
         this.setState({roleUser: respons.user.role});
         const rdata = `${respons.user.name}+${respons.user.role}`;
-        cookies.set('rdata', rdata, {maxAge: 86400});
+        cookies.set('rdata', rdata, {path: '/admin', maxAge: 86400});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -101,7 +101,8 @@ export class MenuList extends React.Component {
         });
         const resJson = await res.json();
         if (resJson.token !== undefined) {
-          cookies.set('ssid', resJson.token, {maxAge: 700});
+          cookies.set('ssid', resJson.token, {path: '/admin', maxAge: 700});
+          cookies.set('ssid', resJson.token, {path: '/', maxAge: 700});
           console.log('token changed');
         }
       }, 400000);

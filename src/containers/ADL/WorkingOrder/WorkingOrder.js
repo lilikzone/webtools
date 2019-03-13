@@ -49,6 +49,14 @@ export default class WorkingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 17,
+        title: 'Status',
+        prop: 'status',
+        width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 4,
         title: 'OLT',
         prop: 'olt',
