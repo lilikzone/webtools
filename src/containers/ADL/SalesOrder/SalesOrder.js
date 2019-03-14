@@ -207,6 +207,7 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
+        console.log(respons);
         if (respons.status === 200) {
           console.log('response', respons);
           this.setState({
@@ -350,7 +351,7 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
-        // console.log(respons);
+        console.log(respons);
         const dataCityObject = respons[0].city;
         const dataCity = [];
         let i;
@@ -372,6 +373,7 @@ export default class SalesOrder extends React.Component {
       })
       .then(json)
       .then((respons) => {
+        console.log(respons);
         this.setState({
           dataProduct: respons.data,
           productLoaded: true,
@@ -397,7 +399,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          // console.log(respons);
+          console.log(respons);
 
           const dataClusterObject = respons;
           const dataCluster = [];
@@ -429,7 +431,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          // console.log(respons);
+          console.log(respons);
 
           const dataStreetObject = respons;
           const dataStreet = [];
@@ -462,8 +464,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          // console.log(respons);
-
+          console.log(respons);
           const dataFullAddressObject = respons;
           const dataFullAddress = [];
           let i;
@@ -494,7 +495,7 @@ export default class SalesOrder extends React.Component {
       })
         .then(json)
         .then((respons) => {
-          // console.log(respons);
+          console.log(respons);
           const dataHomepass = respons[0];
           this.setState({
             textField: {...this.state.textField,  olt: dataHomepass.olt_location, region: dataHomepass.region, fdt: dataHomepass.fdt_code, homepassedId: dataHomepass.homepass_id}});

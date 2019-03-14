@@ -467,6 +467,7 @@ export default class ExistingCustomer extends Component {
     })
       .then(json)
       .then((respons) => {
+        console.log(respons);
         this.setState({
           dataProduct: respons.data,
           productLoaded: true,
@@ -708,7 +709,7 @@ export default class ExistingCustomer extends Component {
     })
       .then(json)
       .then((respons) => {
-        // console.log(respons);
+        console.log(respons);
         if (respons.status === 200) {
           // this._uploadFileOrder(respons.sales_order.id);
           this.setState({
