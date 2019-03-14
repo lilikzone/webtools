@@ -15,8 +15,10 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
+import FileBase64 from 'react-file-base64';
 
 const cookies = new Cookies();
+const sourceLink = 'https://source.adlsandbox.com/storage/';
 
 
 export default class TrackingOrder extends React.Component {
@@ -48,21 +50,48 @@ export default class TrackingOrder extends React.Component {
       note: '',
       editWarning: false,
       orderFilter: '',
+      fileKtp: '',
+      fileAbd: '',
+      fileForm: '',
     };
     const EditBtnSO = (data) => (
       <div className="text-center">
-        <button
-          key={data.id}
-          className="mdl-button mdl-button--raised"
-          onClick={() =>
+        {data.status != 'decline' ?
+          <button
+            key={data.id}
+            className="mdl-button mdl-button--raised"
+            onClick={() =>
             this.setState({
               onEditOrder: true,
               orderDataTemp: data,
             })
           }
-        >
+          >
           Edit
-        </button>
+        </button> :
+          <RaisedButton
+            label="Edit"
+            disabled={true}
+          />
+      }
+      </div>
+    );
+    const ABDRender = (data) => (
+      data.abd && data.abd.length > 0 &&
+      <div className="text-center">
+        <a href={sourceLink + data.abd} target="_blank"> VIEW ABD </a>
+      </div>
+    );
+    const FormRender = (data) => (
+      data.form && data.form.length > 0 &&
+      <div className="text-center">
+        <a href={sourceLink + data.form} target="_blank"> VIEW FORM </a>
+      </div>
+    );
+    const KTPRender = (data) => (
+      data.ktp && data.ktp.length > 0 &&
+      <div className="text-center">
+        <a href={sourceLink + data.ktp} target="_blank"> VIEW KTP </a>
       </div>
     );
     const paymentTypeValue = (data) => (
@@ -184,172 +213,143 @@ export default class TrackingOrder extends React.Component {
     ];
     this.SalesOrdersColumns = [
       {
-        id: 0,
-        title: 'Id',
+        id: 12,
+        title: 'ID',
         prop: 'id',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 1,
-        title: 'Status',
-        prop: 'status',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 2,
-        title: 'Subscription ID',
-        prop: 'subs_id',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 3,
-        title: 'Product ID',
-        prop: 'product_id',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 4,
-        title: 'Customer Email',
-        prop: 'customer_email',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 5,
-        title: 'Customer Name',
-        prop: 'customer_name',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 6,
-        title: 'Product Price',
-        prop: 'product_price',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 7,
-        title: 'Discount Price',
-        prop: 'discount_price',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 8,
-        title: 'Tax Amount',
-        prop: 'tax_amount',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 9,
-        title: 'Tax Price',
-        prop: 'tax_price',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 10,
-        title: 'Materai',
-        prop: 'materai',
-        width: '20%',
+        width: '9%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 11,
-        title: 'Subtotal',
-        prop: 'subtotal',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 12,
-        title: 'Grandtotal',
-        prop: 'grandtotal',
-        width: '20%',
+        title: 'Status',
+        prop: 'status',
+        width: '9%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 13,
-        title: 'Payment Type',
-        prop: 'payment_type',
-        render: paymentTypeValue,
-        width: '20%',
+        title: 'Note',
+        prop: 'notes',
+        width: '9%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 0,
+        title: 'Sales Name',
+        prop: 'sales_name',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 1,
+        title: 'Customer ID',
+        prop: 'customer_id',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 2,
+        title: 'Product Name',
+        prop: 'product_name',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 3,
+        title: 'Customer Email',
+        prop: 'customer_email',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 4,
+        title: 'Customer Name',
+        prop: 'customer_name',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 5,
+        title: 'Customer Type',
+        prop: 'payment_type',
+        render: paymentTypeValue,
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 6,
+        title: 'Grand Total',
+        prop: 'grandtotal',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 7,
+        title: 'Created at',
+        prop: 'created_at',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 8,
+        title: 'Installation Date',
+        prop: 'installation_date',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 9,
+        title: 'Payment Date',
+        prop: 'payment_date',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Edit Action',
+        render: EditBtnSO,
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 14,
-        title: 'Due Date',
-        prop: 'due_date',
-        width: '20%',
+        title: 'ABD',
+        prop: 'abd',
+        width: '9%',
+        render: ABDRender,
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 15,
-        title: 'Sales Name',
-        prop: 'sales_name',
-        width: '20%',
+        title: 'Form',
+        prop: 'form',
+        width: '9%',
+        render: FormRender,
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
         id: 16,
-        title: 'Created At',
-        prop: 'created_at',
-        width: '20%',
+        title: 'KTP',
+        prop: 'ktp',
+        width: '9%',
+        render: KTPRender,
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 17,
-        title: 'Updated At',
-        prop: 'updated_at',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 18,
-        title: 'Notes',
-        prop: 'notes',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 19,
-        title: 'Flag Status',
-        prop: 'flag_status',
-        width: '20%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
-        cellClass: 'mdl-data-table__cell--non-numeric',
-      },
-      {
-        id: 20,
-        title: 'Edit Action',
-        render: EditBtnSO,
-        width: '2%',
-        headerClass: 'mdl-data-table__cell--non-numeric',
       },
       // {
       //   id: 20,
@@ -385,6 +385,16 @@ export default class TrackingOrder extends React.Component {
         });
       }
     }
+  }
+
+  getFilesKtp(file) {
+    this.setState({fileKtp: file});
+  }
+  getFilesAbd(file) {
+    this.setState({fileAbd: file});
+  }
+  getFilesForm(file) {
+    this.setState({fileForm: file});
   }
 
   _onRequestClose=(data) => {
@@ -467,6 +477,9 @@ export default class TrackingOrder extends React.Component {
     this.setState({
       onEditOrder: false,
       editWarning: false,
+      fileKtp: '',
+      fileAbd: '',
+      fileForm: '',
 
     });
   }
@@ -524,9 +537,86 @@ export default class TrackingOrder extends React.Component {
     }
   }
 
+  _handleUpdate() {
+    const fileAbd = this.state.fileAbd;
+    const fileForm = this.state.fileForm;
+    const fileKtp = this.state.fileKtp;
+    const order_id = this.state.orderDataTemp.id;
+    console.log('idnyooo', order_id);
+    const type_id = this.state.orderDataTemp.type_id;
+    const id_number = this.state.orderDataTemp.id_number;
+    const phone1 = this.state.orderDataTemp.phone1;
+    const customer_name = this.state.orderDataTemp.customer_name;
+    const id_address = this.state.orderDataTemp.id_address;
+    const cookieData = cookies.get('ssid');
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        load: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+      console.log('lemparr body', JSON.stringify({
+        'abd': fileAbd.base64,
+        'abd_filename': fileAbd.name,
+        'ktp': fileKtp.base64,
+        'ktp_filename': fileKtp.name,
+        'form': fileForm.base64,
+        'form_filename': fileForm.name,
+      }), );
+      fetch(`https://source.adlsandbox.com/api/order/verification?status=open&id=${order_id}&type_id=${type_id}&id_number=${id_number}&phone1=${phone1}&customer_name=${customer_name}&id_address=${id_address}`,
+        {
+          method: 'POST',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'abd': fileAbd.base64,
+            'abd_filename': fileAbd.name,
+            'ktp': fileKtp.base64,
+            'ktp_filename': fileKtp.name,
+            'form': fileForm.base64,
+            'form_filename': fileForm.name,
+          }),
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({
+          alertMessage: respons.message,
+          alert: true,
+          onEditOrder: false,
+          editWarning: false,
+          // redirect: true,
+        });
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+
+      this._getSOdata();
+      this._handleClose();
+    }
+  }
+
+  _handleValidationTypePayment(input, index, data) {
+    let dataInput = data;
+
+    this.setState({
+      orderDataTemp: {...this.state.orderDataTemp, payment_type: dataInput},
+    });
+  }
+
   render() {
+    console.log('gambar', sourceLink + this.state.orderDataTemp.abd);
     let actions = (role) => {
-      if (role === 'sales') {
+      if (['internalsales', 'salesadmin', 'sales'].includes(role)) {
         return ([
           <FlatButton
             label="Cancel"
@@ -537,7 +627,7 @@ export default class TrackingOrder extends React.Component {
             label="Update"
             primary={true}
             keyboardFocused={true}
-            onTouchTap={() => this._handleWarning()}
+            onTouchTap={() => this._handleUpdate()}
           />,
         ]);
       } else {
@@ -634,40 +724,64 @@ export default class TrackingOrder extends React.Component {
         </div>
       );
     };
+    let _uploadForm = (role) => {
+      if (['internalsales', 'salesadmin', 'sales'].includes(role)) {
+        return (
+          <div>
+            <br />
+            <h3>Upload Files</h3>
+            <hr />
+            <div className="input-group">
+              <span className="input-group-icon">
+                <label>File KTP</label>
+              </span>
+              <div className="input-group-text">
+                <FileBase64 name="ktp" multiple={false} onDone={this.getFilesKtp.bind(this)} />
+              </div>
+              <img style={{width: 500}} src={this.state.fileKtp.base64 == undefined && this.state.orderDataTemp.ktp ? sourceLink + this.state.orderDataTemp.ktp : this.state.fileKtp.base64} />
+            </div>
+            <div className="input-group">
+              <span className="input-group-icon">
+                <label>File ABD</label>
+              </span>
+              <div className="input-group-text">
+                <FileBase64 multiple={false} name="abd"  onDone={this.getFilesAbd.bind(this)} />
+              </div>
+              <img style={{width: 500}} src={this.state.fileAbd.base64 == undefined && this.state.orderDataTemp.abd ? sourceLink + this.state.orderDataTemp.abd : this.state.fileAbd.base64} />
+            </div>
+            <div className="input-group">
+              <span className="input-group-icon">
+                <label>File Form</label>
+              </span>
+              <div className="input-group-text">
+                <FileBase64 multiple={false}  name="file_form" onDone={this.getFilesForm.bind(this)} />
+              </div>
+              <img style={{width: 500}} src={this.state.fileForm.base64 == undefined && this.state.orderDataTemp.form ? sourceLink + this.state.orderDataTemp.form : this.state.fileForm.base64} />
+            </div>
+          </div>
+        );
+      }
+    };
     let _renderModalComponent = () => {
       return (
         <div>
           <TextField
             required={true}
             disabled={true}
-            value={this.state.orderDataTemp.id}
-            hintText="ID"
-            floatingLabelText="ID"
+            value={this.state.orderDataTemp.sales_name}
+            hintText="Sales Name"
+            floatingLabelText="Sales Name"
             fullWidth={true}
             onChange={(e, input) => {
               this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, id: input},
+                orderDataTemp: {...this.state.orderDataTemp, sales_name: input},
               });
             }}
           />
           <TextField
             fullWidth={true}
             required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.status}
-            hintText="Status"
-            floatingLabelText="Status"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, status: input},
-              });
-            }}
-          />
-
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
+            // disabled={true}
             value={this.state.orderDataTemp.customer_id}
             hintText="Customer ID"
             floatingLabelText="Customer ID"
@@ -681,12 +795,12 @@ export default class TrackingOrder extends React.Component {
             fullWidth={true}
             required={true}
             disabled={true}
-            value={this.state.orderDataTemp.product_id}
-            hintText="Product ID"
-            floatingLabelText="Product ID"
+            value={this.state.orderDataTemp.product_name}
+            hintText="Product Name"
+            floatingLabelText="Product Name"
             onChange={(e, input) => {
               this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, product_id: input},
+                orderDataTemp: {...this.state.orderDataTemp, product_name: input},
               });
             }}
           />
@@ -695,8 +809,8 @@ export default class TrackingOrder extends React.Component {
             required={true}
             disabled={true}
             value={this.state.orderDataTemp.customer_email}
-            hintText="Customer email"
-            floatingLabelText="Customer email"
+            hintText="Customer Email"
+            floatingLabelText="Customer Email"
             onChange={(e, input) => {
               this.setState({
                 orderDataTemp: {...this.state.orderDataTemp, customer_email: input},
@@ -706,7 +820,7 @@ export default class TrackingOrder extends React.Component {
           <TextField
             fullWidth={true}
             required={true}
-            disabled={true}
+            // disabled={true}
             value={this.state.orderDataTemp.customer_name}
             hintText="Customer Name"
             floatingLabelText="Customer Name"
@@ -716,133 +830,29 @@ export default class TrackingOrder extends React.Component {
               });
             }}
           />
-          <TextField
+          <SelectField
             fullWidth={true}
             required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.product_price}
-            hintText="Product Price"
-            floatingLabelText="Product Price"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, product_price: input},
-              });
+            floatingLabelText="Customer Type"
+            name="customer_type"
+            value={this.state.orderDataTemp.payment_type}
+            onChange={(input, index, dataSource) => {
+              this._handleValidationTypePayment(input, index, dataSource);
             }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.discount_price}
-            hintText="Discount Price"
-            floatingLabelText="Discount Price"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, discount_price: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.tax_amount}
-            hintText="Tax Amount"
-            floatingLabelText="Tax Amount"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, tax_amount: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.tax_price}
-            hintText="Tax Price"
-            floatingLabelText="Tax Price"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, tax_price: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.materai}
-            hintText="Materai"
-            floatingLabelText="Materai"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, materai: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.subtotal}
-            hintText="Subtotal"
-            floatingLabelText="Subtotal"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, subtotal: input},
-              });
-            }}
-          />
+          >
+            <MenuItem  value="pbi" primaryText="Regular" />
+            <MenuItem  value="pai" primaryText="Pay After Installation" />
+          </SelectField>
           <TextField
             fullWidth={true}
             required={true}
             disabled={true}
             value={this.state.orderDataTemp.grandtotal}
-            hintText="Grandtotal"
-            floatingLabelText="Grandtotal"
+            hintText="Grand total"
+            floatingLabelText="Grand total"
             onChange={(e, input) => {
               this.setState({
                 orderDataTemp: {...this.state.orderDataTemp, grandtotal: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.payment_type}
-            hintText="Payment Type"
-            floatingLabelText="Payment Type"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, payment_type: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.due_date}
-            hintText="Due Date"
-            floatingLabelText="Due Date"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, due_date: input},
-              });
-            }}
-          />
-          <TextField
-            fullWidth={true}
-            required={true}
-            disabled={true}
-            value={this.state.orderDataTemp.sales_name}
-            hintText="Sales Name"
-            floatingLabelText="Sales Name"
-            onChange={(e, input) => {
-              this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, sales_name: input},
               });
             }}
           />
@@ -863,12 +873,12 @@ export default class TrackingOrder extends React.Component {
             fullWidth={true}
             required={true}
             disabled={true}
-            value={this.state.orderDataTemp.updated_at}
-            hintText="Updated At"
-            floatingLabelText="Updated At"
+            value={this.state.orderDataTemp.installation_date}
+            hintText="Installation Date"
+            floatingLabelText="Installation Date"
             onChange={(e, input) => {
               this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, updated_at: input},
+                orderDataTemp: {...this.state.orderDataTemp, installation_date: input},
               });
             }}
           />
@@ -876,16 +886,16 @@ export default class TrackingOrder extends React.Component {
             fullWidth={true}
             required={true}
             disabled={true}
-            value={this.state.orderDataTemp.flag_status}
-            hintText="Flag Status"
-            floatingLabelText="Flag Status"
+            value={this.state.orderDataTemp.payment_date}
+            hintText="Payment Date"
+            floatingLabelText="Payment Date"
             onChange={(e, input) => {
               this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, flag_status: input},
+                orderDataTemp: {...this.state.orderDataTemp, payment_date: input},
               });
             }}
           />
-
+          {_uploadForm(this.state.role)}
         </div>
       );
     };

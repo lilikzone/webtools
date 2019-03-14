@@ -282,6 +282,7 @@ export default class Installation extends React.Component {
       })
         .then(json)
         .then((respons) => {
+          console.log(respons);
           this.setState({
             role: respons.user.role,
           });
@@ -338,6 +339,7 @@ export default class Installation extends React.Component {
         })
         .then(json)
         .then((respons) => {
+          console.log(respons);
           const dataInstallerObject = respons.result.data;
           const dataInstaller = [];
           let i;
@@ -426,7 +428,7 @@ export default class Installation extends React.Component {
       this.setState({isVendorValid: false});
     } else {
       this.setState({
-        dataTemp: {...this.state.dataTemp, vendor: dataInput, vendorValue: found.valueKey},
+        dataTemp: {...this.state.dataTemp, vendor_name: dataInput, vendorValue: found.valueKey},
       });
     }
     // }
@@ -454,7 +456,7 @@ export default class Installation extends React.Component {
 
       const status = stats || this.state.status;
       const json = (response) => response.json();
-      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
+      // console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
       fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`, {
         method: 'PUT',
         type: 'cors',
@@ -661,7 +663,7 @@ export default class Installation extends React.Component {
               disabled={this.state.disableEditVendor || disabled}
               openOnFocus={true}
               dataSource={this.state.dataVendor}
-              searchText={this.state.dataTemp.vendor}
+              searchText={this.state.dataTemp.vendor_name}
               dataSourceConfig={dataSourceConfig}
               onUpdateInput={(input, dataSource) => {
                 this._handleValidationVendor(input, dataSource);
