@@ -2,7 +2,8 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import {Grid, Row, Col} from 'react-flexbox-grid';
@@ -42,7 +43,11 @@ export default class Installation extends React.Component {
       dataTemp: [],
       dataVendor: [],
       dataInstaller: [],
-      workOrderData: [],
+      workOrderData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       // snStb: '',
       // snOnt: '',
       load: false,
@@ -356,6 +361,29 @@ export default class Installation extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.workOrderData.current_page != this.state.workOrderData.current_page) {
+      this.setState({
+        load: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/workorder/all?page=${this.state.workOrderData.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.token}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        // console.log(respons);
+        this.setState({workOrderData: respons, load: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+  }
+
   _getWoData() {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -379,7 +407,7 @@ export default class Installation extends React.Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({workOrderData: respons.data, load: true, onEdit: false});
+        this.setState({workOrderData: respons, load: true, onEdit: false});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -906,14 +934,29 @@ export default class Installation extends React.Component {
 
     let _setVendor = (workOrder) => {
       return (
+        // <MaterialContainer
+        //   keys="id"
+        //   className="mdl-data-table"
+        //   columns={this.WorkOrdersColumns}
+        //   dataArray={workOrder}
+        //   draggable={false}
+        //   sortable={false}
+        //   sortBy={{prop: 'id', order: 'desc'}}
+        //   pageSizeOptions={[10]}
+        // />
         <MaterialContainer
           keys="id"
           className="mdl-data-table"
           columns={this.WorkOrdersColumns}
-          dataArray={workOrder}
+          onChangePage={((page) => this.setState({
+            workOrderData: {...this.state.workOrderData, current_page: page + 1},
+          }))}
+          dataArrayCustom={workOrder.data}
           draggable={false}
           sortable={false}
-          sortBy={{prop: 'id', order: 'desc'}}
+          currentPage={workOrder.current_page - 1}
+          total={workOrder.total}
+          sortBy={{prop: 'id', order: 'asc'}}
           pageSizeOptions={[10]}
         />
       );

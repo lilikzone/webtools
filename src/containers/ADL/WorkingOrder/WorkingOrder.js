@@ -2,7 +2,8 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {Row, Col} from 'react-flexbox-grid';
 import CircularProgress from 'material-ui/CircularProgress';
 import Cookies from 'universal-cookie';
@@ -162,7 +163,11 @@ export default class WorkingOrder extends React.Component {
       },
     ];
     this.state = {
-      workOrderData: [],
+      workOrderData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       cookies: '',
     };
   }
@@ -177,6 +182,29 @@ export default class WorkingOrder extends React.Component {
   componentDidMount() {
     this._getWOData();
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.workOrderData.current_page != this.state.workOrderData.current_page) {
+      this.setState({
+        load: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/workorder/all?page=${this.state.workOrderData.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.token}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        // console.log(respons);
+        this.setState({workOrderData: respons, load: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+  }
+
 
   _getWOData() {
     const status = (response) => {
@@ -199,7 +227,7 @@ export default class WorkingOrder extends React.Component {
     .then(json)
     .then((respons) => {
       console.log(respons);
-      this.setState({workOrderData: respons.data, load: true});
+      this.setState({workOrderData: respons, load: true});
     }).catch((error) => {
       console.log(`error: ${error}`);
     });
@@ -219,11 +247,16 @@ export default class WorkingOrder extends React.Component {
                     keys="id"
                     className="mdl-data-table"
                     columns={this.WorkOrdersColumns}
-                    dataArray={this.state.workOrderData}
+                    onChangePage={((page) => this.setState({
+                      workOrderData: {...this.state.workOrderData, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.workOrderData.data}
                     draggable={false}
                     sortable={false}
-                    sortBy={{prop: 'id', order: 'desc'}}
-                    pageSizeOptions={[5]}
+                    currentPage={this.state.workOrderData.current_page - 1}
+                    total={this.state.workOrderData.total}
+                    sortBy={{prop: 'id', order: 'asc'}}
+                    pageSizeOptions={[10]}
                   /> :
                   <Paper style={styles.paper}>
                     <div style={{minWidth: 700}}>

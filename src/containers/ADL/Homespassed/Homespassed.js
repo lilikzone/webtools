@@ -254,23 +254,36 @@ export default class HomePassed extends React.Component {
   }
   render() {
     var position = [this.state.lat, this.state.lng];
+    let _renderDescription = () => {
+      return (
+        <Paper>
+          <Row style={{margin: 5}}>
+            <Row style={{margin: 5}}><img src="../../../assets/images/blue-marker.png" width={30} height={30} /><h4>Used by Customer</h4></Row>
+            <Row style={{margin: 5}}><img src="../../../assets/images/red-marker.png" width={30} height={30} /><h4>Have Not Used by Customer</h4></Row>
+          </Row>
+        </Paper>
+      );
+    };
     let _renderMap = () => {
       return (
-        <Map
-          ref={(ref) => {
-            this.map = ref;
-          }}
-          style={styles.map}
-          center={position}
-          zoom={this.state.zoom}
-          minZoom={1}
-        >
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <MarkerClusterGroup  markers={this._renderPin(this.state.markerData)} chunkedLoading={true} maxClusterRadius={(zoom) => zoom > 16 ? 5 : 20} />
-        </Map>
+        <div>
+          {_renderDescription()}
+          <Map
+            ref={(ref) => {
+              this.map = ref;
+            }}
+            style={styles.map}
+            center={position}
+            zoom={this.state.zoom}
+            minZoom={1}
+          >
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MarkerClusterGroup  markers={this._renderPin(this.state.markerData)} chunkedLoading={true} maxClusterRadius={(zoom) => zoom > 16 ? 5 : 20} />
+          </Map>
+        </div>
       );
     };
     let _renderTable = () => {
@@ -567,7 +580,6 @@ export default class HomePassed extends React.Component {
                   });
                 }}
               >
-                {/* later on will need to add condition parameter --  && this.state.loadedMap */}
                 {this.state.currentTab == 0  && this.state.loadedMap  ? _renderMap() :  _renderLoading()}
               </Tab>
               <Tab

@@ -3,7 +3,8 @@ import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import {Grid, Row, Col} from 'react-flexbox-grid';
@@ -43,8 +44,16 @@ export default class TrackingOrder extends React.Component {
       textField: [],
       dataTable: this.data,
       cookies: '',
-      workOrderData: [],
-      salesOrderData: [],
+      workOrderData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
+      salesOrderData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       orderDataTemp: [],
       redirect: false,
       note: '',
@@ -390,6 +399,48 @@ export default class TrackingOrder extends React.Component {
     this._getSOdata();
     this._getWOdata();
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.salesOrderData.current_page != this.state.salesOrderData.current_page) {
+      this.setState({
+        load: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/order/all?${this.state.orderFilter}?page=${this.state.salesOrderData.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.cookies}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        // console.log(respons);
+        this.setState({salesOrderData: respons, load: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+    if (prevState.workOrderData.current_page != this.state.workOrderData.current_page) {
+      this.setState({
+        loadWO: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/workorder/all?${this.state.workOrderData.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.cookies}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        // console.log(respons);
+        this.setState({workOrderData: respons, loadWO: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 
   componentWillMount() {
     const cookieData = cookies.get('ssid');
@@ -460,7 +511,7 @@ export default class TrackingOrder extends React.Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({salesOrderData: respons.data, load: true});
+        this.setState({salesOrderData: respons, load: true});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -490,7 +541,7 @@ export default class TrackingOrder extends React.Component {
       .then(json)
       .then((respons) => {
         console.log(respons);
-        this.setState({workOrderData: respons.data, loadWO: true});
+        this.setState({workOrderData: respons, loadWO: true});
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -544,20 +595,16 @@ export default class TrackingOrder extends React.Component {
         this.setState({
           alertMessage: respons.message,
           alert: true,
-          load: true,
+          load: false,
           onEditOrder: false,
           editWarning: false,
           // redirect: true,
         });
+        this._getSOdata();
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-
-      this._getSOdata();
       this._handleClose();
-      this.setState({
-        redirect: true,
-      });
     }
   }
 
@@ -573,9 +620,9 @@ export default class TrackingOrder extends React.Component {
     const id_address = this.state.orderDataTemp.id_address;
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
-      this.setState({
-        load: false,
-      });
+      // this.setState({
+      //   load: false,
+      // });
       const status = (response) => {
         if (response.status >= 200 && response.status < 300) {
           return Promise.resolve(response);
@@ -609,13 +656,13 @@ export default class TrackingOrder extends React.Component {
           alert: true,
           onEditOrder: false,
           editWarning: false,
+          load: false,
           // redirect: true,
         });
+        this._getSOdata();
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
-
-      this._getSOdata();
       this._handleClose();
     }
   }
@@ -680,7 +727,6 @@ export default class TrackingOrder extends React.Component {
       />,
     ];
     let _manageSO = () => {
-      const load = this.state.load;
       return (
         <div>
           <h3 style={styles.navigation}>Manage Sales Order</h3>
@@ -718,16 +764,33 @@ export default class TrackingOrder extends React.Component {
                       rowsMax={4}
                     />
                   </Dialog>
-                  {load ? <MaterialContainer
-                    keys="id"
-                    className="mdl-data-table"
-                    columns={this.SalesOrdersColumns}
-                    dataArray={this.state.salesOrderData}
-                    draggable={false}
-                    sortable={false}
-                    sortBy={{prop: 'id', order: 'desc'}}
-                    pageSizeOptions={[5]}
-                          /> : ''}
+                  {this.state.load ?
+                    // <MaterialContainer
+                    //   keys="id"
+                    //   className="mdl-data-table"
+                    //   columns={this.SalesOrdersColumns}
+                    //   dataArray={this.state.salesOrderData}
+                    //   draggable={false}
+                    //   sortable={false}
+                    //   sortBy={{prop: 'id', order: 'desc'}}
+                    //   pageSizeOptions={[5]}
+                    // />
+                    <MaterialContainer
+                      keys="id"
+                      className="mdl-data-table"
+                      columns={this.SalesOrdersColumns}
+                      onChangePage={((page) => this.setState({
+                        salesOrderData: {...this.state.salesOrderData, current_page: page + 1},
+                      }))}
+                      dataArrayCustom={this.state.salesOrderData.data}
+                      draggable={true}
+                      sortable={false}
+                      currentPage={this.state.salesOrderData.current_page - 1}
+                      total={this.state.salesOrderData.total}
+                      sortBy={{prop: 'id', order: 'desc'}}
+                      pageSizeOptions={[10]}
+                    /> :
+                    ''}
 
 
                 </div>
@@ -957,16 +1020,33 @@ export default class TrackingOrder extends React.Component {
                   >
                     {_renderModalComponent()}
                   </Dialog>
-                  {this.state.loadWO ? <MaterialContainer
-                    keys="id"
-                    className="mdl-data-table"
-                    columns={this.WorkOrdersColumns}
-                    dataArray={this.state.workOrderData}
-                    draggable={false}
-                    sortable={false}
-                    sortBy={{prop: 'id', order: 'desc'}}
-                    pageSizeOptions={[5]}
-                                       /> : ''}
+                  {this.state.loadWO ?
+                  // <MaterialContainer
+                  //   keys="id"
+                  //   className="mdl-data-table"
+                  //   columns={this.WorkOrdersColumns}
+                  //   dataArray={this.state.workOrderData}
+                  //   draggable={false}
+                  //   sortable={false}
+                  //   sortBy={{prop: 'id', order: 'desc'}}
+                  //   pageSizeOptions={[5]}
+                  //                      />
+                    <MaterialContainer
+                      keys="id"
+                      className="mdl-data-table"
+                      columns={this.WorkOrdersColumns}
+                      onChangePage={((page) => this.setState({
+                        workOrderData: {...this.state.workOrderData, current_page: page + 1},
+                      }))}
+                      dataArrayCustom={this.state.workOrderData.data}
+                      draggable={true}
+                      sortable={false}
+                      currentPage={this.state.workOrderData.current_page - 1}
+                      total={this.state.workOrderData.total}
+                      sortBy={{prop: 'id', order: 'desc'}}
+                      pageSizeOptions={[10]}
+                    /> :
+                  ''}
 
                 </div>
               </div>
