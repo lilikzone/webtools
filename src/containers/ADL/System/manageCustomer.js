@@ -75,6 +75,8 @@ export default class ManageCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      dialogMsg: '',
+      isDialog: false,
       loaded: false,
       updateAlert: false,
       cookies: '',
@@ -521,16 +523,23 @@ export default class ManageCustomer extends React.Component {
             // currentTab: 1,
             isRegistered: true,
             notifMessage: responseJson.message,
+            dialogMsg: responseJson.message,
+            isDialog: true,
           });
         } else {
           this.setState({
             isRegistered: true,
             notifMessage: 'Something happen',
+            dialogMsg: 'Something happen',
+            isDialog: true,
           });
         }
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          dialogMsg: 'Register fail, please check again', isDialog: true,
+        });
       });
   }
 
@@ -564,7 +573,11 @@ export default class ManageCustomer extends React.Component {
       this.setState({
         deleteAlert: false,
       });
-    }    else {
+    }      else if (param == 'error') {
+      this.setState({
+        isDialog: false,
+      });
+    }   else {
       this.setState({
         onEdit: false,
       });
@@ -1139,6 +1152,15 @@ export default class ManageCustomer extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <form>
                 <Col xs={12} md={6} lg={6}>
+                  <Dialog
+                    title={this.state.dialogMsg}
+                    actions={actionsUpdate('error')}
+                    modal={true}
+                    open={this.state.isDialog}
+                    onRequestClose={() => this.setState({
+                      isDialog: false,
+                    })}
+                  />
                   <TextField
                     required={true}
                     // hintText="Customer Name"
@@ -1570,7 +1592,7 @@ export default class ManageCustomer extends React.Component {
                   _renderManageUser() : _renderLoading()}
               </Tab>
             </Tabs>
-            <Snackbar
+            {/* <Snackbar
               open={this.state.isRegistered}
               message={this.state.notifMessage}
               onRequestClose={(e) => {
@@ -1578,7 +1600,7 @@ export default class ManageCustomer extends React.Component {
               }}
               autoHideDuration={4000}
               bodyStyle={{backgroundColor: 'teal'}}
-            />
+            /> */}
           </Col>
         </Paper>
       </Row>

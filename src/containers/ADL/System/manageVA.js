@@ -25,6 +25,8 @@ export default class ManageVA extends React.Component {
     super(props);
     this.data = [];
     this.state = {
+      dialogMsg: '',
+      isDialog: false,
       loaded: false,
       currentTab: 0,
       isGenderValid: true,
@@ -236,10 +238,17 @@ export default class ManageVA extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log('res', responseJson);
+        this.setState({
+          dialogMsg: responseJson.status,
+          isDialog: true,
+        });
         this._getAPI(`${HOSTNAME}all`, 'allData');
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          dialogMsg: 'Create fail, please check again', isDialog: true,
+        });
       });
   }
   _putAPI(apiUrl, id,  va_number, issuer, ip, subnet, type_payment, partner, cred1, cred2, cred3, environment) {
@@ -342,7 +351,11 @@ export default class ManageVA extends React.Component {
       this.setState({
         deleteAlert: false,
       });
-    }    else {
+    }  else if (param == 'error') {
+      this.setState({
+        isDialog: false,
+      });
+    }        else {
       this.setState({
         onEdit: false,
       });
@@ -379,6 +392,12 @@ export default class ManageVA extends React.Component {
         onTouchTap={() => this._handleUpdate()}
       />,
     ];
+    let actionsUpdate = (val) => [
+      <RaisedButton
+        label="OK" primary={true}
+        onTouchTap={() => this._handleClose(val)}
+      />,
+    ];
     let _renderSelection = (data) => {
       return data.map((val, index) => {
         return <MenuItem key={index} value={val} primaryText={val} />;
@@ -392,6 +411,15 @@ export default class ManageVA extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <form>
                 <Col xs={12} md={6} lg={6}>
+                  <Dialog
+                    title={this.state.dialogMsg}
+                    actions={actionsUpdate('error')}
+                    modal={true}
+                    open={this.state.isDialog}
+                    onRequestClose={() => this.setState({
+                      isDialog: false,
+                    })}
+                  />
                   <TextField
                     required={true}
                     // hintText="VA"

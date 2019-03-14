@@ -229,6 +229,14 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 18,
+        title: 'Flag Status',
+        prop: 'flag_status',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 13,
         title: 'Note',
         prop: 'notes',
@@ -245,9 +253,25 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 17,
+        title: 'Customer ID Type',
+        prop: 'type_id',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 19,
+        title: 'Customer Address',
+        prop: 'id_address',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 1,
-        title: 'Customer ID',
-        prop: 'customer_id',
+        title: 'Customer ID Number',
+        prop: 'id_number',
         width: '9%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
@@ -542,7 +566,6 @@ export default class TrackingOrder extends React.Component {
     const fileForm = this.state.fileForm;
     const fileKtp = this.state.fileKtp;
     const order_id = this.state.orderDataTemp.id;
-    console.log('idnyooo', order_id);
     const type_id = this.state.orderDataTemp.type_id;
     const id_number = this.state.orderDataTemp.id_number;
     const phone1 = this.state.orderDataTemp.phone1;
@@ -560,14 +583,6 @@ export default class TrackingOrder extends React.Component {
         return Promise.reject(new Error(response.statusText));
       };
       const json = (response) => response.json();
-      console.log('lemparr body', JSON.stringify({
-        'abd': fileAbd.base64,
-        'abd_filename': fileAbd.name,
-        'ktp': fileKtp.base64,
-        'ktp_filename': fileKtp.name,
-        'form': fileForm.base64,
-        'form_filename': fileForm.name,
-      }), );
       fetch(`https://source.adlsandbox.com/api/order/verification?status=open&id=${order_id}&type_id=${type_id}&id_number=${id_number}&phone1=${phone1}&customer_name=${customer_name}&id_address=${id_address}`,
         {
           method: 'POST',
@@ -614,7 +629,6 @@ export default class TrackingOrder extends React.Component {
   }
 
   render() {
-    console.log('gambar', sourceLink + this.state.orderDataTemp.abd);
     let actions = (role) => {
       if (['internalsales', 'salesadmin', 'sales'].includes(role)) {
         return ([
@@ -782,12 +796,38 @@ export default class TrackingOrder extends React.Component {
             fullWidth={true}
             required={true}
             // disabled={true}
-            value={this.state.orderDataTemp.customer_id}
+            value={this.state.orderDataTemp.id_number}
             hintText="Customer ID"
             floatingLabelText="Customer ID"
             onChange={(e, input) => {
               this.setState({
-                orderDataTemp: {...this.state.orderDataTemp, customer_id: input},
+                orderDataTemp: {...this.state.orderDataTemp, id_number: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            // disabled={true}
+            value={this.state.orderDataTemp.type_id}
+            hintText="Customer ID Type"
+            floatingLabelText="Customer ID Type"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, type_id: input},
+              });
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            required={true}
+            // disabled={true}
+            value={this.state.orderDataTemp.id_address}
+            hintText="Customer Address"
+            floatingLabelText="Customer Address"
+            onChange={(e, input) => {
+              this.setState({
+                orderDataTemp: {...this.state.orderDataTemp, id_address: input},
               });
             }}
           />
