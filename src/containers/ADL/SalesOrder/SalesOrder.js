@@ -55,6 +55,8 @@ export default class SalesOrder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      dialogMsg: '',
+      isDialog: false,
       loaded: false,
       isGetProduct: false,
       isGetAllProduct: true,
@@ -215,6 +217,13 @@ export default class SalesOrder extends React.Component {
             openWarning: true,
             warningMessage: respons.message,
             TitleMessage: 'Success',
+          });
+        } else {
+          console.log('response not 200', respons);
+          this.setState({
+            openWarning: true,
+            warningMessage: respons.message,
+            TitleMessage: 'Failed',
           });
         }
       }).catch((error) => {
@@ -785,7 +794,7 @@ export default class SalesOrder extends React.Component {
                     });
                   }}
                 />
-                <SelectField
+                {/* <SelectField
                   floatingLabelText="Customer Group"
                   fullWidth={true}
                   value={this.state.textField.group}
@@ -801,7 +810,7 @@ export default class SalesOrder extends React.Component {
                   <MenuItem  value="REGULAR" primaryText="REGULAR" />
                   <MenuItem  value="FREE WIFI" primaryText="FREE WIFI" />
                   <MenuItem  value="VIP" primaryText="VIP" />
-                </SelectField>
+                </SelectField> */}
                 <TextField
                   required={true}
                   value={this.state.textField.phone1}
@@ -993,7 +1002,7 @@ export default class SalesOrder extends React.Component {
             <Dialog
               title={this.state.TitleMessage}
               actions={action}
-              modal={false}
+              modal={true}
               open={this.state.openWarning}
               onRequestClose={this.handleClose}
             >
@@ -1012,7 +1021,7 @@ export default class SalesOrder extends React.Component {
               >
                 {_renderCreateCustomer()}
               </Tab>
-              <Tab
+              {/* <Tab
                 value={1}
                 label="Existing Customer"
                 onActive={(val) => {
@@ -1022,7 +1031,7 @@ export default class SalesOrder extends React.Component {
                 }}
               >
                 <ExistingCustomer />
-              </Tab>
+              </Tab> */}
             </Tabs>
           </Col>
         </Paper>

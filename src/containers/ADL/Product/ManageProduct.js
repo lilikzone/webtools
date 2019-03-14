@@ -427,6 +427,10 @@ export default class ManageProduct extends React.Component {
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          warningMessage: 'FAILED',
+          openWarning: true,
+        });
       });
   }
   _putAPI() {
@@ -1294,7 +1298,7 @@ export default class ManageProduct extends React.Component {
         <Paper style={styles.paper}>
           <Col xs={12} md={12} lg={12}>
             <Dialog
-              title="Success"
+              title={this.state.warningMessage != 'FAILED' ? 'Success' : 'FAILED TO CREATE PRODUCT'}
               actions={actions()}
               modal={true}
               open={this.state.openWarning}

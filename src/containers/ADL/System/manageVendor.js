@@ -23,6 +23,8 @@ export default class ManageVendor extends React.Component {
     super(props);
     this.data = [];
     this.state = {
+      dialogMsg: '',
+      isDialog: false,
       loaded: false,
       cookies: '',
       keyword: '',
@@ -133,9 +135,15 @@ export default class ManageVendor extends React.Component {
       .then((responseJson) => {
         console.log('res', responseJson);
         this._getAPI(`${HOSTNAME}all`, 'vendorData');
+        this.setState({
+          dialogMsg: 'Vendor Created', isDialog: true,
+        });
       })
       .catch((error) => {
         console.error(error);
+        this.setState({
+          dialogMsg: 'Create fail, please check again', isDialog: true,
+        });
       });
   }
   _deleteAPI(apiUrl, ids) {
@@ -236,7 +244,11 @@ export default class ManageVendor extends React.Component {
       this.setState({
         deleteAlert: false,
       });
-    }    else {
+    }    else if (param == 'error') {
+      this.setState({
+        isDialog: false,
+      });
+    }        else {
       this.setState({
         onEdit: false,
       });
@@ -328,6 +340,15 @@ export default class ManageVendor extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <form>
                 <Col xs={12} md={6} lg={6}>
+                  <Dialog
+                    title={this.state.dialogMsg}
+                    actions={actionsUpdate('error')}
+                    modal={true}
+                    open={this.state.isDialog}
+                    onRequestClose={() => this.setState({
+                      isDialog: false,
+                    })}
+                  />
                   <TextField
                     required={true}
                     // hintText="Code"
@@ -359,12 +380,12 @@ export default class ManageVendor extends React.Component {
                     style={styles.raisedButton}
                     onTouchTap={() => this._handleTouchTap()}
                   />
-                  <Snackbar
+                  {/* <Snackbar
                     open={this.state.isRegistered}
                     message="Vendor Added"
                     autoHideDuration={4000}
                     bodyStyle={{backgroundColor: 'teal'}}
-                  />
+                  /> */}
                 </Col>
               </form>
             </Col>

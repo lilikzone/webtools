@@ -71,6 +71,8 @@ export default class ManageUser extends React.PureComponent {
     super(props);
     this.state = {
       keyword: '',
+      errorFetch: '',
+      isError: false,
       isEmailValid: true,
       isEmailValidTemp: true,
       isPhoneValid: true,
@@ -505,7 +507,7 @@ export default class ManageUser extends React.PureComponent {
     })
       .then(json)
       .then((respons) => {
-        // console.log(respons);
+        console.log(respons);
         if (respons.user.token !== '') {
           this.setState({
             currentTab: 1,
@@ -525,6 +527,9 @@ export default class ManageUser extends React.PureComponent {
         }
       }).catch((error) => {
         console.log(`error: ${error}`);
+        this.setState({
+          errorFetch: 'Register fail, please check again', isError: true,
+        });
       });
 
     fetch('https://source.adlsandbox.com/api/admin/all', {
@@ -552,7 +557,11 @@ export default class ManageUser extends React.PureComponent {
       this.setState({
         deleteAlert: false,
       });
-    }    else {
+    }    else if (param == 'error') {
+      this.setState({
+        isError: false,
+      });
+    }        else {
       this.setState({
         onEdit: false,
       });
@@ -802,6 +811,17 @@ export default class ManageUser extends React.PureComponent {
             <Col xs={12} md={12} lg={12}>
               <form>
                 <Col xs={12} md={6} lg={6}>
+                  <Dialog
+                    title="Failed to Register"
+                    actions={actionsUpdate('error')}
+                    modal={true}
+                    open={this.state.isError}
+                    onRequestClose={() => this.setState({
+                      isError: false,
+                    })}
+                  >
+                    {this.state.errorFetch}
+                  </Dialog>
                   <TextField
                     required={true}
                     hintText="Username"
