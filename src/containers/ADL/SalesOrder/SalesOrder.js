@@ -160,7 +160,6 @@ export default class SalesOrder extends React.Component {
 
 
   _handleTouchTap() {
-    // console.log('tai');
     const name = this.state.textField.name;
     const homepassedId = this.state.textField.homepassedId;
     const typePayment = this.state.textField.typePayment;
@@ -217,6 +216,45 @@ export default class SalesOrder extends React.Component {
             openWarning: true,
             warningMessage: respons.message,
             TitleMessage: 'Success',
+            fileKtp: {
+              base64: '',
+              name: '',
+            },
+            fileAbd: {
+              base64: '',
+              name: '',
+            },
+            fileForm: {
+              base64: '',
+              name: '',
+            },
+            selectedProduct: false,
+            productId: '',
+            textField: {
+              name: '',
+              olt: '',
+              city: '',
+              region: '',
+              fdt: '',
+              cluster: '',
+              street: '',
+              fullAddress: '',
+              homepassedId: '',
+              typePayment: '',
+              idType: '',
+              dobPlace: '',
+              idNumber: '',
+              address: '',
+              phone1: '',
+              phone2: '',
+              phone3: '',
+              email1: '',
+              email2: '',
+              gender: '',
+              group: 'REGULAR',
+              dob: {},
+              installationDate: {},
+            },
           });
         } else {
           console.log('response not 200', respons);
