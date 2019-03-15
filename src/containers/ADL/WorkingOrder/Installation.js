@@ -308,9 +308,8 @@ export default class Installation extends React.Component {
     const role = roleData.split('+');
     const cookieData = cookies.get('ssid');
     const json = (response) => response.json();
-
+    this._getWoData();
     if (cookieData !== undefined && cookieData !== '') {
-      this._getWoData();
       if (AssignVendor.includes(role[1])) {
         fetch('https://source.adlsandbox.com/api/vendor/all', {
           method: 'GET',
@@ -352,6 +351,7 @@ export default class Installation extends React.Component {
             dataInstaller.push(dataInstallerObject[i].username);
           }
           this.setState({
+            load: false,
             dataInstaller: dataInstaller,
             status: 'Dispatch to installer'});
         }).catch((error) => {
@@ -481,11 +481,11 @@ export default class Installation extends React.Component {
       const id = this.state.dataTemp.id;
       const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
       const installer = this.state.dataTemp.installer;
-
+      const time_slot = this.state.dataTemp.time_slot;
       const status = stats || this.state.status;
       const json = (response) => response.json();
       // console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`);
-      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}`, {
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&time_slot=${time_slot}`, {
         method: 'PUT',
         type: 'cors',
         headers: {
@@ -511,11 +511,12 @@ export default class Installation extends React.Component {
       const installer = this.state.dataTemp.installer;
       const status = this.state.dataTemp.status;
       const notes = this.state.dataTemp.notes;
+      const time_slot = this.state.dataTemp.time_slot;
 
       const json = (response) => response.json();
 
-      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`);
-      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}`, {
+      console.log(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}&time_slot=${time_slot}`);
+      fetch(`https://source.adlsandbox.com/api/workorder/update/${id}?type_installation=Installation&status=${status}&vendor=${vendor}&installer=${installer == null ? '' : installer}&notes=${notes}&time_slot=${time_slot}`, {
         method: 'PUT',
         type: 'cors',
         headers: {

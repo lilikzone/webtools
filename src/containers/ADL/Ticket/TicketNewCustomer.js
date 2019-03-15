@@ -74,6 +74,19 @@ export default class TicketExistingCustomer extends React.Component {
       this.setState({
         cookies: cookies.get('ssid'),
       });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/admin/check?token=${cookies.get('ssid')}`, {
+        method: 'get',
+        type: 'cors',
+      })
+      .then(json)
+      .then((respons) => {
+        this.setState({
+          textField: {...this.state.textField, sales_name: respons.user.username},
+        });
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
     }
   }
 
@@ -338,12 +351,13 @@ export default class TicketExistingCustomer extends React.Component {
               value={this.state.textField.sales_name}
               floatingLabelFixed={true}
               floatingLabelText="Helpdesk Name"
+              disabled={true}
             // errorText={!this.state.isEmailValid2}
-              onChange={(e, input) => {
-                this.setState({
-                  textField: {...this.state.textField, sales_name: input},
-                });
-              }}
+              // onChange={(e, input) => {
+              //   this.setState({
+              //     textField: {...this.state.textField, sales_name: input},
+              //   });
+              // }}
             />
             <RaisedButton
               label="Submit Data"

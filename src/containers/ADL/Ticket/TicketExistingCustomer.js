@@ -481,7 +481,7 @@ export default class TicketNewCustomer extends React.Component {
       this.setState({
         loaded: false,
       });
-      this._getAPI(`${HOSTNAME}all?page=${this.state.allCustomer.current_page}`, 'textField');
+      this._getAPI(`${HOSTNAME}customer/all?page=${this.state.allCustomer.current_page}`, 'textField');
     }
   }
 
