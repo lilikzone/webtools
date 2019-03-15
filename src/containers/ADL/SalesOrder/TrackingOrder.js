@@ -151,6 +151,14 @@ export default class TrackingOrder extends React.Component {
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
       {
+        id: 10,
+        title: 'Sales Name',
+        prop: 'sales_name',
+        width: '9%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
         id: 3,
         title: 'Subscription ID',
         prop: 'subs_id',
