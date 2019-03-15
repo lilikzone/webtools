@@ -308,7 +308,7 @@ export default class Installation extends React.Component {
     const role = roleData.split('+');
     const cookieData = cookies.get('ssid');
     const json = (response) => response.json();
-
+    this._getWoData();
     if (cookieData !== undefined && cookieData !== '') {
       if (AssignVendor.includes(role[1])) {
         fetch('https://source.adlsandbox.com/api/vendor/all', {
@@ -354,7 +354,6 @@ export default class Installation extends React.Component {
             load: false,
             dataInstaller: dataInstaller,
             status: 'Dispatch to installer'});
-          this._getWoData();
         }).catch((error) => {
           console.log(`error: ${error}`);
         });
