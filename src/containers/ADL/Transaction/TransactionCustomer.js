@@ -25,6 +25,9 @@ export default class TransactionCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadAllCustomer: true,
+      role: '',
+      allCustomerExport: [],
       dataCustomer: {
         current_page: 1,
         last_page: 1,
@@ -283,9 +286,19 @@ export default class TransactionCustomer extends React.Component {
 
   componentWillMount() {
     if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
-      this.setState({
-        cookies: cookies.get('ssid'),
-      });
+      const userData = cookies.get('rdata');
+      const role =  userData.split('+');
+      if (role === 'sales') {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      } else {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      }
     }
   }
 
@@ -306,6 +319,42 @@ export default class TransactionCustomer extends React.Component {
     this.setState({
       updateAlert: false,
     });
+  }
+
+  _getCustomerAll() {
+    const cookieData = this.state.cookies;
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        loadAllCustomer: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      console.log('https://source.adlsandbox.com/api/customer/all?export=1');
+      fetch('https://source.adlsandbox.com/api/customer/all?export=1',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allCustomerExport: respons, loadAllCustomer: true});
+        this.csv.link.click();
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
   }
 
   _getUpdate(apiUrl) {
@@ -366,6 +415,44 @@ export default class TransactionCustomer extends React.Component {
   }
 
   render() {
+    let _renderExportSearch = () => {
+      return (
+        <p>
+          <CSVLink
+            data={this.state.dataCustomer.data}
+            filename={`Transaction Customer ${new Date(moment())}.xls`}
+            style={{color: 'white'}}
+            target="_blank"
+          >
+            <RaisedButton
+              backgroundColor={red400}
+              style={{marginTop: 10}}
+              label={'EXPORT DATA'}
+              labelStyle={{color: 'white'}}
+            />
+          </CSVLink>
+          { (['admin', 'operation'].includes(this.state.role)) &&
+          <span>
+            <RaisedButton
+              backgroundColor={red400}
+              style={{marginLeft: 10, marginTop: 10, marginBottom: 10}}
+              labelStyle={{color: 'white'}}
+              label={'EXPORT ALL DATA'}
+              disabled={!this.state.loadAllCustomer}
+              onMouseDown={(() => {
+                this._getCustomerAll();
+              })}
+            />
+            <CSVLink
+              data={this.state.allCustomerExport && this.state.allCustomerExport.length > 0 ? this.state.allCustomerExport : []}
+              ref={(pb) => this.csv = pb}
+              filename={`ALL TRANSACTION CUSTOMER ${new Date(moment())}.xls`}
+              style={{color: 'white'}}
+              target="_blank"
+            />
+            { !this.state.loadAllCustomer && <CircularProgress size={20} style={{marginLeft: 10, top: 10}} />}</span> }
+        </p>);
+    };
     return (
       <Row className="m-b-15">
         {this.state.loaded ?
@@ -374,19 +461,7 @@ export default class TransactionCustomer extends React.Component {
             <Paper style={styles.paper}>
               <Col xs={12} md={12} lg={12} sm={12}>
                 <div>
-                  <RaisedButton
-                    backgroundColor={red400}
-                    style={{marginTop: 10, marginBottom: 10}}
-                  >
-                    <CSVLink
-                      data={this.state.dataCustomer.data}
-                      filename={`Transaction Customer ${new Date(moment())}.xls`}
-                      style={{color: 'white'}}
-                      target="_blank"
-                    >
-                      EXPORT
-                    </CSVLink>
-                  </RaisedButton>
+                  {_renderExportSearch()}
                   <div>
                     <TextField
                       required={true}

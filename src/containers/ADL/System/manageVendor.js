@@ -402,11 +402,12 @@ export default class ManageVendor extends React.Component {
             hintText="ID"
             floatingLabelText="ID"
             fullWidth={true}
-            onChange={(e, input) => {
-              this.setState({
-                idTemp: input,
-              });
-            }}
+            disabled={true}
+            // onChange={(e, input) => {
+            //   this.setState({
+            //     idTemp: input,
+            //   });
+            // }}
           />
           <TextField
             fullWidth={true}
@@ -414,11 +415,12 @@ export default class ManageVendor extends React.Component {
             value={this.state.codeTemp}
             hintText="Code"
             floatingLabelText="Code"
-            onChange={(e, input) => {
-              this.setState({
-                codeTemp: input,
-              });
-            }}
+            disabled={true}
+            // onChange={(e, input) => {
+            //   this.setState({
+            //     codeTemp: input,
+            //   });
+            // }}
           />
           <TextField
             fullWidth={true}
@@ -452,7 +454,7 @@ export default class ManageVendor extends React.Component {
                     onRequestClose={() => this._onUpdate()}
                   />
                   <Dialog
-                    title="Edit User"
+                    title="Edit Vendor"
                     actions={actions}
                     modal={false}
                     open={this.state.onEdit}

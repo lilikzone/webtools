@@ -21,6 +21,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import moment from  'moment';
+import {CSVLink} from 'react-csv';
+import {red400} from 'material-ui/styles/colors';
 
 
 const cookies = new Cookies();
@@ -78,8 +80,10 @@ export default class ManageCustomer extends React.Component {
       dialogMsg: '',
       isDialog: false,
       loaded: false,
+      loadAllCustomer: true,
       updateAlert: false,
       cookies: '',
+      role: '',
       keyword: '',
       onEdit: false,
       nameTemp: '',
@@ -128,6 +132,7 @@ export default class ManageCustomer extends React.Component {
         last_page: 1,
         data: [],
       },
+      allCustomerExport: [],
       dataTemp: [],
       dataCity: [],
       dataCluster: [],
@@ -342,9 +347,19 @@ export default class ManageCustomer extends React.Component {
 
   componentWillMount() {
     if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
-      this.setState({
-        cookies: cookies.get('ssid'),
-      });
+      const userData = cookies.get('rdata');
+      const role =  userData.split('+');
+      if (role === 'sales') {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      } else {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      }
     }
   }
 
@@ -380,6 +395,41 @@ export default class ManageCustomer extends React.Component {
           dataCity.push(dataCityObject[i].city);
         }
         this.setState({dataCity: dataCity});
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+  _getCustomerAll() {
+    const cookieData = this.state.cookies;
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        loadAllCustomer: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      console.log('https://source.adlsandbox.com/api/customer/all?export=1');
+      fetch('https://source.adlsandbox.com/api/customer/all?export=1',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({allCustomerExport: respons, loadAllCustomer: true});
+        this.csv.link.click();
       }).catch((error) => {
         console.log(`error: ${error}`);
       });
@@ -1480,6 +1530,44 @@ export default class ManageCustomer extends React.Component {
         </div>
       );
     };
+    let _renderExportSearch = () => {
+      return (
+        <p>
+          <CSVLink
+            data={this.state.allCustomer.data}
+            filename={`Manage Customer ${new Date(moment())}.xls`}
+            style={{color: 'white'}}
+            target="_blank"
+          >
+            <RaisedButton
+              backgroundColor={red400}
+              style={{marginTop: 10}}
+              label={'EXPORT DATA'}
+              labelStyle={{color: 'white'}}
+            />
+          </CSVLink>
+          { (['admin', 'operation'].includes(this.state.role)) &&
+          <span>
+            <RaisedButton
+              backgroundColor={red400}
+              style={{marginLeft: 10, marginTop: 10, marginBottom: 10}}
+              labelStyle={{color: 'white'}}
+              label={'EXPORT ALL DATA'}
+              disabled={!this.state.loadAllCustomer}
+              onMouseDown={(() => {
+                this._getCustomerAll();
+              })}
+            />
+            <CSVLink
+              data={this.state.allCustomerExport && this.state.allCustomerExport.length > 0 ? this.state.allCustomerExport : []}
+              ref={(pb) => this.csv = pb}
+              filename={`ALL CUSTOMER ${new Date(moment())}.xls`}
+              style={{color: 'white'}}
+              target="_blank"
+            />
+            { !this.state.loadAllCustomer && <CircularProgress size={20} style={{marginLeft: 10, top: 10}} />}</span> }
+        </p>);
+    };
     let _renderManageUser = () => {
       return (
         <div>
@@ -1490,7 +1578,7 @@ export default class ManageCustomer extends React.Component {
 
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
-                  <br />
+                  {_renderExportSearch()}
                   <Dialog
                     title="Customer Updated"
                     actions={actionsUpdate('update')}

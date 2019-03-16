@@ -17,18 +17,27 @@ import MenuItem from 'material-ui/MenuItem';
 import Card from 'material-ui/Card';
 import Cookies from 'universal-cookie';
 import FileBase64 from 'react-file-base64';
+import {CSVLink} from 'react-csv';
+import {red400} from 'material-ui/styles/colors';
+import moment from  'moment';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const cookies = new Cookies();
 const sourceLink = 'https://source.adlsandbox.com/storage/';
+const HOSTNAME = 'https://source.adlsandbox.com/api/';
 
 
 export default class TrackingOrder extends React.Component {
   constructor(props) {
     super(props);
-
+    this.csv = '';
     this.state = {
       load: false,
       loadWO: false,
+      loadAllSO: true,
+      loadAllWO: true,
+      keywordSO: '',
+      keywordWO: '',
       currentTab: 0,
       isGenderValid: true,
       isEmailValid: true,
@@ -54,6 +63,8 @@ export default class TrackingOrder extends React.Component {
         last_page: 1,
         data: [],
       },
+      salesOrderDataAll: [],
+      workOrderDataAll: [],
       orderDataTemp: [],
       redirect: false,
       note: '',
@@ -147,6 +158,14 @@ export default class TrackingOrder extends React.Component {
         title: 'Status',
         prop: 'status',
         width: '20%',
+        headerClass: 'mdl-data-table__cell--non-numeric',
+        cellClass: 'mdl-data-table__cell--non-numeric',
+      },
+      {
+        id: 10,
+        title: 'Sales Name',
+        prop: 'sales_name',
+        width: '9%',
         headerClass: 'mdl-data-table__cell--non-numeric',
         cellClass: 'mdl-data-table__cell--non-numeric',
       },
@@ -518,6 +537,78 @@ export default class TrackingOrder extends React.Component {
     }
   }
 
+  _getSOdataAll() {
+    const cookieData = this.state.cookies;
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        loadAllSO: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      console.log('https://source.adlsandbox.com/api/order/all?export=1');
+      fetch('https://source.adlsandbox.com/api/order/all?export=1',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({salesOrderDataAll: respons, loadAllSO: true});
+        this.csv.link.click();
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+
+  _getWOdataAll() {
+    const cookieData = this.state.cookies;
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        loadAllWO: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      console.log('https://source.adlsandbox.com/api/workorder/all?export=1');
+      fetch('https://source.adlsandbox.com/api/workorder/all?export=1',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log(respons);
+        this.setState({workOrderDataAll: respons, loadAllWO: true});
+        this.csv.link.click();
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+
   _getWOdata() {
     const cookieData = cookies.get('ssid');
     if (cookieData !== undefined && cookieData !== '') {
@@ -678,7 +769,46 @@ export default class TrackingOrder extends React.Component {
     });
   }
 
+  _getUpdate(apiUrl, stateName, loader) {
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.state.cookies}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('result_Search', responseJson);
+        if (responseJson.result.data.length > 0) {
+          this.setState({
+            [stateName]: {
+              data: responseJson.result.data,
+              current_page: responseJson.result.current_page,
+              total: responseJson.result.total,
+            },
+            [loader]: false,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  _handleUpdateKeyword(type) {
+    this.setState({
+      load: true,
+    });
+    if (type == 'Sales Order') {
+      this._getUpdate(`${HOSTNAME}order/search?keyword=${this.state.keywordSO}`, 'salesOrderData', 'load');
+    }    else {
+      this._getUpdate(`${HOSTNAME}workorder/search?keyword=${this.state.keywordWO}`, 'workOrderData', 'loadWO');
+    }
+  }
+
   render() {
+    console.log('isi semua', this.state.salesOrderData.data);
     let actions = (role) => {
       if (['internalsales', 'salesadmin', 'sales'].includes(role)) {
         return ([
@@ -716,6 +846,84 @@ export default class TrackingOrder extends React.Component {
         ]);
       }
     };
+    let _renderLoading = () => {
+      return (
+
+        <div style={{minWidth: 700}}>
+          <div
+            style={{margin: '0 auto',
+              marginTop: 20,
+              width: '20%',
+              textAlign: 'center'}}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      );
+    };
+    let _renderExportSearch = (type, data, allData) => {
+      if (['admin', 'operation'].includes(this.state.role)) {
+        return (
+          <div>
+            <p>
+              <CSVLink
+                data={data}
+                filename={`${type} ${new Date(moment())}.xls`}
+                style={{color: 'white'}}
+                target="_blank"
+              >
+                <RaisedButton
+                  backgroundColor={red400}
+                  style={{marginTop: 10, marginBottom: 10}}
+                  labelStyle={{color: 'white'}}
+                  label={'EXPORT DATA'}
+                />
+              </CSVLink>
+              <RaisedButton
+                backgroundColor={red400}
+                style={{marginLeft: 10, marginTop: 10, marginBottom: 10}}
+                labelStyle={{color: 'white'}}
+                label={'EXPORT ALL DATA'}
+                disabled={type == 'Sales Order' ? !this.state.loadAllSO : !this.state.loadAllWO}
+                onMouseDown={(() => {
+                  type == 'Sales Order' ? this._getSOdataAll() : this._getWOdataAll();
+                })}
+              />
+              <CSVLink
+                data={allData && allData.length > 0 ? allData : []}
+                ref={(pb) => this.csv = pb}
+                filename={`${type} ${new Date(moment())}.xls`}
+                style={{color: 'white'}}
+                target="_blank"
+              />
+              {((type == 'Sales Order' && !this.state.loadAllSO) || (type == 'Work Order' && !this.state.loadAllWO)) && <CircularProgress size={20} style={{marginLeft: 10, top: 10}} />}
+            </p>
+            <div>
+              <TextField
+                required={true}
+                value={type == 'Sales Order' ? this.state.keywordSO : this.state.keywordWO}
+                hintText={'Search'}
+                fullWidth={false}
+                onChange={(e, input) => {
+                  if (type == 'Sales Order' ) {
+                    this.setState({
+                      keywordSO: input,
+                    });
+                  }                else {
+                    this.setState({
+                      keywordWO: input,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <RaisedButton secondary={true} label={'Search'} onMouseDown={() => this._handleUpdateKeyword(type)} />
+            </div>
+          </div>
+        );
+      }
+    };
     let actionsWarning = [
       <FlatButton
         label="Cancel"
@@ -738,6 +946,7 @@ export default class TrackingOrder extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <div className="mdl-layout">
                 <div >
+                  {_renderExportSearch('Sales Order', this.state.salesOrderData.data, this.state.salesOrderDataAll)}
                   <br />
                   <Dialog
                     title="Update Sales Order"
@@ -1013,6 +1222,7 @@ export default class TrackingOrder extends React.Component {
             <Col xs={12} md={12} lg={12}>
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
+                  {_renderExportSearch('Work Order', this.state.workOrderData.data, this.state.workOrderDataAll)}
                   <br />
                   <Dialog
                     title="Update"
@@ -1073,7 +1283,7 @@ export default class TrackingOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab === 0 && _manageSO()}
+                {this.state.currentTab === 0 && this.state.load ? _manageSO() : _renderLoading()}
               </Tab>
               <Tab
                 value={1}
@@ -1084,7 +1294,7 @@ export default class TrackingOrder extends React.Component {
                   });
                 }}
               >
-                {this.state.currentTab === 1 && _manageWO()}
+                {this.state.currentTab === 1 && this.state.loadWO ? _manageWO() : _renderLoading()}
               </Tab>
             </Tabs>
           </Col>

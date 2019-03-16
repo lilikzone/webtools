@@ -3,13 +3,18 @@ import Paper from 'material-ui/Paper';
 import styles from '../../../styles';
 import 'react-table-components/styles/styles.css';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
 import Card from 'material-ui/Card';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const HOSTNAME = 'https://source.adlsandbox.com/api/activity/';
 
 const UserPic = (row) => (
   <div className="text-center">
@@ -41,7 +46,7 @@ const columns = [
     id: 1,
     title: 'Id',
     prop: 'id',
-    width: '20%',
+    width: '10%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
@@ -56,15 +61,15 @@ const columns = [
   {
     id: 3,
     title: 'Activity',
-    prop: 'activity',
+    prop: 'description',
     width: '20%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
   },
   {
-    id: 4,
+    id: 5,
     title: 'Activity Time',
-    prop: 'activityTime',
+    prop: 'created_at',
     width: '20%',
     headerClass: 'mdl-data-table__cell--non-numeric',
     cellClass: 'mdl-data-table__cell--non-numeric',
@@ -84,6 +89,12 @@ export default class ManageActivity extends React.Component {
       isAgencyValid: true,
       isRegistered: false,
       currentTab: 0,
+      loaded: false,
+      activityData: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       textField: {
         code: '',
         vendor: '',
@@ -120,6 +131,40 @@ export default class ManageActivity extends React.Component {
     });
   }
 
+  _getAPI(apiUrl, stateName) {
+    fetch(apiUrl,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${cookies.get('ssid')}`,
+          'Content-Type': 'application/json',
+        },
+      })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson) {
+        this.setState({
+          [stateName]: responseJson,
+          loaded: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  componentDidMount() {
+    this._getAPI(`${HOSTNAME}all?page=${this.state.activityData.current_page}`, 'activityData');
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.activityData.current_page != this.state.activityData.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      this._getAPI(`${HOSTNAME}all?page=${this.state.activityData.current_page}`, 'activityData');
+    }
+  }
   render() {
     let _renderCreateVendor = () => {
       return (
@@ -174,7 +219,7 @@ export default class ManageActivity extends React.Component {
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
                   <br />
-                  <MaterialContainer
+                  {/* <MaterialContainer
                     keys="name"
                     className="mdl-data-table"
                     columns={columns}
@@ -185,6 +230,21 @@ export default class ManageActivity extends React.Component {
                     sortable={false}
                     sortBy={{prop: 'country.name', order: 'asc'}}
                     pageSizeOptions={[1]}
+                  /> */}
+                  <MaterialContainer
+                    keys="id"
+                    className="mdl-data-table"
+                    columns={columns}
+                    onChangePage={((page) => this.setState({
+                      activityData: {...this.state.activityData, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.activityData.data}
+                    draggable={true}
+                    sortable={false}
+                    currentPage={this.state.activityData.current_page - 1}
+                    total={this.state.activityData.total}
+                    sortBy={{prop: 'id', order: 'asc'}}
+                    pageSizeOptions={[10]}
                   />
                 </div>
               </div>
