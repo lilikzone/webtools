@@ -9,7 +9,8 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import AutoComplete from 'material-ui/AutoComplete';
-import {MaterialContainer} from 'react-table-components';
+// import {MaterialContainer} from 'react-table-components';
+import MaterialContainer from '../../CustomComponents/react-table-components/lib/containers/MaterialContainer';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 import DatePicker from 'material-ui/DatePicker';
@@ -64,10 +65,14 @@ const CheckBtn = () => (
 export default class ManageProduct extends React.Component {
   constructor(props) {
     super(props);
+    this.csv = '';
     this.state = {
       cookies: '',
       currentTab: 0,
       loaded: false,
+      role: '',
+      loadProductExportAll: true,
+      productExportAll: [],
       keyword: '',
       validation: {
         code: false,
@@ -102,7 +107,11 @@ export default class ManageProduct extends React.Component {
         promo_start: '',
       },
       dataCity: [],
-      productAll: [],
+      productAll: {
+        current_page: 1,
+        last_page: 1,
+        data: [],
+      },
       openWarning: false,
       openEdit: false,
       updateAlert: false,
@@ -301,6 +310,25 @@ export default class ManageProduct extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.productAll.current_page != this.state.productAll.current_page) {
+      this.setState({
+        loaded: false,
+      });
+      const json = (response) => response.json();
+      fetch(`https://source.adlsandbox.com/api/product/all?page=${this.state.productAll.current_page}`, {
+        method: 'GET',
+        type: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.state.cookies}`,
+          'Content-Type': 'application/json',
+        },
+      }).then(json)
+      .then((respons) => {
+        this.setState({productAll: respons, loaded: true});
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
     if (prevState.dataPromoArea != this.state.dataPromoArea) {
       this.setState({
         restartField: true,
@@ -314,13 +342,23 @@ export default class ManageProduct extends React.Component {
   }
   componentWillMount() {
     if (cookies.get('ssid') !== undefined && cookies.get('ssid') !== '') {
-      this.setState({
-        cookies: cookies.get('ssid'),
-      });
+      const userData = cookies.get('rdata');
+      const role =  userData.split('+');
+      if (role === 'sales') {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      } else {
+        this.setState({
+          cookies: cookies.get('ssid'),
+          role: role[1],
+        });
+      }
     }
   }
   componentDidMount() {
-    this._getAPI(`${HOSTNAME}all`);
+    this._getAPI(`${HOSTNAME}all?`);
     this._getAPICity();
   }
 
@@ -357,8 +395,45 @@ export default class ManageProduct extends React.Component {
     this.handleClose('delete');
   }
 
+  _getProductAll() {
+    const cookieData = this.state.cookies;
+    if (cookieData !== undefined && cookieData !== '') {
+      this.setState({
+        loadProductExportAll: false,
+      });
+      const status = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Promise.resolve(response);
+        }
+        return Promise.reject(new Error(response.statusText));
+      };
+      const json = (response) => response.json();
+
+      console.log('https://source.adlsandbox.com/api/product/all?export=1');
+      fetch('https://source.adlsandbox.com/api/product/all?export=1',
+        {
+          method: 'get',
+          type: 'cors',
+          headers: {
+            'Authorization': `Bearer ${cookieData}`,
+            'Content-Type': 'application/json',
+          },
+        }, )
+      .then(status)
+      .then(json)
+      .then((respons) => {
+        console.log('exportALL', respons);
+        this.setState({productExportAll: respons, loadProductExportAll: true});
+        this.csv.link.click();
+      }).catch((error) => {
+        console.log(`error: ${error}`);
+      });
+    }
+  }
+
+
   _getAPI(apiUrl) {
-    fetch(apiUrl, {
+    fetch(`${apiUrl}page=${this.state.productAll.current_page}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${this.state.cookies}`,
@@ -370,7 +445,7 @@ export default class ManageProduct extends React.Component {
         console.log('get', responseJson);
         if (responseJson) {
           this.setState({
-            productAll: responseJson.data,
+            productAll: responseJson,
             loaded: true,
           });
         }
@@ -543,7 +618,7 @@ export default class ManageProduct extends React.Component {
         console.log('result_Search', responseJson);
         if (responseJson.result.data.length > 0) {
           this.setState({
-            productAll: responseJson.result.data,
+            productAll: responseJson,
           });
         }
         this.setState({
@@ -980,19 +1055,42 @@ export default class ManageProduct extends React.Component {
               {/* <Card style={styles.card}> */}
               <div className="mdl-layout mdl-layout--no-drawer-button container">
                 <div className="mdl-layout--fixed-drawer" id="asa">
-                  <RaisedButton
-                    backgroundColor={red400}
-                    style={{marginTop: 10}}
-                  >
+                  <p>
                     <CSVLink
-                      data={this.state.productAll}
+                      data={this.state.productAll.data}
                       filename={`Manage Product ${new Date(moment())}.xls`}
                       style={{color: 'white'}}
                       target="_blank"
                     >
-                      EXPORT
+                      <RaisedButton
+                        backgroundColor={red400}
+                        style={{marginTop: 10}}
+                        label={'EXPORT DATA'}
+                        labelStyle={{color: 'white'}}
+                      />
                     </CSVLink>
-                  </RaisedButton>
+                    { (['admin', 'operation'].includes(this.state.role)) &&
+                    <span>
+                      <RaisedButton
+                        backgroundColor={red400}
+                        style={{marginLeft: 10, marginTop: 10, marginBottom: 10}}
+                        labelStyle={{color: 'white'}}
+                        label={'EXPORT ALL DATA'}
+                        disabled={!this.state.loadProductExportAll}
+                        onMouseDown={(() => {
+                          this._getProductAll();
+                        })}
+                      />
+                      <CSVLink
+                        data={this.state.productExportAll && this.state.productExportAll.length > 0 ? this.state.productExportAll : []}
+                        ref={(pb) => this.csv = pb}
+                        filename={`ALL PRODUCT ${new Date(moment())}.xls`}
+                        style={{color: 'white'}}
+                        target="_blank"
+                      />
+                      { !this.state.loadProductExportAll && <CircularProgress size={20} style={{marginLeft: 10, top: 10}} />}</span> }
+
+                  </p>
                   <div>
                     <TextField
                       required={true}
@@ -1013,16 +1111,31 @@ export default class ManageProduct extends React.Component {
                       onMouseDown={() => this._handleUpdateKeyword()}
                     />
                   </div>
-                  <MaterialContainer
+                  {/* <MaterialContainer
                     keys="id"
                     className="mdl-data-table"
                     columns={this.columns}
-                    dataArray={this.state.productAll}
+                    dataArray={this.state.productAll.data}
                     // dataArray={dataDummy}
                     draggable={true}
                     sortable={true}
                     sortBy={{prop: 'id', order: 'desc'}}
                     generateRowProps={generateRowProps}
+                    pageSizeOptions={[10]}
+                  /> */}
+                  <MaterialContainer
+                    keys="id"
+                    className="mdl-data-table"
+                    columns={this.columns}
+                    onChangePage={((page) => this.setState({
+                      productAll: {...this.state.productAll, current_page: page + 1},
+                    }))}
+                    dataArrayCustom={this.state.productAll.data}
+                    draggable={true}
+                    sortable={false}
+                    currentPage={this.state.productAll.current_page - 1}
+                    total={this.state.productAll.total}
+                    sortBy={{prop: 'id', order: 'asc'}}
                     pageSizeOptions={[10]}
                   />
                 </div>
