@@ -308,9 +308,8 @@ export default class Installation extends React.Component {
     const role = roleData.split('+');
     const cookieData = cookies.get('ssid');
     const json = (response) => response.json();
-
+    this._getWoData();
     if (cookieData !== undefined && cookieData !== '') {
-      this._getWoData();
       if (AssignVendor.includes(role[1])) {
         fetch('https://source.adlsandbox.com/api/vendor/all', {
           method: 'GET',
@@ -352,6 +351,7 @@ export default class Installation extends React.Component {
             dataInstaller.push(dataInstallerObject[i].username);
           }
           this.setState({
+            load: false,
             dataInstaller: dataInstaller,
             status: 'Dispatch to installer'});
         }).catch((error) => {
@@ -481,8 +481,8 @@ export default class Installation extends React.Component {
       const id = this.state.dataTemp.id;
       const vendor = this.state.dataTemp.vendorValue === undefined ? this.state.dataTemp.vendor : this.state.dataTemp.vendorValue;
       const installer = this.state.dataTemp.installer;
-      const status = stats || this.state.status;
       const time_slot = this.state.dataTemp.time_slot;
+      const status = stats || this.state.status;
       const sn_ont = this.state.dataTemp.snOnt;
       const sn_stb = this.state.dataTemp.snStb;
       const json = (response) => response.json();

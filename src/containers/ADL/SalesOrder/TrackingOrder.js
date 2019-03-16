@@ -413,7 +413,7 @@ export default class TrackingOrder extends React.Component {
         load: false,
       });
       const json = (response) => response.json();
-      fetch(`https://source.adlsandbox.com/api/order/all?${this.state.orderFilter}?page=${this.state.salesOrderData.current_page}`, {
+      fetch(`https://source.adlsandbox.com/api/order/all?page=${this.state.salesOrderData.current_page}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -433,7 +433,7 @@ export default class TrackingOrder extends React.Component {
         loadWO: false,
       });
       const json = (response) => response.json();
-      fetch(`https://source.adlsandbox.com/api/workorder/all?${this.state.workOrderData.current_page}`, {
+      fetch(`https://source.adlsandbox.com/api/workorder/all?page=${this.state.workOrderData.current_page}`, {
         method: 'GET',
         type: 'cors',
         headers: {
@@ -611,6 +611,9 @@ export default class TrackingOrder extends React.Component {
         this._getSOdata();
       }).catch((error) => {
         console.log(`error: ${error}`);
+      });
+      this.setState({
+        redirect: true,
       });
       this._handleClose();
     }
