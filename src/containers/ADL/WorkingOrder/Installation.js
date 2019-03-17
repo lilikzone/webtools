@@ -21,6 +21,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import FontIcon from 'material-ui/FontIcon';
 import FileBase64 from 'react-file-base64';
 import moment from  'moment';
+import CircularProgress from 'material-ui/CircularProgress';
 import IconButton from 'material-ui/IconButton';
 
 
@@ -1017,7 +1018,18 @@ export default class Installation extends React.Component {
                     rowsMax={4}
                   />
                 </Dialog>
-                {this.state.load ? _setVendor(workOrder) : ''}
+                {this.state.load ? _setVendor(workOrder)                  :
+                <Paper style={styles.paper}>
+                  <div style={{minWidth: 700}}>
+                    <div
+                      style={{margin: '0 auto',
+                        width: '20%',
+                        textAlign: 'center'}}
+                    >
+                      <CircularProgress />
+                    </div>
+                  </div>
+                </Paper>}
               </div>
             </div>
           </Col>

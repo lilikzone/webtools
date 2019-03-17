@@ -146,7 +146,7 @@ export class MenuList extends React.Component {
                 leftIcon={<FontIcon  style={styles_left_icon} color={this.props.muiTheme.appBar.color} className="material-icons"> home </FontIcon>}
                 key={1}
                 primaryText={strings.menu.dashboard}
-                containerElement={<Link to={'dashboard'} />}
+                containerElement={<Link to={'/admin/dashboard'} />}
               /> : ''}
 
             {systemShowRule.includes(userRole) ? <ListItem

@@ -39,9 +39,9 @@ const pic = {
 const DashboardPage_2 = () => {
   return (
     <div>
-      <h3 style={globalStyles.navigation}>Application / Dashboard </h3>
+      {/* <h3 style={globalStyles.navigation}>Application / Dashboard </h3> */}
 
-      <Row className="m-b-15">
+      {/* <Row className="m-b-15">
 
         <Col xs={12} md={3} lg={3}>
           <Paper style={style} zDepth={1}>
@@ -72,7 +72,7 @@ const DashboardPage_2 = () => {
         <Col xs={12} md={6} lg={6}>
           <UserTable />
         </Col>
-      </Row>
+      </Row> */}
 
 
     </div>
