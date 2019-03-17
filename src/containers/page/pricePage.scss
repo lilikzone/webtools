@@ -1,0 +1,71 @@
+.pricePage {
+  background: #87c9d5;
+  padding: 3em 5em 5em 5em;
+}
+
+.priceTitle {
+  text-align: center;
+  font-size: 3em;
+  color: #fff;
+}
+
+.pricePaper {
+  margin-top: 60px;
+  width: 100%!important;
+  min-height: 630px;
+  background: #fff;
+  text-align: center;
+  padding: 3em;
+}
+
+.centerPrice {
+  transform: scale(1.1);
+}
+
+.pricePaper h1 {
+  font-size: 2em;
+}
+
+.pricePaper .divider {
+  margin: 30px 0!important;
+}
+
+.pricePaper .ico {
+  width: 7em!important;
+  height: 7em!important
+}
+
+.pricePaper p {
+  margin: 40px 0 150px 0;
+}
+
+.enterprise_price {
+  color: #79bbc7;
+  font-size: 3em!important;
+  margin-bottom: 30px;
+}
+
+.pro_price {
+  color: #e9571b;
+  font-size: 3em!important;
+  margin-bottom: 30px;
+}
+
+.startup_price {
+  color: #79bbc7;
+  font-size: 3em!important;
+  margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 320px) {
+  .pricePaper h1 {
+    font-size: 1em;
+  }
+  .priceTitle {
+    font-size: 2em;
+    line-height: 1.2em;
+  }
+  .pricePage {
+    padding: 1em 2em 3em 2em;
+  }
+}
